@@ -125,6 +125,84 @@ footer small {
     opacity: 0.7;
 }
 
+/* ------------------- NYE ELEMENTER ------------------- */
+
+/* Progress bar */
+.progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 1060;
+}
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ffc107, #ff5722);
+    transition: width 0.1s linear;
+}
+
+/* Hero canvas */
+#heroCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Gradient headings */
+.hero h1 {
+    background: linear-gradient(135deg, #ffc107 0%, #ff5722 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.section-article h2 {
+    background: linear-gradient(135deg, #ffc107, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Evolution timeline */
+.evolution-timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin: 2rem 0;
+    border-left: 3px solid #ffc107;
+}
+.evolution-timeline .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 1.5rem;
+}
+.evolution-timeline .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -9px;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffc107;
+    border: 2px solid #1a1a1a;
+}
+.timeline-item h4 {
+    color: #ffc107;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .section-article { padding: 1.5rem; }
