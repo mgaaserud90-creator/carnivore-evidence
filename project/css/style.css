@@ -1,0 +1,26 @@
+body {
+    padding-top: 56px;       /* offset for fixed navbar */
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    scroll-behavior: smooth;
+}
+.navbar-brand, .nav-link { color: #fff !important; }
+.nav-link:hover { color: #ffc107 !important; }
+#content h1, #content h2 { color: #ffc107; }
+.section-article {
+    animation: fadeIn 0.4s ease-in;
+    margin-bottom: 3rem;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.flow-diagram {
+    border: 1px solid #555;
+    padding: 1rem;
+    border-radius: 5px;
+    background: #2a2a2a;
+    overflow-x: auto;
+}
+.flow-diagram svg { max-width: 100%; height: auto; }
