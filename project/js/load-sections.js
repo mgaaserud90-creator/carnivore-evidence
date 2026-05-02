@@ -1,15 +1,37 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const contentDiv = document.getElementById('content');
-    const homeSection = contentDiv.querySelector('#home');
-    const homeHTML = homeSection
-        ? homeSection.outerHTML
-        : '<section id="home" class="mb-5"><h1 class="display-4">Karnivore – Slik vi er designet</h1><p class="lead">En rapport av en hjertekirurg ...</p><p>Klikk på menyen for å utforske bevisene.</p></section>';
+/**
+ * load-sections.js
+ * Loads section content from hidden DOM templates embedded in index.html.
+ * This works reliably with both file:// and http:// protocols.
+ *
+ * For modular editing: Individual section files live in /sections/ folder.
+ * Run "node build.js" after editing section files to rebuild index.html.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    'use strict';
 
-    let lastSlug = null;
-    let isLoading = false;
+    var contentDiv = document.getElementById('content');
+    var homeHTML = contentDiv ? contentDiv.innerHTML : '';
+    var sectionTemplates = {};
+    var lastSlug = null;
+    var isLoading = false;
+
+    // Cache all section templates from hidden DOM
+    var templateContainer = document.getElementById('section-templates');
+    if (templateContainer) {
+        var templateDivs = templateContainer.querySelectorAll('div[data-section]');
+        templateDivs.forEach(function(div) {
+            var slug = div.getAttribute('data-section');
+            if (slug) {
+                // Wrap the inner content in a proper section element
+                sectionTemplates[slug] = '<section class="section-article" id="' + slug + '">\n' +
+                    div.innerHTML.trim() + '\n</section>';
+            }
+        });
+    }
 
     function setActiveNav(slug) {
-        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+        var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+        navLinks.forEach(function(link) {
             link.classList.remove('active');
             if (link.getAttribute('href') === '#' + slug) {
                 link.classList.add('active');
@@ -18,124 +40,100 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showSection(slug) {
-        // Prevent repeated or simultaneous loads
         if (slug === lastSlug || isLoading) return;
         lastSlug = slug;
         setActiveNav(slug);
 
-        // Show the home view and return
+        // Home view
         if (slug === 'home' || slug === '') {
             contentDiv.innerHTML = homeHTML;
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (window.initHeroCounters) window.initHeroCounters();
             return;
         }
 
         isLoading = true;
-        // Show a loading spinner while we prepare the section
+
+        // Show loading spinner
         contentDiv.innerHTML =
-            '<div class="text-center mt-5"><div class="spinner-border text-warning" role="status">' +
-            '<span class="visually-hidden">Laster...</span></div></div>';
+            '<div class="text-center mt-5 py-5"><div class="spinner-border text-warning" role="status" style="width:3rem;height:3rem;">' +
+            '<span class="visually-hidden">Laster...</span></div><p class="text-muted mt-2">Laster seksjon...</p></div>';
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Retrieve the section from the hidden templates already embedded in index.html
-        const templateContainer = document.getElementById('section-templates');
-        if (templateContainer) {
-            const template = templateContainer.querySelector(`section[data-slug="${slug}"]`);
-            if (template) {
-                const clone = template.cloneNode(true);
-                // Avoid duplicate IDs when the section is moved into #content
-                clone.removeAttribute('id');
-                contentDiv.innerHTML = clone.outerHTML;
-                isLoading = false;
+        // Small delay so the spinner is visible
+        setTimeout(function() {
+            var html = sectionTemplates[slug];
+
+            if (html) {
+                contentDiv.innerHTML = html;
+            } else {
+                // Fallback: try fetch() (works when served via HTTP)
+                fetchSection(slug);
                 return;
             }
-        }
 
-        // If we reach this point the section was not found
-        contentDiv.innerHTML = '<p class="text-center mt-5">Seksjonen ble ikke funnet.</p>';
-        isLoading = false;
+            isLoading = false;
+            document.dispatchEvent(new CustomEvent('sectionLoaded'));
+        }, 200);
+    }
+
+    // Fallback fetch method - used if template not found in DOM
+    function fetchSection(slug) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'sections/' + slug + '.html', true);
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                contentDiv.innerHTML = xhr.responseText;
+            } else {
+                contentDiv.innerHTML =
+                    '<div class="text-center mt-5 py-5"><p class="text-danger fs-4">' +
+                    '<i class="fa-solid fa-circle-exclamation me-2"></i>Kunne ikke laste seksjonen.</p>' +
+                    '<p class="text-muted">Prøv å laste siden på nytt.</p></div>';
+            }
+            isLoading = false;
+            document.dispatchEvent(new CustomEvent('sectionLoaded'));
+        };
+        xhr.onerror = function() {
+            contentDiv.innerHTML =
+                '<div class="text-center mt-5 py-5"><p class="text-danger fs-4">' +
+                '<i class="fa-solid fa-circle-exclamation me-2"></i>Kunne ikke laste seksjonen.</p>' +
+                '<p class="text-muted">Prøv å laste siden på nytt, eller åpne med en lokal server.</p></div>';
+            isLoading = false;
+        };
+        xhr.send();
     }
 
     function handleHash() {
-        const hash = window.location.hash.slice(1);
+        var hash = window.location.hash.slice(1);
         showSection(hash || 'home');
     }
 
+    // Listen for hash changes
     window.addEventListener('hashchange', handleHash);
 
-    // Initial load based on current URL hash
-    const startSlug = window.location.hash.slice(1) || 'home';
+    // Initial load
+    var startSlug = window.location.hash.slice(1) || 'home';
     showSection(startSlug);
     setActiveNav(startSlug);
 
-    // Back‑to‑top button toggle and scroll
-    const backToTop = document.getElementById('backToTop');
+    // Back-to-top button
+    var backToTop = document.getElementById('backToTop');
     if (backToTop) {
-        window.addEventListener('scroll', () => {
+        window.addEventListener('scroll', function() {
             backToTop.classList.toggle('d-none', window.scrollY < 400);
         });
-        backToTop.addEventListener('click', () => {
+        backToTop.addEventListener('click', function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
-    // ----- Progress bar -----
-    const progressBar = document.getElementById('progressBar');
+    // Progress bar
+    var progressBar = document.getElementById('progressBar');
     if (progressBar) {
-        window.addEventListener('scroll', () => {
-            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (window.scrollY / windowHeight) * 100;
+        window.addEventListener('scroll', function() {
+            var windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (window.scrollY / windowHeight) * 100;
             progressBar.style.width = scrolled + '%';
         });
-    }
-
-    // ----- Particle background (hero) -----
-    const canvas = document.getElementById('heroCanvas');
-    if (canvas) {
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        function resizeCanvas() {
-            canvas.width = canvas.offsetWidth;
-            canvas.height = canvas.offsetHeight;
-        }
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            createParticles();
-        });
-        resizeCanvas();
-
-        function createParticles() {
-            particles = [];
-            const count = Math.min(100, Math.floor((canvas.width * canvas.height) / 12000));
-            for (let i = 0; i < count; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    radius: Math.random() * 2 + 0.5,
-                    speedX: (Math.random() - 0.5) * 0.5,
-                    speedY: (Math.random() - 0.5) * 0.5,
-                    alpha: Math.random() * 0.6 + 0.2
-                });
-            }
-        }
-        createParticles();
-
-        function drawParticles() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255,193,7,${p.alpha})`;
-                ctx.fill();
-                p.x += p.speedX;
-                p.y += p.speedY;
-                if (p.x < 0) p.x = canvas.width;
-                if (p.x > canvas.width) p.x = 0;
-                if (p.y < 0) p.y = canvas.height;
-                if (p.y > canvas.height) p.y = 0;
-            });
-            requestAnimationFrame(drawParticles);
-        }
-        drawParticles();
     }
 });

@@ -1,38 +1,159 @@
 <section class="section-article" id="evolusjon">
     <h2><i class="fa-solid fa-dna me-2 text-warning"></i>1. Evolusjonær historie – Vi var apex‑predatorer i 2 millioner år</h2>
     <p>Tenk deg et menneske for 100 000 år siden. Ingen kornåkre, ingen supermarkeder – bare store flokker av byttedyr og en nådeløs savanne. Over <strong>2 millioner år</strong> utviklet mennesket seg som et spesialisert rovdyr, og den genetiske arven sitter fortsatt i oss.</p>
+
     <div class="fact-bubble">
         <i class="fa-solid fa-lightbulb me-2"></i>
-        <strong>Visste du:</strong> Før jordbruksrevolusjonen var vi <em>hyper‑karnivore</em> – vi spiste nesten utelukkende kjøtt og fett. Kroppene våre er fortsatt programmerte for dette.
+        <strong>Visste du:</strong> Før jordbruksrevolusjonen for ~10 000 år siden var vi <em>hyper‑karnivore</em> – vi spiste nesten utelukkende kjøtt og fett. Kroppene våre er fortsatt programmerte for dette, til tross for 500 generasjoner med jordbruk.
     </div>
-    <div class="evolution-timeline">
+
+    <!-- NITROGEN-15 TROPHIC PYRAMID SVG -->
+    <h3 class="mt-4"> Nitrogen‑15 bekrefter at vi var på toppen</h3>
+    <p>Stabile isotoper av nitrogen (N15) i fossile knokler forteller oss hva et dyr spiste. Jo høyere N15-nivå, jo høyere opp i næringskjeden. <strong>Paleolittiske mennesker viser N15-verdier høyere enn ulv og hyene</strong> – vi var super-rovdyr på toppen av pyramiden.</p>
+    <div class="flow-diagram text-center">
+        <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+            <defs>
+                <linearGradient id="pyramid1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ffc107"/>
+                    <stop offset="100%" stop-color="#ff9800"/>
+                </linearGradient>
+                <linearGradient id="pyramid2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#ff5722"/>
+                    <stop offset="100%" stop-color="#d32f2f"/>
+                </linearGradient>
+                <linearGradient id="pyramid3" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4caf50"/>
+                    <stop offset="100%" stop-color="#388e3c"/>
+                </linearGradient>
+            </defs>
+            <!-- Top: Humans (apex) -->
+            <polygon points="250,20 180,100 320,100" fill="url(#pyramid1)" stroke="#fff" stroke-width="1.5" opacity="0.9"/>
+            <text x="250" y="75" text-anchor="middle" fill="#1a1a1a" font-weight="700" font-size="15">Menneske (apex)</text>
+            <text x="250" y="92" text-anchor="middle" fill="#1a1a1a" font-size="10">N15: høyest registrert</text>
+            <!-- Mid: Wolves / Hyenas -->
+            <polygon points="250,105 140,195 360,195" fill="#e65100" stroke="#fff" stroke-width="1.5" opacity="0.8"/>
+            <text x="250" y="150" text-anchor="middle" fill="#fff" font-weight="600" font-size="13">Ulv & Hyene</text>
+            <text x="250" y="167" text-anchor="middle" fill="#ddd" font-size="10">N15: middels</text>
+            <!-- Lower: Herbivores -->
+            <polygon points="250,200 100,320 400,320" fill="url(#pyramid3)" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+            <text x="250" y="260" text-anchor="middle" fill="#fff" font-weight="600" font-size="13">Store planteetere</text>
+            <text x="250" y="277" text-anchor="middle" fill="#ddd" font-size="10">N15: lavest</text>
+            <!-- Arrow + label -->
+            <line x1="420" y1="50" x2="460" y2="50" stroke="#ffc107" stroke-width="2"/>
+            <text x="465" y="54" fill="#ffc107" font-size="11">Økende N15</text>
+            <text x="465" y="68" fill="#aaa" font-size="9">= høyere trofisk nivå</text>
+            <!-- Legend -->
+            <rect x="20" y="340" width="460" height="35" rx="6" fill="#2a2a2a" stroke="#444"/>
+            <text x="250" y="362" text-anchor="middle" fill="#aaa" font-size="11">Nitrogen-15 isotopanalyse bekrefter mennesket som super-apex-predator</text>
+        </svg>
+    </div>
+
+    <!-- BRAIN VOLUME COMPARISON CHART -->
+    <h3 class="mt-4"> Hjernevolum krympet dramatisk etter jordbruket</h3>
+    <p>Da vi gikk over fra kjøtt til korn, sank hjernevolumet fra ~1500 cm³ til ~1350 cm³ – et tap på 10 %. Hjernen er avhengig av animalsk fett og kolesterol for struktur og drift; en karbohydratbasert diett ga kalorier, men manglet byggesteinene hjernen trenger.</p>
+    <div class="chart-container">
+        <div class="chart-bar-row">
+            <span class="chart-bar-label">Jeger-samler (1500 cm³)</span>
+            <div class="chart-bar-track">
+                <div class="chart-bar-fill fill-animal" style="width:100%;">100%</div>
+            </div>
+            <span class="chart-bar-value">1500 cm³</span>
+        </div>
+        <div class="chart-bar-row">
+            <span class="chart-bar-label">Tidlig jordbruk (1400 cm³)</span>
+            <div class="chart-bar-track">
+                <div class="chart-bar-fill fill-plant" style="width:70%;">70%</div>
+            </div>
+            <span class="chart-bar-value">~1400 cm³</span>
+        </div>
+        <div class="chart-bar-row">
+            <span class="chart-bar-label">Moderne menneske (1350 cm³)</span>
+            <div class="chart-bar-track">
+                <div class="chart-bar-fill fill-plant" style="width:56%;">56%</div>
+            </div>
+            <span class="chart-bar-value">~1350 cm³</span>
+        </div>
+        <p class="ref-source mt-2 mb-0" style="font-size:0.85rem;">
+            <i class="fa-solid fa-circle-info me-1"></i>
+            Kilde: Balzeau et al., Journal of Human Evolution – hjernekassen krympet raskt etter jordbruksrevolusjonen.
+        </p>
+    </div>
+
+    <!-- DENTAL ARCH COMPARISON SVG -->
+    <h3 class="mt-4"> Tannstillingen kollapset med bløt kost</h3>
+    <p>Jeger-samlere hadde perfekte tannbuer – brede kjever med plass til alle visdomstenner. Etter jordbruket ble kjevene mindre og tennene trangstilte, fordi bløt, bearbeidet mat ikke stimulerte kjevevekst.</p>
+    <div class="flow-diagram text-center">
+        <svg viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+            <!-- Left: Paleo jaw -->
+            <text x="125" y="25" text-anchor="middle" fill="#ffc107" font-weight="600" font-size="13">Jeger-samler kjeve</text>
+            <ellipse cx="125" cy="120" rx="60" ry="45" fill="none" stroke="#4caf50" stroke-width="2.5"/>
+            <!-- Teeth -->
+            <rect x="100" y="95" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="112" y="93" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="124" y="92" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="136" y="93" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="148" y="95" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="100" y="128" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="112" y="130" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="124" y="131" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="136" y="130" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <rect x="148" y="128" width="10" height="10" rx="3" fill="#fff" opacity="0.9"/>
+            <text x="125" y="190" text-anchor="middle" fill="#aaa" font-size="9">Bred kjeve • Plass til alle tenner</text>
+            <!-- Separator -->
+            <line x1="230" y1="20" x2="230" y2="200" stroke="#555" stroke-width="1" stroke-dasharray="4"/>
+            <!-- Right: Modern jaw -->
+            <text x="375" y="25" text-anchor="middle" fill="#ff5722" font-weight="600" font-size="13">Moderne kjeve</text>
+            <ellipse cx="375" cy="120" rx="45" ry="38" fill="none" stroke="#ff5722" stroke-width="2.5"/>
+            <!-- Crowded teeth -->
+            <rect x="355" y="98" width="8" height="10" rx="3" fill="#fff" opacity="0.7" transform="rotate(10,359,103)"/>
+            <rect x="360" y="95" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="366" y="100" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="372" y="97" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="378" y="102" width="8" height="10" rx="3" fill="#fff" opacity="0.7" transform="rotate(-10,382,107)"/>
+            <rect x="383" y="99" width="8" height="10" rx="3" fill="#fff" opacity="0.7" transform="rotate(-15,387,104)"/>
+            <rect x="360" y="128" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="366" y="130" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="372" y="125" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="378" y="128" width="8" height="10" rx="3" fill="#fff" opacity="0.7"/>
+            <rect x="384" y="132" width="8" height="10" rx="3" fill="#fff" opacity="0.7" transform="rotate(10,388,137)"/>
+            <text x="375" y="190" text-anchor="middle" fill="#aaa" font-size="9">Trang kjeve • Overlapp • Visdomstenner mangler</text>
+        </svg>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="evolution-timeline mt-4">
         <div class="timeline-item">
-            <h4>🔬 Nitrogen‑15 plasserer oss på toppen</h4>
+            <h4> Nitrogen‑15 plasserer oss på toppen</h4>
             <p>Beinrester fra paleolittiske mennesker viser nitrogen‑15‑verdier <strong>høyere</strong> enn hos ulv og hyene. Det gjør oss til <strong>super‑rovdyr</strong> – på toppen av næringskjeden.</p>
         </div>
         <div class="timeline-item">
-            <h4>🧠 Hjernevolum krympet etter jordbruket</h4>
+            <h4> Hjernevolum krympet etter jordbruket</h4>
             <p>Fra 1500 cm³ til 1350 cm³ – et tap tilsvarende en tennisball. Korn ga kalorier, men fratok oss fettet som hjernen trenger.</p>
         </div>
         <div class="timeline-item">
-            <h4>🦷 Tannstillingen kollapset</h4>
+            <h4> Tannstillingen kollapset</h4>
             <p>Perfekte tannbuer hos jeger‑samlere, mot dagens trangstilte tenner. Bløt grøt svekket kjeven, og kjeveortopedien eksploderte.</p>
         </div>
         <div class="timeline-item">
-            <h4>🦴 Skjeletter ble skjøre</h4>
+            <h4> Skjeletter ble skjøre</h4>
             <p>Jordbrukere var kortere og mer osteoporotiske – en direkte konsekvens av næringsfattig, plantebasert kost.</p>
         </div>
         <div class="timeline-item">
-            <h4>🔥 Ildens rolle</h4>
+            <h4> Ildens rolle</h4>
             <p>Vi kokte kjøtt over 1 million år før vi dyrket hvete, noe som økte biotilgjengeligheten av proteiner og fett enormt.</p>
         </div>
         <div class="timeline-item">
-            <h4>🦍 Neandertalernes diett</h4>
+            <h4> Neandertalernes diett</h4>
             <p>Kollagenanalyse viser at neandertalere var nesten rene kjøttetere, med diett basert på mammut og andre store planteetere.</p>
         </div>
         <div class="timeline-item">
-            <h4>⚙️ Enzymer hyper‑spesialiserte</h4>
+            <h4> Enzymer hyper‑spesialiserte</h4>
             <p>Pepsin og lipase – langt mer effektive for animalsk næring enn hos ekte planteetere.</p>
         </div>
+    </div>
+
+    <!-- Section navigation -->
+    <div class="section-nav">
+        <a href="#anatomi" class="btn btn-warning">Neste: Anatomi <i class="fa-solid fa-arrow-right ms-2"></i></a>
     </div>
 </section>

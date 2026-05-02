@@ -1,20 +1,41 @@
+/* ============================================================
+   BASE
+   ============================================================ */
 body {
-    padding-top: 56px;               /* offset for fixed navbar */
+    padding-top: 56px;
     background-color: #1a1a1a;
     color: #e0e0e0;
     font-family: 'Open Sans', sans-serif;
     scroll-behavior: smooth;
 }
 
-/* Typography */
 h1, h2, h3, .navbar-brand {
     font-family: 'Montserrat', sans-serif;
 }
 .navbar-brand, .nav-link { color: #fff !important; }
 .nav-link:hover { color: #ffc107 !important; }
+.nav-link.active { color: #ffc107 !important; font-weight: 600; }
 #content h1, #content h2 { color: #ffc107; }
 
-/* Hero */
+/* ============================================================
+   REFERENCE / SOURCE TEXT – readability fix
+   ============================================================ */
+.text-muted, .ref-source {
+    color: #b0b8c0 !important;
+    font-style: italic;
+}
+.ref-source {
+    border-left: 3px solid #ffc107;
+    padding: 0.4rem 0.8rem;
+    margin: 0.5rem 0;
+    background: rgba(255,193,7,0.06);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
 .hero {
     background: linear-gradient(135deg, #4a0400 0%, #7a1f0e 50%, #3a0400 100%);
     color: #fff;
@@ -39,23 +60,121 @@ h1, h2, h3, .navbar-brand {
     border-color: #ffc107;
     color: #1a1a1a !important;
 }
+.hero h1 {
+    background: linear-gradient(135deg, #ffc107 0%, #ff5722 80%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
 
-/* Section cards */
+/* Hero stat counters */
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+.hero-stat {
+    text-align: center;
+    padding: 0.5rem 1.5rem;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(255,193,7,0.2);
+    min-width: 160px;
+}
+.hero-stat-number {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    color: #ffc107;
+    line-height: 1.2;
+}
+.hero-stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+}
+
+/* ============================================================
+   SECTION CARDS
+   ============================================================ */
 .section-article {
-    animation: fadeInUp 0.5s ease;
     margin-bottom: 2.5rem;
     background: rgba(255,255,255,0.05);
     border-radius: 12px;
     padding: 2rem 3rem;
     box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     backdrop-filter: blur(8px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
+.section-article:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+}
+.section-article h2 {
+    background: linear-gradient(135deg, #ffc107, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1.5rem;
 }
 
-/* Fact bubble – eye‑catching highlight */
+/* ============================================================
+   SECTION NAVIGATION (Prev / Next buttons)
+   ============================================================ */
+.section-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #444;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.section-nav .btn {
+    min-width: 160px;
+    transition: all 0.3s ease;
+}
+.section-nav .btn:hover {
+    transform: translateX(3px);
+}
+.section-nav .btn-prev:hover {
+    transform: translateX(-3px);
+}
+
+/* ============================================================
+   ANIMATIONS – SCROLL TRIGGERED
+   ============================================================ */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger delays for children */
+.section-article.animate-on-scroll.visible h2,
+.section-article.animate-on-scroll.visible .fact-bubble,
+.section-article.animate-on-scroll.visible .stat-badge,
+.section-article.animate-on-scroll.visible .highlight-box,
+.section-article.animate-on-scroll.visible .flow-diagram,
+.section-article.animate-on-scroll.visible .evolution-timeline {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+/* ============================================================
+   FACT BUBBLE
+   ============================================================ */
 .fact-bubble {
     background: rgba(255,193,7,0.15);
     border-left: 5px solid #ffc107;
@@ -66,7 +185,9 @@ h1, h2, h3, .navbar-brand {
     font-size: 1rem;
 }
 
-/* Stat badge & callout */
+/* ============================================================
+   STAT BADGE & CALLOUT
+   ============================================================ */
 .stat-badge {
     background: #2a2a2a;
     border: 1px solid #ffc107;
@@ -75,7 +196,6 @@ h1, h2, h3, .navbar-brand {
     margin: 1.5rem 0;
     box-shadow: 0 2px 8px rgba(255,193,7,0.1);
 }
-
 .highlight-box {
     background: #1f1f1f;
     border: 1px solid #ffc107;
@@ -86,97 +206,22 @@ h1, h2, h3, .navbar-brand {
     box-shadow: 0 4px 10px rgba(255,193,7,0.1);
 }
 
-/* Diagram container */
+/* ============================================================
+   FLOW DIAGRAM / SVG CONTAINERS
+   ============================================================ */
 .flow-diagram {
     border: 1px solid #555;
     padding: 1rem;
-    border-radius: 5px;
+    border-radius: 8px;
     background: #2a2a2a;
     overflow-x: auto;
+    margin: 1.5rem 0;
 }
 .flow-diagram svg { max-width: 100%; height: auto; }
 
-/* Back‑to‑top */
-.back-to-top {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #ffc107;
-    color: #1a1a1a;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    opacity: 0.9;
-    transition: opacity 0.3s, transform 0.3s;
-    z-index: 1050;
-    box-shadow: 0 2px 12px rgba(255,193,7,0.5);
-}
-.back-to-top:hover {
-    opacity: 1;
-    transform: scale(1.1);
-}
-
-/* Footer */
-footer small {
-    opacity: 0.7;
-}
-
-/* ------------------- NYE ELEMENTER ------------------- */
-
-/* Progress bar */
-.progress-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: transparent;
-    z-index: 1060;
-}
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #ffc107, #ff5722);
-    transition: width 0.1s linear;
-}
-
-/* Hero canvas */
-#heroCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    pointer-events: none;
-}
-.hero .container {
-    position: relative;
-    z-index: 2;
-}
-
-/* Gradient headings */
-.hero h1 {
-    background: linear-gradient(135deg, #ffc107 0%, #ff5722 80%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-}
-
-.section-article h2 {
-    background: linear-gradient(135deg, #ffc107, #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-}
-
-/* Evolution timeline */
+/* ============================================================
+   EVOLUTION TIMELINE
+   ============================================================ */
 .evolution-timeline {
     position: relative;
     padding-left: 2rem;
@@ -203,8 +248,462 @@ footer small {
     color: #ffc107;
 }
 
-/* Responsive adjustments */
+/* ============================================================
+   COMPARISON SLIDER (Eye comparison)
+   ============================================================ */
+.comparison-slider {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 320px;
+    margin: 1.5rem auto;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: ew-resize;
+    user-select: none;
+    border: 2px solid #444;
+}
+.comparison-slider .comparison-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.comparison-slider .comparison-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: inset(0 50% 0 0);
+}
+.comparison-slider .comparison-left img,
+.comparison-slider .comparison-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.comparison-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: #ffc107;
+    transform: translateX(-2px);
+    z-index: 10;
+    box-shadow: 0 0 8px rgba(255,193,7,0.5);
+}
+.comparison-handle::after {
+    content: '\2194';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffc107;
+    color: #1a1a1a;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* SVG-based eye comparison fallback */
+.eye-comparison {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 1.5rem auto;
+    text-align: center;
+}
+.eye-comparison svg {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* ============================================================
+   ANTI-NUTRIENT TABLE
+   ============================================================ */
+.anti-nutrient-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.anti-nutrient-table thead th {
+    background: linear-gradient(135deg, #ffc107, #ff5722);
+    color: #1a1a1a;
+    padding: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    border: none;
+}
+.anti-nutrient-table tbody td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+}
+.anti-nutrient-table tbody tr {
+    background: rgba(255,255,255,0.03);
+    transition: background 0.3s;
+}
+.anti-nutrient-table tbody tr:hover {
+    background: rgba(255,193,7,0.08);
+}
+.anti-nutrient-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.anti-nutrient-table .antinutrient-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+.anti-nutrient-table .severity-high { color: #ff5722; font-weight: 600; }
+.anti-nutrient-table .severity-medium { color: #ffc107; font-weight: 600; }
+.anti-nutrient-table .severity-low { color: #4caf50; font-weight: 600; }
+
+/* ============================================================
+   HORMONE FLOW DIAGRAM
+   ============================================================ */
+.hormone-flow {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+.hormone-flow svg {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ============================================================
+   CHART BARS (Animated data bars)
+   ============================================================ */
+.chart-container {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #2a2a2a;
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+.chart-bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    gap: 0.8rem;
+}
+.chart-bar-label {
+    flex: 0 0 140px;
+    font-size: 0.85rem;
+    color: #ccc;
+    text-align: right;
+}
+.chart-bar-track {
+    flex: 1;
+    height: 24px;
+    background: #333;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+.chart-bar-fill {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 1.5s ease;
+    width: 0%;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+.chart-bar-fill.fill-animal {
+    background: linear-gradient(90deg, #ffc107, #ff9800);
+}
+.chart-bar-fill.fill-plant {
+    background: linear-gradient(90deg, #4caf50, #8bc34a);
+}
+.chart-bar-fill.fill-lipid {
+    background: linear-gradient(90deg, #2196f3, #03a9f4);
+}
+.chart-bar-fill.fill-statin {
+    background: linear-gradient(90deg, #ff5722, #f44336);
+}
+.chart-bar-value {
+    flex: 0 0 50px;
+    font-size: 0.85rem;
+    color: #aaa;
+    text-align: right;
+}
+.animate-on-scroll.visible .chart-bar-fill {
+    /* Widths set inline in HTML, triggered by visible class */
+}
+
+/* ============================================================
+   KEY STAT CARDS
+   ============================================================ */
+.key-stat {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255,193,7,0.1);
+    border: 1px solid rgba(255,193,7,0.3);
+    border-radius: 12px;
+    padding: 1.2rem 1.8rem;
+    text-align: center;
+    min-width: 130px;
+}
+.key-stat .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffc107;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.2;
+}
+.key-stat .stat-desc {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-top: 4px;
+}
+
+/* ============================================================
+   LIPID PROFILE TABLE
+   ============================================================ */
+.lipid-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.lipid-table thead th {
+    background: linear-gradient(135deg, #2196f3, #1565c0);
+    color: #fff;
+    padding: 0.9rem 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+    border: none;
+}
+.lipid-table tbody td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+}
+.lipid-table tbody tr {
+    background: rgba(255,255,255,0.03);
+    transition: background 0.3s;
+}
+.lipid-table tbody tr:hover {
+    background: rgba(33,150,243,0.08);
+}
+.lipid-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.lipid-bad { color: #ff5722; font-weight: 600; }
+.lipid-good { color: #4caf50; font-weight: 600; }
+.lipid-neutral { color: #ffc107; font-weight: 600; }
+
+/* ============================================================
+   NNT / STATIN STATS
+   ============================================================ */
+.nnt-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255,87,34,0.1);
+    border: 2px solid #ff5722;
+    border-radius: 12px;
+    margin: 1rem 0;
+}
+.nnt-card .nnt-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ff5722;
+    font-family: 'Montserrat', sans-serif;
+    display: block;
+}
+.nnt-card .nnt-label {
+    font-size: 0.85rem;
+    color: #ccc;
+    margin-top: 4px;
+    display: block;
+}
+.nnt-card.nnt-good {
+    background: rgba(76,175,80,0.1);
+    border-color: #4caf50;
+}
+.nnt-card.nnt-good .nnt-number { color: #4caf50; }
+
+/* ============================================================
+   ATHEROSCLEROSIS STAGES (Heart attack SVG)
+   ============================================================ */
+.athero-stage {
+    text-align: center;
+    margin: 1rem 0;
+}
+.athero-stage svg {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* ============================================================
+   BACK TO TOP
+   ============================================================ */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #ffc107;
+    color: #1a1a1a;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 1050;
+    box-shadow: 0 2px 12px rgba(255,193,7,0.5);
+}
+.back-to-top:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+.progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: transparent;
+    z-index: 1060;
+}
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #ffc107, #ff5722);
+    transition: width 0.1s linear;
+}
+
+/* ============================================================
+   HERO CANVAS
+   ============================================================ */
+#heroCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+.hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer small {
+    opacity: 0.7;
+}
+
+/* ============================================================
+   LOADING ANIMATION
+   ============================================================ */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 991px) {
+    /* Responsive hero title */
+    .hero h1.display-3 { font-size: clamp(1.8rem, 5vw, 3rem); }
+    .hero p.lead { font-size: clamp(0.95rem, 2.5vw, 1.15rem) !important; }
+}
+
 @media (max-width: 768px) {
     .section-article { padding: 1.5rem; }
     .hero { min-height: 50vh; }
+    .hero h1.display-3 { font-size: clamp(1.5rem, 6vw, 2.2rem); }
+    .hero-stat { min-width: 120px; padding: 0.4rem 0.8rem; }
+    .hero-stat-number { font-size: 1.6rem; }
+    .hero-stat-label { font-size: 0.7rem; }
+    .comparison-slider { height: 220px; }
+    .chart-bar-label { flex-basis: 100px; font-size: 0.75rem; }
+    .chart-bar-row { flex-wrap: wrap; gap: 0.4rem; }
+    .chart-bar-track { flex: 1 1 100%; order: 3; }
+    .chart-bar-label { flex: 0 0 auto; text-align: left; }
+    .chart-bar-value { flex: 0 0 auto; }
+    .anti-nutrient-table { font-size: 0.85rem; }
+    .anti-nutrient-table thead th { padding: 0.7rem; }
+    .anti-nutrient-table tbody td { padding: 0.6rem 0.7rem; }
+    .section-nav .btn { min-width: 120px; font-size: 0.85rem; }
+    .eye-comparison svg { max-width: 100%; }
+    .fact-bubble { font-size: 0.9rem; padding: 0.8rem 1rem; }
+    .evolution-timeline { padding-left: 1.2rem; }
+    .evolution-timeline .timeline-item { padding-left: 1rem; }
+}
+
+@media (max-width: 576px) {
+    .hero-stats { gap: 0.6rem; }
+    .hero-stat { min-width: 90px; padding: 0.3rem 0.6rem; }
+    .hero-stat-number { font-size: 1.3rem; }
+    .hero-stat-label { font-size: 0.65rem; letter-spacing: 0; }
+    .hero h1.display-3 { font-size: clamp(1.2rem, 7vw, 1.8rem); }
+    .comparison-slider { height: 160px; }
+    .section-nav { flex-direction: column; align-items: stretch; }
+    .section-nav .btn { min-width: 100%; font-size: 0.8rem; }
+    .flow-diagram { padding: 0.5rem; }
+    .key-stat { padding: 0.8rem 1rem; min-width: 100px; }
+    .key-stat .stat-number { font-size: 1.5rem; }
+    .fact-bubble { font-size: 0.85rem; padding: 0.7rem 0.8rem; }
+    .anti-nutrient-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .lipid-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .athero-stage svg { max-height: 300px; width: auto; }
+    .nnt-card { padding: 1rem; }
+    .nnt-card .nnt-number { font-size: 1.8rem; }
+}
+
+@media (max-width: 400px) {
+    .section-article { padding: 1rem; }
+    .hero p.lead { font-size: 0.9rem !important; }
+    .hero-btn { font-size: 0.85rem; padding: 0.6rem 1.2rem !important; }
+    .chart-bar-row { gap: 0.2rem; }
+    .chart-bar-label { font-size: 0.7rem; }
+    .chart-bar-value { font-size: 0.7rem; }
+    .nnt-card .nnt-number { font-size: 1.5rem; }
 }
