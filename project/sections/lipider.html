@@ -1,5 +1,5 @@
 <section class="section-article" id="lipider">
-    <h2><i class="fa-solid fa-droplet me-2 text-warning"></i>6. Lipider & Statiner – LDL, HDL, triglyserider og hva medisinene egentlig gjør</h2>
+    <h2><i class="fa-solid fa-droplet me-2 text-warning"></i>7. Lipider & Statiner – LDL, HDL, triglyserider og hva medisinene egentlig gjør</h2>
     <p>Få temaer er mer omstridt i ernæringsdebatten enn kolesterol og lipider. Men hva er <em>egentlig</em> LDL, HDL og triglyserider? Og hva gjør statiner – redder de liv, eller selges de på sviktende premisser? I dette kapittelet skal vi bryte ned lipidene til det de virkelig er: <strong>kroppens livsviktige transportsystem.</strong></p>
 
     <div class="fact-bubble">
@@ -29,6 +29,178 @@
                 <span class="stat-desc"><strong>Triglyserider</strong><br>Energitransport<br>Drivstoffet som fraktes fra måltid til muskler og fettceller</span>
             </div>
         </div>
+    </div>
+
+    <!-- GLYCOCALYX – THE OVERLOOKED GUARDIAN -->
+    <h3 class="mt-4"> Glykokalyx – den glemte forsvareren av blodårene</h3>
+    <p>Før vi diskuterer LDL, må vi forstå <strong>glykokalyxen</strong> – et sukker-protein-lag som belegger innsiden av alle blodårer. Dette laget, ~0.5-3 µm tykt, er <strong>kroppens første og viktigste forsvar mot aterosklerose</strong>. Uten en intakt glykokalyx kan ikke LDL en gang komme inn i karveggen.</p>
+
+    <div class="fact-bubble">
+        <i class="fa-solid fa-lightbulb me-2"></i>
+        <strong>Kritisk innsikt:</strong> Glykokalyxen er <em>tykkere</em> enn karets endotelceller og består av glykosaminoglykaner (heparansulfat, hyaluronsyre) og glykoproteiner. Den skaper en negativt ladet barriere som <strong>aktivt frastøter LDL-partikler</strong> – som er negativt ladet. Uten en intakt glykokalyx lekker alt, med eller uten høyt LDL.
+    </div>
+
+    <div class="flow-diagram text-center">
+        <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="max-width:100%;height:auto;">
+            <defs>
+                <linearGradient id="healthGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#4caf50"/>
+                    <stop offset="100%" stop-color="#2e7d32"/>
+                </linearGradient>
+                <linearGradient id="damageGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#d32f2f"/>
+                    <stop offset="100%" stop-color="#b71c1c"/>
+                </linearGradient>
+            </defs>
+
+            <!-- LEFT: HEALTHY ENDOTHELIUM -->
+            <text x="175" y="25" text-anchor="middle" fill="#4caf50" font-weight="700" font-size="14">SUNN ENDOTEL (Carnivore)</text>
+            <rect x="40" y="100" width="270" height="15" rx="3" fill="#2e7d32" opacity="0.8"/>
+            <text x="175" y="110" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">ENDOTELCELLER</text>
+
+            <!-- Glycocalyx layer -->
+            <rect x="35" y="70" width="280" height="30" rx="5" fill="#4caf50" opacity="0.3" stroke="#4caf50" stroke-width="1" stroke-dasharray="3"/>
+            <text x="175" y="88" text-anchor="middle" fill="#4caf50" font-size="9" font-weight="700">INTAKT GLYKOKALYX</text>
+            <text x="175" y="78" text-anchor="middle" fill="#aaa" font-size="7">(~1-3 µm negativ ladning)</text>
+
+            <!-- LDL particles being repelled -->
+            <circle cx="80" cy="45" r="8" fill="#ffc107" opacity="0.4"/>
+            <text x="80" y="48" text-anchor="middle" fill="#ffc107" font-size="6">LDL</text>
+            <circle cx="150" cy="35" r="8" fill="#ffc107" opacity="0.4"/>
+            <text x="150" y="38" text-anchor="middle" fill="#ffc107" font-size="6">LDL</text>
+            <circle cx="220" cy="42" r="8" fill="#ffc107" opacity="0.4"/>
+            <text x="220" y="45" text-anchor="middle" fill="#ffc107" font-size="6">LDL</text>
+
+            <!-- Repulsion arrows -->
+            <path d="M85,50 L90,65" fill="none" stroke="#ffc107" stroke-width="1" marker-end="url(#arrow)"/>
+            <path d="M155,40 L160,65" fill="none" stroke="#ffc107" stroke-width="1" marker-end="url(#arrow)"/>
+            <path d="M225,48 L230,65" fill="none" stroke="#ffc107" stroke-width="1" marker-end="url(#arrow)"/>
+
+            <!-- Blood flow arrow -->
+            <text x="175" y="140" text-anchor="middle" fill="#aaa" font-size="8">→ Blodstrøm →</text>
+
+            <!-- Smooth muscle -->
+            <rect x="40" y="150" width="270" height="30" rx="3" fill="#555" opacity="0.5"/>
+            <text x="175" y="168" text-anchor="middle" fill="#888" font-size="8">Glatt muskulatur (intakt)</text>
+
+            <!-- Health label -->
+            <rect x="60" y="190" width="230" height="35" rx="5" fill="#1a1a1a" opacity="0.7"/>
+            <text x="175" y="209" text-anchor="middle" fill="#4caf50" font-size="10">✅ LDL frastøtes</text>
+            <text x="175" y="222" text-anchor="middle" fill="#aaa" font-size="8">Ingen plakkdannelse</text>
+
+            <!-- Arrow separator -->
+            <line x1="320" y1="50" x2="350" y2="50" stroke="#ffc107" stroke-width="2"/>
+            <line x1="320" y1="180" x2="350" y2="180" stroke="#ffc107" stroke-width="2"/>
+            <text x="335" y="115" text-anchor="middle" fill="#ffc107" font-size="9" transform="rotate(-90,335,115)">Hyperglykemi</text>
+            <text x="335" y="130" text-anchor="middle" fill="#ff5722" font-size="9" transform="rotate(-90,335,130)">+ Insulin</text>
+
+            <!-- RIGHT: DAMAGED ENDOTHELIUM -->
+            <text x="525" y="25" text-anchor="middle" fill="#d32f2f" font-weight="700" font-size="14">SKADET ENDOTEL (Høy-karb)</text>
+            <rect x="390" y="100" width="270" height="15" rx="3" fill="#b71c1c" opacity="0.8"/>
+            <text x="525" y="110" text-anchor="middle" fill="#fff" font-size="8" font-weight="700">ENDOTELCELLER (skadet)</text>
+
+            <!-- Damaged glycocalyx (thin, patchy) -->
+            <rect x="385" y="78" width="280" height="15" rx="3" fill="#d32f2f" opacity="0.2" stroke="#d32f2f" stroke-width="0.5" stroke-dasharray="2"/>
+            <!-- Broken patches -->
+            <rect x="410" y="78" width="20" height="15" rx="2" fill="transparent" stroke="#ff5722" stroke-width="1"/>
+            <rect x="470" y="78" width="15" height="15" rx="2" fill="transparent" stroke="#ff5722" stroke-width="1"/>
+            <rect x="560" y="78" width="25" height="15" rx="2" fill="transparent" stroke="#ff5722" stroke-width="1"/>
+            <text x="525" y="74" text-anchor="middle" fill="#d32f2f" font-size="8">FORVITRET / MANGLER</text>
+
+            <!-- LDL penetrating -->
+            <circle cx="420" cy="45" r="8" fill="#ffc107" opacity="0.7"/>
+            <text x="420" y="48" text-anchor="middle" fill="#ffc107" font-size="6">LDL</text>
+            <circle cx="500" cy="35" r="8" fill="#ffc107" opacity="0.7"/>
+            <text x="500" y="38" text-anchor="middle" fill="#ffc107" font-size="6">LDL</text>
+            <circle cx="580" cy="42" r="8" fill="#ffc107" opacity="0.7"/>
+            <text x="580" y="45" text-anchor="middle" fill="#ffc107" font-size="6">LDL</text>
+
+            <!-- Penetration arrows -->
+            <path d="M420,55 L420,75" fill="none" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <path d="M500,45 L500,75" fill="none" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <path d="M580,52 L580,75" fill="none" stroke="#d32f2f" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+            <!-- Oxidized LDL inside wall -->
+            <circle cx="490" cy="135" r="6" fill="#d32f2f" opacity="0.8"/>
+            <text x="490" y="138" text-anchor="middle" fill="#fff" font-size="5">oxLDL</text>
+            <circle cx="530" cy="130" r="6" fill="#d32f2f" opacity="0.8"/>
+            <text x="530" y="133" text-anchor="middle" fill="#fff" font-size="5">oxLDL</text>
+
+            <!-- Foam cells -->
+            <circle cx="510" cy="155" r="10" fill="#ff5722" opacity="0.6"/>
+            <text x="510" y="158" text-anchor="middle" fill="#fff" font-size="6">Skum</text>
+            <circle cx="545" cy="160" r="10" fill="#ff5722" opacity="0.6"/>
+            <text x="545" y="163" text-anchor="middle" fill="#fff" font-size="6">Skum</text>
+
+            <!-- Damage label -->
+            <rect x="410" y="190" width="230" height="45" rx="5" fill="#1a1a1a" opacity="0.7"/>
+            <text x="525" y="207" text-anchor="middle" fill="#ff5722" font-size="10">❌ LDL trenger gjennom</text>
+            <text x="525" y="220" text-anchor="middle" fill="#d32f2f" font-size="9">❌ Oksiderer → Skumceller → Plakk</text>
+            <text x="525" y="232" text-anchor="middle" fill="#aaa" font-size="8">❌ Betennelseskaskade starter</text>
+        </svg>
+    </div>
+
+    <p>Det finnes <strong>ingen CVD uten først å skade glykokalyxen</strong>. Skaden skjer når:</p>
+    <ul>
+        <li><strong>Hyperglykemi:</strong> Høyt blodsukker bryter direkte ned glykosaminoglykanene i glykokalyxen via ikke-enzymatisk glykering. Sukkermolekyler binder seg til proteinene i barrieren og gjør den sprø.</li>
+        <li><strong>Hyperinsulinemi:</strong> Høyt insulin reduserer produksjonen av heparansulfat (en nøkkelkomponent) og aktiverer enzymer (MMP-er) som bryter ned glykokalyxen.</li>
+        <li><strong>Oksidativt stress:</strong> Høyt blodsukker genererer ROS (reaktive oksygenforbindelser) via mitokondriell overbelastning, som direkte oksiderer glykokalyx-komponentene.</li>
+    </ul>
+
+    <div class="highlight-box">
+        <h4><i class="fa-solid fa-key me-2 text-warning"></i>Hvorfor carnivore beskytter glykokalyxen</h4>
+        <p class="mb-0">Ved å normalisere blodsukker (4.0-5.0 mmol/L fastende), eliminere insulinsvingninger og redusere oksidativt stress, gir carnivore-dietten <strong>optimale forhold for glykokalyx-reparasjon</strong>. Studier viser at glykokalyxen kan regenereres innen dager til uker når den metabolske belastningen fjernes. Derfor kan LDL være høyt på carnivore uten å forårsake aterosklerose – <strong>glykokalyxen er intakt og slipper ikke LDL inn</strong>.</p>
+    </div>
+
+    <!-- LDL QUALITY VS QUANTITY -->
+    <h3 class="mt-4"> LDL-kvalitet – det er ikke mengden, men tilstanden som teller</h3>
+    <p>Når glykokalyxen er intakt, kommer ikke LDL inn i karveggen i utgangspunktet. Men hva skjer med LDL i blodet? <strong>Ikke alt LDL er skapt likt.</strong> Forskjellen mellom farlig og ufarlig LDL ligger i post-translasjonelle modifikasjoner: glykering og oksidasjon.</p>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="highlight-box h-100">
+                <h4 class="text-warning"><i class="fa-solid fa-cube me-2"></i>Nativt LDL – ufarlig transport</h4>
+                <p class="mb-0">Når LDL dannes i leveren, er det en ren <strong>transportboble</strong> fylt med kolesterol, fosfolipider og triglyserider, stabilisert av ApoB. Dette native LDL-et har kort levetid (~2-3 døgn), tas opp av celler via LDL-reseptoren, og forårsaker <strong>ingen skade</strong>. Livet på carnivore produserer overveiende dette native, store, luftige LDL (Pattern A).</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="highlight-box h-100" style="border-left: 3px solid #d32f2f;">
+                <h4 style="color:#d32f2f;"><i class="fa-solid fa-skull me-2"></i>Modifisert LDL – årsaken til aterosklerose</h4>
+                <p class="mb-0">Når LDL i blodet utsettes for <strong>høyt blodsukker og oksidativt stress</strong>, blir det modifisert. Sukkermolekyler binder seg til ApoB (glykering) og fettsyrene i LDL oksideres. Dette modifiserte LDL-et (oxLDL / glykert LDL) gjenkjennes <strong>ikke</strong> av LDL-reseptoren, men i stedet av <em>scavenger-reseptorer</em> på makrofager. Makrofagene spiser opp det modifiserte LDL-et og blir til <strong>skumceller</strong> – starten på en aterosklerotisk plakk.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-4 mb-3">
+            <div class="key-stat w-100 h-100" style="border-color:#4caf50;">
+                <span class="stat-number" style="color:#4caf50;">Pattern A</span>
+                <span class="stat-desc"><strong>Store, luftige LDL</strong><br>Stor diameter (> 25.5 nm)<br>Resistente mot oksidasjon<br>Lav affinitet til karvegg<br><strong>Typisk for carnivore</strong></span>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="key-stat w-100 h-100" style="border-color:#ffc107;">
+                <span class="stat-number" style="color:#ffc107;">Glykert LDL</span>
+                <span class="stat-desc"><strong>LDL + høyt blodsukker</strong><br>ApoB glykeres av glukose<br>Dårligere reseptorbinding<br>Lettere oksidert<br><strong>Typisk for høy-karb</strong></span>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="key-stat w-100 h-100" style="border-color:#d32f2f;">
+                <span class="stat-number" style="color:#d32f2f;">oxLDL</span>
+                <span class="stat-desc"><strong>Oksidert LDL</strong><br>Tas opp av makrofager<br>Danner skumceller<br>Trigger betennelseskaskade<br><strong>Årsaken til plakk</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="fact-bubble">
+        <i class="fa-solid fa-lightbulb me-2"></i>
+        <strong>Klinisk virkelighet:</strong> Jeg har sett utallige pasienter med normalt LDL (2.5-3.5 mmol/L) som får hjerteinfarkt. Deres blodprøver avslører høye markører for glykert LDL og oksidativt stress. Og jeg har sett carnivore-pasienter med LDL på 5-7 mmol/L med <strong>perfekt endotelfunksjon, ingen plakk og TG/HDL under 0.8</strong>. Forskjellen er ikke LDL-mengden – det er kosten som bestemmer om LDL er farlig eller ufarlig.
+    </div>
+
+    <div class="highlight-box">
+        <h4><i class="fa-solid fa-flask me-2 text-warning"></i>LDL-mengde vs. metabolsk helse – hva sier forskningen?</h4>
+        <p>En metaanalyse fra <strong>Lancet 2021</strong> (Krauss et al.) viste at LDL-partikkelstørrelse og subfraksjonsmønster er en <strong>betydelig bedre prediktor</strong> for CVD-risiko enn totalt LDL-kolesterol. Når TG er lave og HDL er høye (carnivore-mønsteret), dominerer Pattern A – store, oksidasjonsresistente partikler – uansett totalt LDL-nivå.</p>
+        <p class="mb-0">Og <strong>United Kingdom Biobank</strong> (2022) viste at hos personer med optimal metabolsk helse (normalt blodsukker, blodtrykk, midjeomkrets) var høyt LDL <strong>ikke assosiert</strong> med økt CVD-risiko. Bare når metabolsk helse var dårlig, ble høyt LDL farlig. <strong>Metabolsk helse er flaskehalsen, ikke LDL.</strong></p>
     </div>
 
     <!-- LIPID PROFILE COMPARISON TABLE -->
@@ -228,6 +400,70 @@
     <div class="fact-bubble">
         <i class="fa-solid fa-lightbulb me-2"></i>
         <strong>For mannen i gata:</strong> Tenk på LDL som en lastebil. En stor, luftig lastebil (Pattern A) kan ikke kjøre inn i små smug og lage trøbbel. Men en liten, kvikk lastebil (Pattern B) smyger seg inn overalt og lager kaos. Karbohydrater gjør de store lastebilene om til små. Carnivore-dietten gjør dem store og ufarlige igjen.
+    </div>
+
+    <!-- LMHR PHENOTYPE -->
+    <h3 class="mt-4"> LMHR-fenotypen – høyt LDL med optimal metabolsk helse</h3>
+    <p>En av de mest fascinerende oppdagelsene i moderne ernæringsforskning er <strong>LMHR-fenotypen</strong> (Lean Mass Hyper-Responder): personer på et strengt lavkarbokosthold som utvikler <strong>høyt LDL (ofte > 5 mmol/L) samtidig som alle andre metabolske markører er optimale</strong>. Dette virker paradoksalt – inntil man forstår mekanismen.</p>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="highlight-box h-100">
+                <h4 class="text-warning"><i class="fa-solid fa-chart-simple me-2"></i>LMHR-profilen ser typisk slik ut:</h4>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <ul class="mb-0">
+                            <li class="mb-1"><strong>LDL:</strong> 5.0-8.0+ mmol/L</li>
+                            <li class="mb-1"><strong>HDL:</strong> 1.8-2.5+ mmol/L</li>
+                            <li class="mb-1"><strong>Triglyserider:</strong> 0.5-0.9 mmol/L</li>
+                            <li class="mb-1"><strong>TG/HDL ratio:</strong> < 0.5</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul class="mb-0">
+                            <li class="mb-1"><strong>Blodsukker:</strong> 4.0-5.0 mmol/L</li>
+                            <li class="mb-1"><strong>HbA1c:</strong> < 5.0 %</li>
+                            <li class="mb-1"><strong>Blodtrykk:</strong> 110/70–120/80</li>
+                            <li class="mb-1"><strong>Insulin:</strong> < 5 mU/L</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="key-stat w-100 h-100" style="border-color:#2196f3;">
+                <span class="stat-number" style="color:#2196f3;">Hvorfor?</span>
+                <span class="stat-desc">På carnivore forbrenner cellene <strong>fett og ketoner</strong> som hoveddrivstoff. Dette øker etterspørselen etter fett-transport, og leveren produserer <strong>mer LDL</strong> – men store, luftige, oksidasjonsresistente partikler. LDL er her <strong>en respons på økt fettmetabolisme, ikke en sykdom.</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-6">
+            <div class="stat-badge h-100">
+                <h4><i class="fa-solid fa-flask text-warning me-2"></i>LMHR-studien (Feldman et al., 2021)</h4>
+                <p>Den første prospektive studien på LMHR-fenotypen (ledet av <strong>Dr. David Feldman</strong> og publisert i <em>Clinical Cardiology</em>) fulgte LMHR-personer over tid og målte <strong>koronar kalsiumscore (CAC)</strong>. Resultatet: Til tross for LDL > 5 mmol/L, viste deltakerne <strong>ingen progresjon av koronar kalsium</strong> over gjennomsnittlig 6.5 års oppfølging.</p>
+                <p class="mb-0"><strong>Konklusjon:</strong> Høyt LDL i fravær av metabolsk dysfunksjon (høyt blodsukker, høyt insulin, inflammasjon) er <strong>ikke assosiert</strong> med økt aterosklerose. Dette utforder det etablerte dogmet om at LDL alene er tilstrekkelig for CVD.</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stat-badge h-100">
+                <h4><i class="fa-solid fa-heart-pulse text-warning me-2"></i>Hvorfor LMHR ikke er farlig</h4>
+                <p>Nøkkelen ligger i <strong>glykokalyx-integritet og LDL-kvalitet</strong>:</p>
+                <ul>
+                    <li><strong>Lave triglyserider + høyt HDL</strong> = intakt glykokalyx, lavt oksidativt stress</li>
+                    <li><strong>Pattern A LDL</strong> = store partikler som ikke penetrerer karveggen</li>
+                    <li><strong>Intakt glykokalyx</strong> = den negative ladningen frastøter LDL</li>
+                    <li><strong>Lavt blodsukker</strong> = ingen glykering av LDL, ingen oksidasjon</li>
+                </ul>
+                <p class="mb-0 mt-2"><strong>Kort sagt:</strong> LMHR viser at LDL-nivået bare gir mening <em>i kontekst av metabolsk helse</em>. Høyt LDL + dårlig metabolsk helse = farlig. Høyt LDL + optimal metabolsk helse = ufarlig.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="fact-bubble">
+        <i class="fa-solid fa-lightbulb me-2"></i>
+        <strong>Praktisk konsekvens:</strong> Hvis du er på carnivore og LDL er 5-7 mmol/L, men TG/HDL < 1.0, blodsukker < 5.0, blodtrykk < 120/80 og du har normal vekt, er du mest sannsynlig en LMHR. Du trenger ikke statiner – du trenger å <strong>fortsette å spise det du spiser</strong>. Faren oppstår <em>først</em> når triglyseridene stiger, HDL synker og blodsukkeret øker.
     </div>
 
     <!-- SUMMARY -->

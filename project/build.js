@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SECTION_ORDER = ['evolusjon', 'anatomi', 'ernaring', 'sykdom', 'debunking', 'lipider', 'konklusjon'];
+const SECTION_ORDER = ['evolusjon', 'anatomi', 'predator-vision', 'ernaring', 'sykdom', 'debunking', 'lipider', 'konklusjon'];
 const SECTIONS_DIR = path.join(__dirname, 'sections');
 const INDEX_FILE = path.join(__dirname, 'index.html');
 
