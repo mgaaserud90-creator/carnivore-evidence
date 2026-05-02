@@ -22,6 +22,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: project
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,7 +36,6 @@ jobs:
 
       - name: Build section templates
         run: node build.js
-        working-directory: Carnivore/project
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -41,7 +43,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: Carnivore/project
+          path: project
 
       - name: Deploy to GitHub Pages
         id: deployment
