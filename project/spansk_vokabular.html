@@ -1,0 +1,3742 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spansk Vokabular – Selvtesting</title>
+<style>
+:root {
+  --bg: #f5f0eb; --fg: #2c2416; --card: #fff; --card2: #faf7f3;
+  --accent: #c75b39; --accent2: #2a7f62; --accent3: #d4a017;
+  --border: #e0d5c5; --shadow: 0 2px 12px rgba(0,0,0,.06);
+  --radius: 14px; --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --correct: #2a7f62; --wrong: #c75b39; --partial: #d4a017;
+  --prog-bg: #e8e0d5;
+}
+.dark {
+  --bg: #1a1815; --fg: #e8e0d5; --card: #252220; --card2: #2a2725;
+  --border: #3a3530; --shadow: 0 2px 12px rgba(0,0,0,.3);
+  --prog-bg: #3a3530;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--bg); color: var(--fg); min-height: 100vh; line-height: 1.5; }
+.app { max-width: 800px; margin: 0 auto; padding: 16px; }
+header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 16px 0; border-bottom: 2px solid var(--border); margin-bottom: 8px; }
+header h1 { font-size: 1.4rem; color: var(--accent); }
+.header-actions { display: flex; gap: 8px; align-items: center; }
+.icon-btn { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 1rem; color: var(--fg); transition: all .15s; }
+.icon-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.icon-btn.active { background: var(--accent2); color: #fff; border-color: var(--accent2); }
+nav { display: flex; gap: 4px; margin: 12px 0; flex-wrap: wrap; }
+nav button { flex: 1; min-width: 80px; padding: 10px 8px; border: 2px solid var(--border); border-radius: 10px; background: var(--card); color: var(--fg); cursor: pointer; font-weight: 600; font-size: .85rem; transition: all .15s; }
+nav button:hover { border-color: var(--accent); }
+nav button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.tab { display: none; animation: fadeIn .25s ease; }
+.tab.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.card { background: var(--card); border-radius: var(--radius); padding: 24px; margin: 16px 0; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.card h3 { margin-bottom: 12px; color: var(--accent); font-size: 1.05rem; }
+
+/* Quiz */
+.quiz-word { font-size: 3rem; text-align: center; font-weight: 700; padding: 32px 16px; color: var(--accent); letter-spacing: 1px; }
+.quiz-controls { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 16px 0; }
+.quiz-controls button { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: .95rem; transition: all .15s; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { opacity: .85; }
+.btn-outline { background: transparent; border: 2px solid var(--border) !important; color: var(--fg); }
+.btn-outline:hover { border-color: var(--accent) !important; }
+.quiz-input { width: 100%; padding: 14px; border-radius: 10px; border: 2px solid var(--border); font-size: 1.1rem; background: var(--card2); color: var(--fg); text-align: center; margin: 8px 0; }
+.quiz-input:focus { outline: none; border-color: var(--accent); }
+.answer-reveal { font-size: 1.3rem; text-align: center; padding: 12px; color: var(--accent2); font-weight: 600; min-height: 48px; }
+.feedback-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+.feedback-btns button { flex: 1; min-width: 100px; padding: 12px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: .9rem; transition: all .15s; }
+.btn-correct { background: var(--correct); color: #fff; }
+.btn-partial { background: var(--partial); color: #fff; }
+.btn-wrong { background: var(--wrong); color: #fff; }
+.btn-correct:hover, .btn-partial:hover, .btn-wrong:hover { opacity: .85; }
+.example-sentence { font-style: italic; text-align: center; color: var(--fg); opacity: .7; margin-top: 8px; font-size: .9rem; }
+.ai-sentence { text-align: center; margin-top: 8px; padding: 10px 14px; background: var(--card2); border-radius: 8px; font-size: .9rem; border: 1px dashed var(--border); }
+.ai-sentence .es { color: var(--accent); font-style: italic; }
+.ai-sentence .no { color: var(--fg); opacity: .8; }
+.ai-sentence .loading { opacity: .5; }
+
+/* Progress bar */
+.progress-bar { height: 6px; background: var(--prog-bg); border-radius: 3px; margin: 8px 0; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent2); border-radius: 3px; transition: width .4s ease; }
+
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.stat-box { background: var(--card2); border-radius: 10px; padding: 16px; text-align: center; border: 1px solid var(--border); }
+.stat-box .num { font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+.stat-box .lbl { font-size: .8rem; color: var(--fg); opacity: .7; margin-top: 4px; }
+
+/* Wordlist */
+.search-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.search-bar input, .search-bar select { padding: 10px 14px; border-radius: 8px; border: 2px solid var(--border); font-size: .9rem; background: var(--card2); color: var(--fg); }
+.search-bar input { flex: 1; min-width: 180px; }
+.word-table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.word-table th, .word-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); }
+.word-table th { color: var(--accent); font-weight: 700; position: sticky; top: 0; background: var(--card); }
+.word-table tr:hover { background: var(--card2); }
+.word-table .rank { color: var(--accent); font-weight: 600; width: 50px; }
+.word-table .sp { font-weight: 600; }
+.word-table .speak-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 2px 6px; border-radius: 6px; }
+.word-table .speak-btn:hover { background: var(--border); }
+.word-table .level-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+.lvl-1 { background: #c75b39; } .lvl-2 { background: #d4a017; } .lvl-3 { background: #2a7f62; } .lvl-4 { background: #3a7bd5; } .lvl-5 { background: #8b5cf6; } .lvl-ai { background: #6c5ce7; }
+
+/* SRS */
+.srs-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.srs-item .word { font-size: 1.1rem; font-weight: 600; color: var(--accent); min-width: 120px; }
+.srs-item .due { font-size: .8rem; color: var(--fg); opacity: .6; }
+.srs-item .actions { margin-left: auto; display: flex; gap: 6px; }
+
+/* Toggle switch */
+.toggle-lbl { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: .85rem; }
+.toggle { width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; cursor: pointer; transition: background .2s; }
+.toggle.on { background: var(--accent2); }
+.toggle::after { content: ''; width: 20px; height: 20px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: left .2s; }
+.toggle.on::after { left: 22px; }
+
+/* Daily goal */
+.goal-bar { height: 10px; background: var(--prog-bg); border-radius: 5px; margin: 8px 0; overflow: hidden; }
+.goal-fill { height: 100%; background: var(--accent3); border-radius: 5px; transition: width .4s; }
+
+/* SRS badges */
+.badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: .75rem; font-weight: 600; }
+.badge-due { background: #c75b39; color: #fff; }
+.badge-ok { background: #2a7f62; color: #fff; }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent2); color: #fff; padding: 10px 24px; border-radius: 20px; font-weight: 600; z-index: 999; animation: toastIn .3s ease, toastOut .3s ease 1.5s forwards; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* Keyboard hint */
+.kbd-hint { text-align: center; font-size: .75rem; opacity: .5; margin-top: 12px; }
+.kbd { display: inline-block; background: var(--card2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: .75rem; }
+
+/* AI Tab */
+.ai-input-area { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.ai-input-area textarea { flex: 1; min-width: 250px; padding: 12px; border-radius: 10px; border: 2px solid var(--border); font-size: .95rem; background: var(--card2); color: var(--fg); resize: vertical; min-height: 60px; font-family: var(--font); }
+.ai-input-area textarea:focus { outline: none; border-color: var(--accent); }
+.ai-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn-ai { padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: .95rem; transition: all .15s; background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff; }
+.btn-ai:hover { opacity: .85; transform: translateY(-1px); }
+.btn-ai:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.ai-word-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 8px; }
+.ai-word-card { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; transition: all .2s; }
+.ai-word-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.ai-word-card .word-es { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+.ai-word-card .word-no { font-size: .9rem; opacity: .8; }
+.ai-word-card .word-ex { font-size: .8rem; font-style: italic; opacity: .6; margin-top: 4px; padding: 6px 8px; background: var(--bg); border-radius: 6px; }
+.ai-word-card .card-actions { display: flex; gap: 6px; margin-top: auto; padding-top: 6px; }
+.ai-word-card .btn-accept, .ai-word-card .btn-reject { flex: 1; padding: 8px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: .8rem; transition: all .15s; }
+.btn-accept { background: var(--correct); color: #fff; }
+.btn-accept:hover { opacity: .85; }
+.btn-reject { background: var(--wrong); color: #fff; }
+.btn-reject:hover { opacity: .85; }
+.ai-word-card.accepted { border-color: var(--correct); background: #e8f5e9; }
+.dark .ai-word-card.accepted { background: #1a2e1a; }
+.ai-word-card.rejected { border-color: var(--wrong); opacity: .5; }
+.ai-loading { text-align: center; padding: 32px; }
+.ai-loading .spinner { display: inline-block; width: 40px; height: 40px; border: 4px solid var(--border); border-top: 4px solid var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ai-loading p { margin-top: 12px; opacity: .7; }
+.ai-custom-bank { margin-top: 16px; }
+.ai-custom-bank h3 { margin-bottom: 8px; }
+.export-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.export-btns button { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--fg); cursor: pointer; font-size: .85rem; font-weight: 600; }
+.export-btns button:hover { border-color: var(--accent); }
+.ai-sentence .sentence-es { color: var(--accent); font-weight: 600; }
+.ai-sentence .sentence-no { opacity: .7; font-size: .9rem; }
+.ai-sentence .loading { opacity: .5; font-style: italic; }
+
+@media (max-width: 600px) {
+  .quiz-word { font-size: 2rem; padding: 20px 8px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  nav button { font-size: .78rem; padding: 8px 4px; }
+  .word-table { font-size: .78rem; }
+  .ai-word-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🇪🇸 Spansk Vokabular</h1>
+    <div class="header-actions">
+      <span style="font-size:.85rem;opacity:.7">Mål: <strong id="goal-indicator">0/20</strong></span>
+      <button class="icon-btn" id="darkToggle" title="Nattmodus">🌙</button>
+      <button class="icon-btn" id="autoSpeakToggle" title="Automatisk opplesning">🔊</button>
+    </div>
+  </header>
+  <nav>
+    <button class="active" data-tab="quiz">📝 Quiz</button>
+    <button data-tab="srs">🔄 Repetisjon <span id="srs-badge" style="font-size:.7rem;background:var(--wrong);color:#fff;padding:2px 6px;border-radius:8px;display:none;"></span></button>
+    <button data-tab="wordlist">📚 Ordliste</button>
+    <button data-tab="ai">🤖 AI Generer</button>
+    <button data-tab="stats">📊 Statistikk</button>
+  </nav>
+
+  <!-- QUIZ TAB -->
+  <div class="tab active" id="tab-quiz">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div><strong>Nivå:</strong> <select id="quiz-level" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--fg)">
+          <option value="0">Alle nivå</option><option value="1">Nivå 1 (1–1000)</option><option value="2">Nivå 2 (1001–2000)</option><option value="3">Nivå 3 (2001–3000)</option><option value="4">Nivå 4 (3001–4000)</option><option value="5">Nivå 5 (4001–5000)</option>
+        </select></div>
+        <div><strong>Prioriter:</strong> <select id="quiz-priority" style="padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--fg)">
+          <option value="smart">Smart (svake + nye)</option><option value="weak">Bare svake ord</option><option value="new">Bare nye ord</option><option value="random">Tilfeldig</option>
+        </select></div>
+      </div>
+    </div>
+    <div class="card" id="quiz-card">
+      <div class="quiz-word" id="quiz-word">Klar?</div>
+      <div style="text-align:center">
+        <button class="icon-btn" id="speak-current" title="Lytt" style="font-size:1.4rem;padding:10px 16px">🔊</button>
+      </div>
+      <input type="text" class="quiz-input" id="quiz-answer" placeholder="Skriv norsk oversettelse (valgfritt)..." autocomplete="off">
+      <div class="quiz-controls">
+        <button class="btn-primary" id="btn-reveal">Vis svar (Enter / →)</button>
+        <button class="btn-outline" id="btn-skip">Hopp over (←)</button>
+      </div>
+      <div class="answer-reveal" id="answer-reveal"></div>
+      <div class="example-sentence" id="example-sentence"></div>
+      <div class="ai-sentence" id="ai-sentence" style="display:none"></div>
+      <div class="feedback-btns" id="feedback-btns" style="display:none">
+        <button class="btn-wrong" data-fb="0">❌ Kunne ikke (3)</button>
+        <button class="btn-partial" data-fb="1">🤔 Delvis (2)</button>
+        <button class="btn-correct" data-fb="2">✅ Kunne det (1 / Enter)</button>
+      </div>
+      <div class="kbd-hint">
+        <span class="kbd">Enter</span> avslør → bekreft korrekt · 
+        <span class="kbd">1</span><span class="kbd">2</span><span class="kbd">3</span> velg status · 
+        <span class="kbd">←</span> hopp over · 
+        <span class="kbd">Mellomrom</span> lytt
+      </div>
+    </div>
+  </div>
+
+  <!-- SRS TAB -->
+  <div class="tab" id="tab-srs">
+    <div class="card">
+      <h3>🔄 Spaced Repetition</h3>
+      <p style="opacity:.7;margin-bottom:8px">Ord du har slitt med vises her for repetisjon med økende intervaller.</p>
+      <div id="srs-stats" style="margin-bottom:12px"></div>
+      <div id="srs-list"></div>
+    </div>
+  </div>
+
+  <!-- WORDLIST TAB -->
+  <div class="tab" id="tab-wordlist">
+    <div class="card">
+      <div class="search-bar">
+        <input type="text" id="wl-search" placeholder="Søk spansk eller norsk...">
+        <select id="wl-level"><option value="0">Alle nivå</option><option value="1">Nivå 1</option><option value="2">Nivå 2</option><option value="3">Nivå 3</option><option value="4">Nivå 4</option><option value="5">Nivå 5</option></select>
+        <select id="wl-status"><option value="all">Alle</option><option value="learned">Lært</option><option value="weak">Svake</option><option value="unseen">Ikke sett</option></select>
+      </div>
+      <div style="max-height:60vh;overflow-y:auto">
+        <table class="word-table">
+          <thead><tr><th>#</th><th>Spansk</th><th>Norsk</th><th></th><th>Status</th></tr></thead>
+          <tbody id="wl-body"></tbody>
+        </table>
+      </div>
+      <div id="wl-count" style="margin-top:8px;opacity:.7;font-size:.85rem"></div>
+    </div>
+  </div>
+
+  <!-- AI GENERATE TAB -->
+  <div class="tab" id="tab-ai">
+    <div class="card">
+      <h3>🤖 AI Ordgenerator (DeepSeek)</h3>
+      <p style="opacity:.7;margin-bottom:8px">Beskriv et tema på norsk, så genererer DeepSeek AI 20 spanske ord med setninger. Ord du aksepterer legges til i din personlige ordbank for quiz og repetisjon.</p>
+      <div class="ai-input-area">
+        <textarea id="ai-topic" placeholder="F.eks: mat og drikke på restaurant, været og årstider, familie og slekt, reise og transport, følelser og humør, jobbintervju, legebesøk, sport og trening..."></textarea>
+      </div>
+      <div class="ai-actions">
+        <button class="btn-ai" id="btn-generate">✨ Generer 20 ord</button>
+        <span style="font-size:.8rem;opacity:.5">API: DeepSeek Chat</span>
+      </div>
+      <div id="ai-loading" class="ai-loading" style="display:none">
+        <div class="spinner"></div>
+        <p>DeepSeek genererer ordliste... Dette tar noen sekunder.</p>
+      </div>
+      <div id="ai-results"></div>
+    </div>
+    <div class="card ai-custom-bank">
+      <h3>📦 Min AI-ordbank (<span id="ai-bank-count">0</span> ord)</h3>
+      <p style="opacity:.7;margin-bottom:8px">Ord du har akseptert fra AI-generatoren. Disse inngår i quiz og SRS-repetisjon.</p>
+      <div class="search-bar">
+        <input type="text" id="ai-bank-search" placeholder="Søk i AI-ordbanken...">
+      </div>
+      <div id="ai-bank-list" style="max-height:40vh;overflow-y:auto"></div>
+      <div class="export-btns">
+        <button id="btn-export-ai">📋 Kopier ordliste</button>
+        <button id="btn-clear-ai" style="border-color:var(--wrong);color:var(--wrong)">🗑️ Tøm AI-ordbank</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS TAB -->
+  <div class="tab" id="tab-stats">
+    <div class="stats-grid">
+      <div class="stat-box"><div class="num" id="st-total">0</div><div class="lbl">Ord testet</div></div>
+      <div class="stat-box"><div class="num" id="st-learned">0</div><div class="lbl">Ord lært</div></div>
+      <div class="stat-box"><div class="num" id="st-streak">0</div><div class="lbl">Dager på rad</div></div>
+      <div class="stat-box"><div class="num" id="st-accuracy">0%</div><div class="lbl">Treffsikkerhet</div></div>
+    </div>
+    <div class="card">
+      <h3>🎯 Daglig mål</h3>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+        <span>Mål (nye ord/dag):</span>
+        <input type="number" id="daily-goal-input" value="20" min="5" max="200" style="width:70px;padding:6px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--fg)">
+        <button class="icon-btn" id="save-goal">Lagre</button>
+      </div>
+      <div class="goal-bar"><div class="goal-fill" id="goal-fill" style="width:0%"></div></div>
+      <div style="font-size:.85rem;opacity:.7;margin-top:4px" id="goal-text">0 av 20 nye ord i dag</div>
+    </div>
+    <div class="card">
+      <h3>📈 Nivå-progresjon</h3>
+      <div id="level-progress"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== WORD DATABASE ====================
+// Compact format: [id, "spanish", "norwegian", frequency_rank, level, "example" (optional)]
+const WORDS = [];
+(function buildWordDB() {
+  // Level 1: 1-1000 (most frequent)
+  const l1 = [
+    [1,"el","den/det (m)",1,1,"El libro es interesante."],
+    [2,"de","av/fra",2,1,"El libro de Juan."],
+    [3,"que","som/at/hva",3,1,"Creo que sí."],
+    [4,"y","og",4,1,"Pan y agua."],
+    [5,"a","til/på/ved",5,1,"Voy a casa."],
+    [6,"en","i/på/om",6,1,"Vivo en Oslo."],
+    [7,"un","en/et (ubestemt)",7,1,"Un perro grande."],
+    [8,"ser","å være",8,1,"Quiero ser médico."],
+    [9,"se","seg/å bli",9,1,"No se ve bien."],
+    [10,"no","ikke/nei",10,1,"No lo sé."],
+    [11,"haber","å ha (hjelpeverb)",11,1,"He comido."],
+    [12,"por","for/av/gjennom",12,1,"Gracias por todo."],
+    [13,"con","med",13,1,"Voy con ella."],
+    [14,"su","hans/hennes/deres/sin",14,1,"Su casa es grande."],
+    [15,"para","for/for å/til",15,1,"Es para ti."],
+    [16,"como","som/hvordan/jeg spiser",16,1,"Como tú quieras."],
+    [17,"estar","å være/befinne seg",17,1,"Estoy cansado."],
+    [18,"tener","å ha",18,1,"Tengo dos hijos."],
+    [19,"le","ham/henne/dem (IO)",19,1,"Le di el libro."],
+    [20,"lo","det/ham (DO)",20,1,"No lo vi."],
+    [21,"todo","alt/alle/hel",21,1,"Todo está bien."],
+    [22,"pero","men",22,1,"Quiero, pero no puedo."],
+    [23,"más","mer/mer enn/flere",23,1,"Necesito más tiempo."],
+    [24,"hacer","å gjøre/lage",24,1,"¿Qué haces?"],
+    [25,"o","eller",25,1,"¿Café o té?"],
+    [26,"poder","å kunne/klare",26,1,"¿Puedes ayudarme?"],
+    [27,"decir","å si",27,1,"Eso no dice nada."],
+    [28,"este","denne/dette",28,1,"Este es mi amigo."],
+    [29,"ir","å gå/dra",29,1,"Voy al supermercado."],
+    [30,"otro","annen/andre",30,1,"¿Otro café?"],
+    [31,"ese","den/det der",31,1,"Ese coche es azul."],
+    [32,"la","den/det (f)",32,1,"La mesa es grande."],
+    [33,"si","hvis/ja/om",33,1,"Si quieres, ven."],
+    [34,"me","meg",34,1,"Me gusta el chocolate."],
+    [35,"ya","allerede/nå",35,1,"Ya terminé."],
+    [36,"ver","å se",36,1,"No puedo ver nada."],
+    [37,"porque","fordi",37,1,"Porque lo digo yo."],
+    [38,"dar","å gi",38,1,"Te doy las gracias."],
+    [39,"cuando","når",39,1,"Cuando llegues, avísame."],
+    [40,"él","han",40,1,"Él es mi hermano."],
+    [41,"muy","veldig/svært",41,1,"Muy bien, gracias."],
+    [42,"sin","uten",42,1,"Café sin azúcar."],
+    [43,"vez","gang",43,1,"Una vez más."],
+    [44,"mucho","mye/mange",44,1,"Mucho gusto."],
+    [45,"saber","å vite/kunne",45,1,"No sé qué hacer."],
+    [46,"qué","hva/hvilken",46,1,"¿Qué quieres?"],
+    [47,"sobre","om/på/over",47,1,"Háblame sobre ti."],
+    [48,"mi","min/mitt/mine",48,1,"Mi casa es pequeña."],
+    [49,"alguno","noen/en eller annen",49,1,"¿Algún problema?"],
+    [50,"mismo","samme/selv",50,1,"Lo mismo digo."],
+    [51,"yo","jeg",51,1,"Yo no fui."],
+    [52,"también","også",52,1,"Yo también quiero."],
+    [53,"hasta","til/opp til/enda",53,1,"Hasta luego."],
+    [54,"año","år",54,1,"Feliz año nuevo."],
+    [55,"dos","to",55,1,"Tengo dos gatos."],
+    [56,"querer","å ville/ønske/elske",56,1,"Te quiero."],
+    [57,"entre","mellom/blant",57,1,"Entre tú y yo."],
+    [58,"así","sånn/slik",58,1,"Así es la vida."],
+    [59,"primero","første",59,1,"Es la primera vez."],
+    [60,"desde","fra/siden",60,1,"Desde ayer."],
+    [61,"grande","stor",61,1,"Es una gran idea."],
+    [62,"eso","det der",62,1,"Eso no me gusta."],
+    [63,"ni","ikke engang/verken",63,1,"Ni yo lo sé."],
+    [64,"nos","oss",64,1,"Nos vemos mañana."],
+    [65,"llegar","å komme/ankomme",65,1,"¿Cuándo llegas?"],
+    [66,"pasar","å passere/skje",66,1,"¿Qué pasa?"],
+    [67,"tiempo","tid/vær",67,1,"No tengo tiempo."],
+    [68,"ella","hun",68,1,"Ella es mi amiga."],
+    [69,"sí","ja/jo",69,1,"¡Claro que sí!"],
+    [70,"día","dag",70,1,"Buenos días."],
+    [71,"uno","en",71,1,"Uno más, por favor."],
+    [72,"bien","bra/vel",72,1,"Está bien."],
+    [73,"poco","lite/litt/få",73,1,"Un poco de agua."],
+    [74,"deber","å måtte/burde/skylde",74,1,"Debes estudiar."],
+    [75,"entonces","da/så",75,1,"Entonces, ¿qué hacemos?"],
+    [76,"poner","å sette/legge",76,1,"Pon la mesa."],
+    [77,"cosa","ting/sak",77,1,"Cualquier cosa."],
+    [78,"tanto","så mye/så mange",78,1,"Tanto tiempo sin verte."],
+    [79,"hombre","mann/menneske",79,1,"El hombre aquel."],
+    [80,"parecer","å virke/synes",80,1,"Me parece bien."],
+    [81,"nuestro","vår/vårt/våre",81,1,"Nuestra casa."],
+    [82,"tan","så (foran adj.)",82,1,"Es tan bonito."],
+    [83,"donde","hvor/der",83,1,"¿Dónde vives?"],
+    [84,"ahora","nå",84,1,"Ahora mismo."],
+    [85,"parte","del",85,1,"Por una parte."],
+    [86,"después","etter/etterpå",86,1,"Después de comer."],
+    [87,"vida","liv",87,1,"Así es la vida."],
+    [88,"quedar","å bli igjen/gjenstå",88,1,"Quedan dos días."],
+    [89,"siempre","alltid",89,1,"Siempre te amaré."],
+    [90,"creer","å tro",90,1,"No te creo."],
+    [91,"hablar","å snakke",91,1,"Háblame de ti."],
+    [92,"llevar","å bære/ha med/ta",92,1,"Llevo dos años aquí."],
+    [93,"dejar","å forlate/slutte/la",93,1,"Déjame en paz."],
+    [94,"nada","ingenting/intet",94,1,"No pasa nada."],
+    [95,"cada","hver",95,1,"Cada día aprendo."],
+    [96,"seguir","å følge/fortsette",96,1,"Sigue recto."],
+    [97,"menos","mindre/unntatt",97,1,"Menos mal."],
+    [98,"nuevo","ny",98,1,"Algo nuevo."],
+    [99,"encontrar","å finne",99,1,"No lo encuentro."],
+    [100,"algo","noe",100,1,"Algo pasa aquí."],
+    [101,"casa","hus/hjem",101,1],
+    [102,"solo","bare/alene",102,1],
+    [103,"pues","vel/da/siden",103,1],
+    [104,"mundo","verden",104,1],
+    [105,"hijo","sønn/barn",105,1],
+    [106,"país","land",106,1],
+    [107,"tres","tre (tall)",107,1],
+    [108,"dios","gud",108,1],
+    [109,"cómo","hvordan",109,1],
+    [110,"gente","folk/mennesker",110,1],
+    [111,"ciudad","by",111,1],
+    [112,"historia","historic",112,1],
+    [113,"color","farge",113,1],
+    [114,"pensar","å tenke",114,1],
+    [115,"agua","vann",115,1],
+    [116,"trabajo","arbeid/jobb",116,1],
+    [117,"mujer","kvinne/kone",117,1],
+    [118,"lado","side",118,1],
+    [119,"venir","å komme",119,1],
+    [120,"problema","problem",120,1],
+    [121,"amigo","venn",121,1],
+    [122,"vivir","å leve/bo",122,1],
+    [123,"conocer","å kjenne/vite om",123,1],
+    [124,"fin","slutt/ende",124,1],
+    [125,"niño","barn/gutt",125,1],
+    [126,"mirar","å se på",126,1],
+    [127,"bueno","god/bra",127,1],
+    [128,"forma","form/måte",128,1],
+    [129,"casi","nesten",129,1],
+    [130,"noche","natt/kveld",130,1],
+    [131,"claro","klar/tydelig/lys",131,1],
+    [132,"ayuda","hjelp",132,1],
+    [133,"mujeres","kvinner",133,1],
+    [134,"luz","lys",134,1],
+    [135,"mano","hånd",135,1],
+    [136,"guerra","krig",136,1],
+    [137,"política","politikk",137,1],
+    [138,"tipo","type/slag",138,1],
+    [139,"puerta","dør",139,1],
+    [140,"amor","kjærlighet",140,1],
+    [141,"cambio","endring/veksel",141,1],
+    [142,"familia","familie",142,1],
+    [143,"sentir","å føle",143,1],
+    [144,"tierra","jord/land",144,1],
+    [145,"ninguno","ingen",145,1],
+    [146,"gobierno","regjering",146,1],
+    [147,"punto","punkt",147,1],
+    [148,"escribir","å skrive",148,1],
+    [149,"lugar","sted/plass",149,1],
+    [150,"cuenta","regning/konto",150,1],
+    [151,"grueso","tykk",151,1],
+    [152,"arte","kunst",152,1],
+    [153,"esperar","å vente/håpe",153,1],
+    [154,"tomar","å ta/drikke",154,1],
+    [155,"sistema","system",155,1],
+    [156,"blanco","hvit",156,1],
+    [157,"calle","gate",157,1],
+    [158,"presidente","president",158,1],
+    [159,"situación","situasjon",159,1],
+    [160,"padre","far",160,1],
+    [161,"trabajar","å jobbe",161,1],
+    [162,"caso","tilfelle/sak",162,1],
+    [163,"nombre","navn",163,1],
+    [164,"relación","forhold",164,1],
+    [165,"muerte","død",165,1],
+    [166,"fuerza","kraft/styrke",166,1],
+    [167,"luego","deretter/senere",167,1],
+    [168,"cine","kino/film",168,1],
+    [169,"salir","å gå ut/dra ut",169,1],
+    [170,"hecho","faktum/gjort",170,1],
+    [171,"música","musikk",171,1],
+    [172,"hora","time/klokkeslett",172,1],
+    [173,"persona","person",173,1],
+    [174,"mes","måned",174,1],
+    [175,"realidad","virkelighet",175,1],
+    [176,"información","informasjon",176,1],
+    [177,"total","total/hel",177,1],
+    [178,"aunque","selv om",178,1],
+    [179,"economía","økonomi",179,1],
+    [180,"verdad","sannhet/ikke sant",180,1],
+    [181,"comer","å spise",181,1],
+    [182,"pie","fot",182,1],
+    [183,"cuerpo","kropp",183,1],
+    [184,"juicio","dom/dømmekraft",184,1],
+    [185,"ojo","øye",185,1],
+    [186,"resultado","resultat",186,1],
+    [187,"sociedad","samfunn",187,1],
+    [188,"mejor","bedre/best",188,1],
+    [189,"importante","viktig",189,1],
+    [190,"derecho","rettighet/jus/høyre",190,1],
+    [191,"seguridad","sikkerhet",191,1],
+    [192,"campo","felt/landsbygd",192,1],
+    [193,"dinero","penger",193,1],
+    [194,"cierto","viss/sikker",194,1],
+    [195,"medio","middel/halv/miljø",195,1],
+    [196,"hoy","i dag",196,1],
+    [197,"ley","lov",197,1],
+    [198,"jefe","sjef",198,1],
+    [199,"perder","å miste/tape",199,1],
+    [200,"largo","lang",200,1],
+    [201,"segundo","andre (2.)",201,1],
+    [202,"estado","tilstand/stat",202,1],
+    [203,"libro","bok",203,1],
+    [204,"sino","men (etter nektelse)",204,1],
+    [205,"idea","idé",205,1],
+    [206,"señor","herr",206,1],
+    [207,"médico","lege/medisinsk",207,1],
+    [208,"recibir","å motta/få",208,1],
+    [209,"tampoco","heller ikke",209,1],
+    [210,"suerte","flaks/skjebne",210,1],
+    [211,"número","tall/antall",211,1],
+    [212,"sol","sol",212,1],
+    [213,"servicio","tjeneste/service",213,1],
+    [214,"aire","luft",214,1],
+    [215,"llamar","å kalle/ringe",215,1],
+    [216,"sangre","blod",216,1],
+    [217,"empresa","selskap/bedrift",217,1],
+    [218,"orden","orden/rekkefølge",218,1],
+    [219,"esposa","kone",219,1],
+    [220,"plan","plan",220,1],
+    [221,"colorado","rød/farget",221,1],
+    [222,"solar","solo-/sol-",222,1],
+    [223,"diferente","forskjellig",223,1],
+    [224,"paz","fred",224,1],
+    [225,"grupo","gruppe",225,1],
+    [226,"necesitar","å trenge",226,1],
+    [227,"edad","alder",227,1],
+    [228,"pregunta","spørsmål",228,1],
+    [229,"puerto","havn",229,1],
+    [230,"tema","tema/emne",230,1],
+    [231,"bajo","lav/under",231,1],
+    [232,"imagen","bilde/image",232,1],
+    [233,"clase","klasse/type",233,1],
+    [234,"mesa","bord",234,1],
+    [235,"interés","interesse",235,1],
+    [236,"proyecto","prosjekt",236,1],
+    [237,"existir","å eksistere/finnes",237,1],
+    [238,"papel","papir/rolle",238,1],
+    [239,"superior","øvre/overlegen",239,1],
+    [240,"juego","spill/lek",240,1],
+    [241,"responder","å svare",241,1],
+    [242,"estudio","studie",242,1],
+    [243,"general","generell",243,1],
+    [244,"propio","egen",244,1],
+    [245,"efecto","effekt/virkning",245,1],
+    [246,"camino","vei/sti",246,1],
+    [247,"programa","program",247,1],
+    [248,"comida","mat",248,1],
+    [249,"famoso","berømt",249,1],
+    [250,"novela","roman",250,1],
+    [251,"bolsa","pose/børs/veske",251,1],
+    [252,"adelante","forover/frem",252,1],
+    [253,"final","slutt/finale",253,1],
+    [254,"cabeza","hode",254,1],
+    [255,"popular","populær",255,1],
+    [256,"compañía","selskap/firma",256,1],
+    [257,"desarrollo","utvikling",257,1],
+    [258,"ventana","vindu",258,1],
+    [259,"real","virkelig/ekte",259,1],
+    [260,"grave","alvorlig",260,1],
+    [261,"futuro","fremtid",261,1],
+    [262,"igual","lik/samme",262,1],
+    [263,"respuesta","svar",263,1],
+    [264,"interior","indre/innvendig",264,1],
+    [265,"ejemplo","eksempel",265,1],
+    [266,"animal","dyr",266,1],
+    [267,"plaza","plass/torg",267,1],
+    [268,"esfuerzo","innsats",268,1],
+    [269,"escuela","skole",269,1],
+    [270,"sueño","drøm",270,1],
+    [271,"feliz","lykkelig/glad",271,1],
+    [272,"gracias","takk",272,1],
+    [273,"elemento","element",273,1],
+    [274,"pasado","fortid/forbi",274,1],
+    [275,"maestro","mester/lærer",275,1],
+    [276,"pese","til tross for",276,1],
+    [277,"recordar","å huske",277,1],
+    [278,"meses","måneder",278,1],
+    [279,"mañana","i morgen/morgen",279,1],
+    [280,"gobierna","styrer",280,1],
+    [281,"alrededor","rundt/omtrent",281,1],
+    [282,"posible","mulig",282,1],
+    [283,"izquierda","venstre",283,1],
+    [284,"resto","resten",284,1],
+    [285,"oportunidad","mulighet/sjanse",285,1],
+    [286,"lleno","full",286,1],
+    [287,"mercado","marked",287,1],
+    [288,"río","elv",288,1],
+    [289,"comenzar","å begynne",289,1],
+    [290,"natural","naturlig",290,1],
+    [291,"elección","valg",291,1],
+    [292,"cultura","kultur",292,1],
+    [293,"pesar","å veie/anger",293,1],
+    [294,"actividad","aktivitet",294,1],
+    [295,"modelo","modell",295,1],
+    [296,"corazón","hjerte",296,1],
+    [297,"momento","øyeblikk",297,1],
+    [298,"primer","første (fork.)",298,1],
+    [299,"fácil","lett/enkel",299,1],
+    [300,"suficiente","nok/tilstrekkelig",300,1],
+    [301,"televisión","fjernsyn",301,1],
+    [302,"estarás","du vil være",302,1],
+    [303,"conjunto","sett/samlet",303,1],
+    [304,"según","ifølge",304,1],
+    [305,"piedra","stein",305,1],
+    [306,"interesar","å interessere",306,1],
+    [307,"positivo","positiv",307,1],
+    [308,"obtener","å oppnå/få",308,1],
+    [309,"gustar","å like",309,1],
+    [310,"acción","handling",310,1],
+    [311,"nivel","nivå",311,1],
+    [312,"cambiar","å endre/bytte",312,1],
+    [313,"ayudar","å hjelpe",313,1],
+    [314,"explicar","å forklare",314,1],
+    [315,"línea","linje",315,1],
+    [316,"reconocer","å gjenkjenne",316,1],
+    [317,"apertura","åpning",317,1],
+    [318,"totalmente","fullstendig/helt",318,1],
+    [319,"cocina","kjøkken",319,1],
+    [320,"pagar","å betale",320,1],
+    [321,"mitad","halvpart",321,1],
+    [322,"prueba","prøve/test/bevis",322,1],
+    [323,"extraño","fremmed/rar",323,1],
+    [324,"simple","enkel/simpel",324,1],
+    [325,"riqueza","rikdom",325,1],
+    [326,"fuego","ild",326,1],
+    [327,"retirar","å trekke tilbake",327,1],
+    [328,"modalidad","modalitet",328,1],
+    [329,"materia","materiale/stoff",329,1],
+    [330,"moral","moral",330,1],
+    [331,"sexual","seksuell",331,1],
+    [332,"duda","tvil",332,1],
+    [333,"exterior","ytre/eksteriør",333,1],
+    [334,"esposo","ektemann",334,1],
+    [335,"técnica","teknikk",335,1],
+    [336,"enorme","enorm",336,1],
+    [337,"producir","å produsere",337,1],
+    [338,"fábrica","fabrikk",338,1],
+    [339,"atención","oppmerksomhet",339,1],
+    [340,"peligro","fare",340,1],
+    [341,"policía","politi",341,1],
+    [342,"restaurante","restaurant",342,1],
+    [343,"crisis","krise",343,1],
+    [344,"siquiera","i det minste/engang",344,1],
+    [345,"hospital","sykehus",345,1],
+    [346,"científico","vitenskapelig",346,1],
+    [347,"culpa","skyld",347,1],
+    [348,"superar","å overvinne",348,1],
+    [349,"eliminar","å eliminere/fjerne",349,1],
+    [350,"fiesta","fest",350,1],
+    [351,"construir","å bygge",351,1],
+    [352,"cargo","stilling/last/ansvar",352,1],
+    [353,"simpleza","enkelhet",353,1],
+    [354,"suelo","gulv/jord",354,1],
+    [355,"enseñar","å undervise/vise",355,1],
+    [356,"lunes","mandag",356,1],
+    [357,"carácter","karakter/personlighet",357,1],
+    [358,"negocio","forretning",358,1],
+    [359,"bastante","ganske/nok",359,1],
+    [360,"contra","mot",360,1],
+    [361,"coche","bil",361,1],
+    [362,"recuerdo","minne",362,1],
+    [363,"objetivo","mål/objektiv",363,1],
+    [364,"perro","hund",364,1],
+    [365,"voz","stemme",365,1],
+    [366,"rosa","rose/rosa",366,1],
+    [367,"dictadura","diktatur",367,1],
+    [368,"cineasta","filmskaper",368,1],
+    [369,"crecimiento","vekst",369,1],
+    [370,"extremo","ekstrem",370,1],
+    [371,"frase","setning/frase",371,1],
+    [372,"lengua","tunge/språk",372,1],
+    [373,"renovar","å fornye",373,1],
+    [374,"mar","hav",374,1],
+    [375,"carne","kjøtt",375,1],
+    [376,"sencillo","enkel",376,1],
+    [377,"defensa","forsvar",377,1],
+    [378,"tranquilo","rolig",378,1],
+    [379,"subir","å gå opp/stige",379,1],
+    [380,"aire","luft",380,1],
+    [381,"reunión","møte",381,1],
+    [382,"valor","verdi/mot",382,1],
+    [383,"común","felles/vanlig",383,1],
+    [384,"opinión","mening",384,1],
+    [385,"sueño","søvn/drøm",385,1],
+    [386,"actual","nåværende/aktuell",386,1],
+    [387,"espacio","rom/plass/verdensrom",387,1],
+    [388,"democracia","demokrati",388,1],
+    [389,"formar","å danne/forme",389,1],
+    [390,"movimiento","bevegelse",390,1],
+    [391,"avanzar","å avansere/gå frem",391,1],
+    [392,"chico","gutt/liten",392,1],
+    [393,"verano","sommer",393,1],
+    [394,"nota","notat/karakter",394,1],
+    [395,"conocido","kjent",395,1],
+    [396,"confianza","tillit",396,1],
+    [397,"mañana","morgendag",397,1],
+    [398,"estilo","stil",398,1],
+    [399,"pequeño","liten",399,1],
+    [400,"dedo","finger",400,1],
+    [401,"nacer","å bli født",401,1],
+    [402,"vuelta","omdreining/tilbakekomst",402,1],
+    [403,"oferta","tilbud",403,1],
+    [404,"preciso","presis/nøyaktig",404,1],
+    [405,"producto","produkt",405,1],
+    [406,"placer","nytelse/glede",406,1],
+    [407,"sino","skjebne (subst.)",407,1],
+    [408,"miedo","frykt/redsel",408,1],
+    [409,"obtener","å få/oppnå",409,1],
+    [410,"definitivamente","definitivt",410,1],
+    [411,"belleza","skjønnhet",411,1],
+    [412,"discurso","tale/diskurs",412,1],
+    [413,"ventaja","fordel",413,1],
+    [414,"cumplir","å oppfylle/fylle",414,1],
+    [415,"viaje","reise",415,1],
+    [416,"bolivar","bolívar (valuta)",416,1],
+    [417,"castellano","kastiljansk/spansk",417,1],
+    [418,"condición","betingelse/tilstand",418,1],
+    [419,"presencia","nærvær/tilstedeværelse",419,1],
+    [420,"carrera","karriere/løp",420,1],
+    [421,"riesgo","risiko",421,1],
+    [422,"sanidad","helsevesen",422,1],
+    [423,"estación","stasjon/årstid",423,1],
+    [424,"silencio","stillhet",424,1],
+    [425,"reciente","nylig",425,1],
+    [426,"secretario","sekretær",426,1],
+    [427,"normal","normal",427,1],
+    [428,"matrimonio","ekteskap",428,1],
+    [429,"sensación","følelse/sensasjon",429,1],
+    [430,"contar","å fortelle/telle",430,1],
+    [431,"vender","å selge",431,1],
+    [432,"alcalde","ordfører",432,1],
+    [433,"par","par/like",433,1],
+    [434,"verde","grønn",434,1],
+    [435,"aprender","å lære",435,1],
+    [436,"existencia","eksistens",436,1],
+    [437,"prensa","presse/aviser",437,1],
+    [438,"consecuencia","konsekvens",438,1],
+    [439,"mantener","å holde/opprettholde",439,1],
+    [440,"utilizar","å bruke",440,1],
+    [441,"dirigir","å lede/styre",441,1],
+    [442,"consejo","råd",442,1],
+    [443,"dirección","retning/adresse/ledelse",443,1],
+    [444,"personal","personlig/personale",444,1],
+    [445,"unidad","enhet",445,1],
+    [446,"estudiar","å studere",446,1],
+    [447,"plantear","å foreslå/legge frem",447,1],
+    [448,"película","film",448,1],
+    [449,"construcción","konstruksjon/bygging",449,1],
+    [450,"abordar","å ta opp/angripe",450,1],
+    [451,"peor","verre/verst",451,1],
+    [452,"sencillamente","enkelt og greit",452,1],
+    [453,"máximo","maksimal",453,1],
+    [454,"islámico","islamsk",454,1],
+    [455,"fecha","dato",455,1],
+    [456,"entender","å forstå",456,1],
+    [457,"millón","million",457,1],
+    [458,"base","base/grunnlag",458,1],
+    [459,"pasará","vil skje/passere",459,1],
+    [460,"aceptar","å akseptere",460,1],
+    [461,"alto","høy",461,1],
+    [462,"dolor","smerte",462,1],
+    [463,"oficial","offisiell",463,1],
+    [464,"religión","religion",464,1],
+    [465,"indígena","urfolk/innfødt",465,1],
+    [466,"diferencia","forskjell",466,1],
+    [467,"lograr","å oppnå/klare",467,1],
+    [468,"próximo","neste/nær",468,1],
+    [469,"entrada","inngang/oppføring",469,1],
+    [470,"canción","sang",470,1],
+    [471,"comunicación","kommunikasjon",471,1],
+    [472,"serie","serie/rekke",472,1],
+    [473,"contacto","kontakt",473,1],
+    [474,"azul","blå",474,1],
+    [475,"origen","opprinnelse",475,1],
+    [476,"ciudadano","borger",476,1],
+    [477,"antiguo","gammel/antikk",477,1],
+    [478,"anunciar","å kunngjøre",478,1],
+    [479,"cita","avtale/sitat",479,1],
+    [480,"propuesta","forslag",480,1],
+    [481,"fenómeno","fenomen",481,1],
+    [482,"fuera","ute/utenfor",482,1],
+    [483,"cualquier","hvilken som helst",483,1],
+    [484,"centro","sentrum/senter",484,1],
+    [485,"control","kontroll",485,1],
+    [486,"permitir","å tillate",486,1],
+    [487,"esperanza","håp",487,1],
+    [488,"voluntad","vilje",488,1],
+    [489,"habitación","rom (hus)",489,1],
+    [490,"responsable","ansvarlig",490,1],
+    [491,"fondo","bakgrunn/bunn/fond",491,1],
+    [492,"militar","militær",492,1],
+    [493,"labor","arbeid/innsats",493,1],
+    [494,"disposición","disposisjon/bestemmelse",494,1],
+    [495,"paso","skritt/passasje",495,1],
+    [496,"público","offentlig/publikum",496,1],
+    [497,"rojo","rød",497,1],
+    [498,"demostrar","å demonstrere/bevise",498,1],
+    [499,"detener","å stoppe",499,1],
+    [500,"capaz","i stand til",500,1],
+    [501,"cielo","himmel",501,1],
+    [502,"necesario","nødvendig",502,1],
+    [503,"abril","april",503,1],
+    [504,"concepto","konsept/begrep",504,1],
+    [505,"generar","å generere/skape",505,1],
+    [506,"enero","januar",506,1],
+    [507,"análisis","analyse",507,1],
+    [508,"campaña","kampanje",508,1],
+    [509,"libre","fri",509,1],
+    [510,"marco","ramme/rammeverk",510,1],
+    [511,"internet","internett",511,1],
+    [512,"auténtico","autentisk/ekte",512,1],
+    [513,"ministerio","departement/ministerium",513,1],
+    [514,"café","kaffe/kafé",514,1],
+    [515,"contenido","innhold",515,1],
+    [516,"idioma","språk",516,1],
+    [517,"tratar","å behandle/prøve",517,1],
+    [518,"resolver","å løse",518,1],
+    [519,"socialista","sosialistisk",519,1],
+    [520,"pasajero","passasjer",520,1],
+    [521,"conversación","samtale",521,1],
+    [522,"distinto","forskjellig/ulik",522,1],
+    [523,"propaganda","propaganda",523,1],
+    [524,"dueño","eier",524,1],
+    [525,"volver","å komme tilbake",525,1],
+    [526,"excelente","utmerket",526,1],
+    [527,"literatura","litteratur",527,1],
+    [528,"móvil","mobil",528,1],
+    [529,"envío","forsendelse",529,1],
+    [530,"participar","å delta",530,1],
+    [531,"mil","tusen",531,1],
+    [532,"personaje","figur/karakter",532,1],
+    [533,"triunfo","triumf/seier",533,1],
+    [534,"hielo","is",534,1],
+    [535,"escritor","forfatter",535,1],
+    [536,"industria","industri",536,1],
+    [537,"parque","park",537,1],
+    [538,"visita","besøk",538,1],
+    [539,"simplemente","rett og slett",539,1],
+    [540,"territorio","territorium",540,1],
+    [541,"fiesta","fest",541,1],
+    [542,"identidad","identitet",542,1],
+    [543,"suponer","å anta",543,1],
+    [544,"rosa","rosa (farge)",544,1],
+    [545,"vínculo","bånd/forbindelse",545,1],
+    [546,"diablo","djevel",546,1],
+    [547,"exposición","utstilling/eksponering",547,1],
+    [548,"retrato","portrett",548,1],
+    [549,"tecnología","teknologi",549,1],
+    [550,"tradición","tradisjon",550,1],
+    [551,"cambio","endring",551,1],
+    [552,"temporada","sesong",552,1],
+    [553,"altura","høyde",553,1],
+    [554,"ambiente","miljø/atmosfære",554,1],
+    [555,"inversión","investering",555,1],
+    [556,"cliente","kunde/klient",556,1],
+    [557,"alma","sjel",557,1],
+    [558,"descubrir","å oppdage",558,1],
+    [559,"empezar","å begynne",559,1],
+    [560,"capítulo","kapittel",560,1],
+    [561,"elección","valg",561,1],
+    [562,"pelo","hår",562,1],
+    [563,"justicia","rettferdighet",563,1],
+    [564,"contenedor","beholder",564,1],
+    [565,"texto","tekst",565,1],
+    [566,"obstáculo","hinder",566,1],
+    [567,"obligación","forpliktelse",567,1],
+    [568,"oro","gull",568,1],
+    [569,"novio","kjæreste/brudgom",569,1],
+    [570,"correr","å løpe",570,1],
+    [571,"periódico","avis",571,1],
+    [572,"ayer","i går",572,1],
+    [573,"arriba","opp/ovenpå",573,1],
+    [574,"sala","sal/stue",574,1],
+    [575,"secretaría","sekretariat",575,1],
+    [576,"príncipe","prins",576,1],
+    [577,"síntoma","symptom",577,1],
+    [578,"fútbol","fotball",578,1],
+    [579,"fumar","å røyke",579,1],
+    [580,"vino","vin/kom (pret. av venir)",580,1],
+    [581,"maravilla","vidunder/underverk",581,1],
+    [582,"pobre","fattig/stakkars",582,1],
+    [583,"visitar","å besøke",583,1],
+    [584,"mentira","løgn",584,1],
+    [585,"laboral","arbeids-",585,1],
+    [586,"comercio","handel",586,1],
+    [587,"cifra","tall/siffer",587,1],
+    [588,"dulce","søt",588,1],
+    [589,"argumento","argument",589,1],
+    [590,"motivo","grunn/motiv",590,1],
+    [591,"plata","sølv/penger",591,1],
+    [592,"asunto","sak/emne",592,1],
+    [593,"universidad","universitet",593,1],
+    [594,"personalidad","personlighet",594,1],
+    [595,"tendencia","tendens",595,1],
+    [596,"nocturna","nattlig",596,1],
+    [597,"octubre","oktober",597,1],
+    [598,"confirmar","å bekrefte",598,1],
+    [599,"abuelo","bestefar",599,1],
+    [600,"colocar","å plassere",600,1],
+    [601,"plantilla","mal/ansatte",601,1],
+    [602,"potencia","kraft/potens",602,1],
+    [603,"teatro","teater",603,1],
+    [604,"navidad","jul",604,1],
+    [605,"español","spansk/spanjol",605,1],
+    [606,"especie","art/slag",606,1],
+    [607,"aplicar","å anvende",607,1],
+    [608,"olvidar","å glemme",608,1],
+    [609,"crítica","kritikk",609,1],
+    [610,"visión","syn/visjon",610,1],
+    [611,"mal","dårlig/vondt/ond",611,1],
+    [612,"director","regissør/direktør",612,1],
+    [613,"sombra","skygge",613,1],
+    [614,"independiente","uavhengig",614,1],
+    [615,"absoluto","absolutt",615,1],
+    [616,"victoria","seier",616,1],
+    [617,"social","sosial",617,1],
+    [618,"educación","utdanning",618,1],
+    [619,"tras","etter/bak",619,1],
+    [620,"consciente","bevisst",620,1],
+    [621,"energía","energi",621,1],
+    [622,"brazo","arm",622,1],
+    [623,"personal","personale",623,1],
+    [624,"boda","bryllup",624,1],
+    [625,"conducir","å kjøre/lede",625,1],
+    [626,"investigación","forskning/etterforskning",626,1],
+    [627,"conflicto","konflikt",627,1],
+    [628,"pan","brød",628,1],
+    [629,"frente","panne/foran",629,1],
+    [630,"extraordinario","ekstraordinær",630,1],
+    [631,"racismo","rasisme",631,1],
+    [632,"frontera","grense",632,1],
+    [633,"sesión","sesjon/møte",633,1],
+    [634,"destacar","å fremheve",634,1],
+    [635,"registro","register/registrering",635,1],
+    [636,"pleno","full/plenum",636,1],
+    [637,"asco","avsky/ekkelhet",637,1],
+    [638,"especial","spesiell",638,1],
+    [639,"kilómetro","kilometer",639,1],
+    [640,"humano","menneskelig",640,1],
+    [641,"madre","mor",641,1],
+    [642,"error","feil",642,1],
+    [643,"exigir","å kreve",643,1],
+    [644,"oscuro","mørk",644,1],
+    [645,"comisión","kommisjon/provisjon",645,1],
+    [646,"solamente","bare/kun",646,1],
+    [647,"cantidad","mengde/antall",647,1],
+    [648,"dedicar","å dedikere/vie",648,1],
+    [649,"causa","årsak/sak",649,1],
+    [650,"periodo","periode",650,1],
+    [651,"sábado","lørdag",651,1],
+    [652,"referencia","referanse",652,1],
+    [653,"ropa","klær",653,1],
+    [654,"acuerdo","avtale/enighet",654,1],
+    [655,"vía","via/vei",655,1],
+    [656,"periodista","journalist",656,1],
+    [657,"pecho","bryst",657,1],
+    [658,"fundamental","grunnleggende",658,1],
+    [659,"debate","debatt",659,1],
+    [660,"actriz","skuespillerinne",660,1],
+    [661,"isla","øy",661,1],
+    [662,"gráfico","grafisk/grafikk",662,1],
+    [663,"documento","dokument",663,1],
+    [664,"gestión","forvaltning/ledelse",664,1],
+    [665,"expresión","uttrykk",665,1],
+    [666,"suceso","hendelse",666,1],
+    [667,"facultad","evne/fakultet",667,1],
+    [668,"diseño","design",668,1],
+    [669,"diciembre","desember",669,1],
+    [670,"búsqueda","søk/leting",670,1],
+    [671,"aplicación","applikasjon/anvendelse",671,1],
+    [672,"rechazar","å avvise",672,1],
+    [673,"escena","scene",673,1],
+    [674,"secretario","sekretær (m)",674,1],
+    [675,"revolución","revolusjon",675,1],
+    [676,"permanecer","å forbli",676,1],
+    [677,"tomate","tomat",677,1],
+    [678,"crítico","kritisk/kritiker",678,1],
+    [679,"entrevista","intervju",679,1],
+    [680,"julio","juli",680,1],
+    [681,"acceso","tilgang",681,1],
+    [682,"inmediato","umiddelbar",682,1],
+    [683,"pantalla","skjerm",683,1],
+    [684,"joven","ung/ungdom",684,1],
+    [685,"misa","messe (kirke)",685,1],
+    [686,"puro","ren",686,1],
+    [687,"título","tittel",687,1],
+    [688,"amenaza","trussel",688,1],
+    [689,"receta","oppskrift/resept",689,1],
+    [690,"disparar","å skyte",690,1],
+    [691,"impedir","å hindre",691,1],
+    [692,"cubrir","å dekke",692,1],
+    [693,"marzo","mars",693,1],
+    [694,"suegra","svigermor",694,1],
+    [695,"escuchar","å lytte",695,1],
+    [696,"eficacia","effektivitet",696,1],
+    [697,"quitar","å fjerne",697,1],
+    [698,"impuesto","skatt/avgift",698,1],
+    [699,"fuente","kilde/font",699,1],
+    [700,"destruir","å ødelegge",700,1],
+    [701,"religioso","religiøs",701,1],
+    [702,"proteger","å beskytte",702,1],
+    [703,"funcionar","å fungere",703,1],
+    [704,"pelear","å slåss",704,1],
+    [705,"rodilla","kne",705,1],
+    [706,"meter","å stikke/legge inn",706,1],
+    [707,"septiembre","september",707,1],
+    [708,"lenguaje","språk/språkbruk",708,1],
+    [709,"lector","leser",709,1],
+    [710,"desear","å ønske",710,1],
+    [711,"libertad","frihet",711,1],
+    [712,"compromiso","forpliktelse/kompromiss",712,1],
+    [713,"rápido","rask",713,1],
+    [714,"leche","melk",714,1],
+    [715,"negro","svart",715,1],
+    [716,"sustancia","stoff/substans",716,1],
+    [717,"observar","å observere",717,1],
+    [718,"material","materials",718,1],
+    [719,"comparar","å sammenligne",719,1],
+    [720,"básico","grunnleggende",720,1],
+    [721,"directo","direkte",721,1],
+    [722,"cuidado","forsiktighet/omsorg",722,1],
+    [723,"pensamiento","tanke/tenkning",723,1],
+    [724,"reforma","reform",724,1],
+    [725,"grabación","opptak/innspilling",725,1],
+    [726,"tumba","grav",726,1],
+    [727,"conectar","å koble til",727,1],
+    [728,"humor","humør",728,1],
+    [729,"campeón","mester/vinner",729,1],
+    [730,"mirada","blikk",730,1],
+    [731,"salud","helse",731,1],
+    [732,"término","term/slutt",732,1],
+    [733,"circunstancia","omstendighet",733,1],
+    [734,"mediante","ved hjelp av",734,1],
+    [735,"fuertemente","kraftig/sterkt",735,1],
+    [736,"electoral","valg-",736,1],
+    [737,"ratón","mus (data/dyr)",737,1],
+    [738,"campaña","kampanje",738,1],
+    [739,"académico","akademisk",739,1],
+    [740,"discutir","å diskutere",740,1],
+    [741,"colaboración","samarbeid",741,1],
+    [742,"acostumbrar","å venne seg til",742,1],
+    [743,"preocupación","bekymring",743,1],
+    [744,"bienestar","velvære",744,1],
+    [745,"fotografía","fotografi",745,1],
+    [746,"velocidad","hastighet",746,1],
+    [747,"huir","å flykte",747,1],
+    [748,"establecer","å etablere",748,1],
+    [749,"metro","meter/t-bane",749,1],
+    [750,"decisión","avgjørelse/beslutning",750,1],
+    [751,"vacío","tom/tomrom",751,1],
+    [752,"mejorar","å forbedre",752,1],
+    [753,"estómago","mage",753,1],
+    [754,"alcohol","alkohol",754,1],
+    [755,"sexo","sex/kjønn",755,1],
+    [756,"espiritual","åndelig",756,1],
+    [757,"terrible","forferdelig",757,1],
+    [758,"posesión","eiendel/besittelse",758,1],
+    [759,"noviembre","november",759,1],
+    [760,"ayuda","hjelpemiddel",760,1],
+    [761,"separar","å skille/separere",761,1],
+    [762,"impresión","inntrykk/utskrift",762,1],
+    [763,"enfermo","syk",763,1],
+    [764,"despertar","å våkne",764,1],
+    [765,"cuestión","spørsmål/sak",765,1],
+    [766,"divertido","morsom/underholdende",766,1],
+    [767,"desayuno","frokost",767,1],
+    [768,"salvar","å redde",768,1],
+    [769,"crema","krem",769,1],
+    [770,"bolígrafo","kulepenn",770,1],
+    [771,"hueso","bein/knokkel",771,1],
+    [772,"autonomía","selvstyre/autonomi",772,1],
+    [773,"villano","skurk",773,1],
+    [774,"barrio","nabolag/bydel",774,1],
+    [775,"acto","handling/akt",775,1],
+    [776,"vecino","nabo",776,1],
+    [777,"presunto","antatt/påstått",777,1],
+    [778,"química","kjemi",778,1],
+    [779,"perder","å tape/miste",779,1],
+    [780,"fechas","datoer",780,1],
+    [781,"cruz","kors",781,1],
+    [782,"esencia","essens/kjerne",782,1],
+    [783,"reina","dronning",783,1],
+    [784,"recomendar","å anbefale",784,1],
+    [785,"orgullo","stolthet",785,1],
+    [786,"rodear","å omgi",786,1],
+    [787,"inteligencia","intelligens",787,1],
+    [788,"mercancía","vare/merchandise",788,1],
+    [789,"mayor","større/eldre",789,1],
+    [790,"reparar","å reparere",790,1],
+    [791,"funcionario","tjenestemann",791,1],
+    [792,"centenar","hundretalls",792,1],
+    [793,"habitante","innbygger",793,1],
+    [794,"cerdo","gris",794,1],
+    [795,"volumen","volum",795,1],
+    [796,"joya","juvel/smykke",796,1],
+    [797,"provincia","provins",797,1],
+    [798,"alegría","glede",798,1],
+    [799,"convencer","å overbevise",799,1],
+    [800,"apagar","å slukke/slå av",800,1],
+    [801,"homosexual","homofil",801,1],
+    [802,"vocación","kall/yrke",802,1],
+    [803,"operación","operasjon",803,1],
+    [804,"ministra","kvinnelig minister",804,1],
+    [805,"nacimiento","fødsel",805,1],
+    [806,"recorrer","å reise gjennom",806,1],
+    [807,"emoción","følelse",807,1],
+    [808,"respeto","respekt",808,1],
+    [809,"tabaco","tobakk",809,1],
+    [810,"formación","utdanning/forming",810,1],
+    [811,"avión","fly",811,1],
+    [812,"guitarra","gitar",812,1],
+    [813,"cerebro","hjerne",813,1],
+    [814,"tren","tog",814,1],
+    [815,"anterior","forrige/tidligere",815,1],
+    [816,"recorte","kutt/nedskjæring",816,1],
+    [817,"imprescindible","uunnværlig",817,1],
+    [818,"interna","intern",818,1],
+    [819,"negar","å nekte",819,1],
+    [820,"chica","jente",820,1],
+    [821,"decena","titals",821,1],
+    [822,"golpe","slag",822,1],
+    [823,"caballo","hest",823,1],
+    [824,"consultar","å konsultere",824,1],
+    [825,"piano","piano",825,1],
+    [826,"periodista","journalist",826,1],
+    [827,"describir","å beskrive",827,1],
+    [828,"artículo","artikkel/vare",828,1],
+    [829,"denuncia","klage/anmeldelse",829,1],
+    [830,"adecuado","passende/egnet",830,1],
+    [831,"comprobar","å sjekke/verifisere",831,1],
+    [832,"población","befolkning",832,1],
+    [833,"pertenecer","å tilhøre",833,1],
+    [834,"sorpresa","overraskelse",834,1],
+    [835,"completo","komplett/fullstendig",835,1],
+    [836,"diablo","djevel",836,1],
+    [837,"residencia","bolig/opphold",837,1],
+    [838,"bolívar","bolivar",838,1],
+    [839,"jardín","hage",839,1],
+    [840,"convicción","overbevisning",840,1],
+    [841,"deporte","sport/idrett",841,1],
+    [842,"abandonar","å forlate/gi opp",842,1],
+    [843,"examen","eksamen",843,1],
+    [844,"testigo","vitne",844,1],
+    [845,"prisión","fengsel",845,1],
+    [846,"entregar","å levere/overrekke",846,1],
+    [847,"región","region",847,1],
+    [848,"rosa","rose",848,1],
+    [849,"perfil","profil",849,1],
+    [850,"detalle","detalj",850,1],
+    [851,"repetir","å gjenta",851,1],
+    [852,"cabello","hår",852,1],
+    [853,"manifestación","demonstrasjon",853,1],
+    [854,"estable","stabil",854,1],
+    [855,"zona","sone/område",855,1],
+    [856,"chocolate","sjokolade",856,1],
+    [857,"ejército","hær",857,1],
+    [858,"probable","sannsynlig",858,1],
+    [859,"celebrar","å feire",859,1],
+    [860,"mayoría","flertall",860,1],
+    [861,"considerar","å vurdere/anse",861,1],
+    [862,"volar","å fly",862,1],
+    [863,"certificado","sertifikat/attest",863,1],
+    [864,"oposición","opposisjon",864,1],
+    [865,"fantástico","fantastisk",865,1],
+    [866,"verdadero","sann/ekte",866,1],
+    [867,"fiebre","feber",867,1],
+    [868,"suave","myk/mild",868,1],
+    [869,"apenas","knapt/så vidt",869,1],
+    [870,"futuro","fremtidig",870,1],
+    [871,"reunir","å samle",871,1],
+    [872,"anuncio","kunngjøring/annonse",872,1],
+    [873,"secreto","hemmelig",873,1],
+    [874,"salida","utgang/avreise",874,1],
+    [875,"señalar","å påpeke/peke",875,1],
+    [876,"sur","sør",876,1],
+    [877,"posibilidad","mulighet",877,1],
+    [878,"disciplina","disiplin",878,1],
+    [879,"disfrutar","å nyte",879,1],
+    [880,"plato","tallerken/rett",880,1],
+    [881,"alma","sjel",881,1],
+    [882,"entorno","omgivelser/miljø",882,1],
+    [883,"firmar","å signere",883,1],
+    [884,"fortuna","formue/hell",884,1],
+    [885,"gigante","kjempe/gigant",885,1],
+    [886,"alquilar","å leie",886,1],
+    [887,"contestar","å svare",887,1],
+    [888,"concesión","konsesjon/innrømmelse",888,1],
+    [889,"cortar","å kutte",889,1],
+    [890,"cadena","kjede",890,1],
+    [891,"actuar","å handle/opptre",891,1],
+    [892,"venganza","hevn",892,1],
+    [893,"cena","middag (kveldsmat)",893,1],
+    [894,"cobre","kobber",894,1],
+    [895,"moda","mote",895,1],
+    [896,"líder","leder",896,1],
+    [897,"mentir","å lyve",897,1],
+    [898,"bruja","heks",898,1],
+    [899,"documental","dokumentar",899,1],
+    [900,"acero","stål",900,1],
+    [901,"complejo","kompleks/kompleks (n)",901,1],
+    [902,"cuadro","bilde/ramme",902,1],
+    [903,"horror","skrekk/redsel",903,1],
+    [904,"guardia","vakt",904,1],
+    [905,"departamento","avdeling/leilighet",905,1],
+    [906,"tortura","tortur",906,1],
+    [907,"bomba","bombe/pumpe",907,1],
+    [908,"sonreír","å smile",908,1],
+    [909,"privado","privat",909,1],
+    [910,"combate","kamp/strid",910,1],
+    [911,"reina","dronning",911,1],
+    [912,"monte","fjell/berg",912,1],
+    [913,"actualidad","aktualitet/nåtid",913,1],
+    [914,"terror","terror/skrekk",914,1],
+    [915,"influencia","innflytelse",915,1],
+    [916,"revisión","gjennomgang/revisjon",916,1],
+    [917,"arroz","ris",917,1],
+    [918,"indicar","å indikere/vise",918,1],
+    [919,"agosto","august",919,1],
+    [920,"confesar","å tilstå",920,1],
+    [921,"moneda","mynt/valuta",921,1],
+    [922,"asistir","å delta/være til stede",922,1],
+    [923,"celebración","feiring",923,1],
+    [924,"hermano","bror/søsken",924,1],
+    [925,"emisión","utslipp/sending",925,1],
+    [926,"trato","behandling/omgang",926,1],
+    [927,"mental","mental",927,1],
+    [928,"prima","kusine/premie",928,1],
+    [929,"relación","forhold/relasjon",929,1],
+    [930,"instalación","installasjon",930,1],
+    [931,"margen","margin/kant",931,1],
+    [932,"cuello","hals",932,1],
+    [933,"distancia","avstand",933,1],
+    [934,"específico","spesifikk",934,1],
+    [935,"etapa","etappe/fase",935,1],
+    [936,"revelar","å avsløre",936,1],
+    [937,"uniforme","uniform",937,1],
+    [938,"pecado","synd",938,1],
+    [939,"regresar","å returnere/komme tilbake",939,1],
+    [940,"aceite","olje (mat)",940,1],
+    [941,"europeo","europeisk",941,1],
+    [942,"concretar","å konkretisere/spesifisere",942,1],
+    [943,"habitual","vanlig",943,1],
+    [944,"elegir","å velge",944,1],
+    [945,"tratamiento","behandling",945,1],
+    [946,"incendio","brann",946,1],
+    [947,"excepción","unntak",947,1],
+    [948,"sed","tørst",948,1],
+    [949,"comprar","å kjøpe",949,1],
+    [950,"paquete","pakke",950,1],
+    [951,"aguantar","å holde ut/tåle",951,1],
+    [952,"sepultura","grav/begravelse",952,1],
+    [953,"concluir","å konkludere/avslutte",953,1],
+    [954,"consumidor","forbruker",954,1],
+    [955,"peligroso","farlig",955,1],
+    [956,"marcha","marsj/gange/gir",956,1],
+    [957,"dictar","å diktere",957,1],
+    [958,"viento","vind",958,1],
+    [959,"barco","båt/skip",959,1],
+    [960,"virgen","jomfru",960,1],
+    [961,"tripulación","mannskap",961,1],
+    [962,"diversidad","mangfold",962,1],
+    [963,"norte","nord",963,1],
+    [964,"correo","post/e-post",964,1],
+    [965,"desastre","katastrofe",965,1],
+    [966,"anunciar","å annonsere",966,1],
+    [967,"legal","lovlig/rettslig",967,1],
+    [968,"flexible","fleksibel",968,1],
+    [969,"copia","kopi",969,1],
+    [970,"estadística","statistikk",970,1],
+    [971,"enamorar","å forelske seg",971,1],
+    [972,"desierto","ørken",972,1],
+    [973,"maldito","forbannet",973,1],
+    [974,"sonrisa","smil",974,1],
+    [975,"informe","rapport",975,1],
+    [976,"espectáculo","forestilling/skue",976,1],
+    [977,"sueldo","lønn",977,1],
+    [978,"abogado","advokat",978,1],
+    [979,"pintar","å male",979,1],
+    [980,"despedir","å si opp/si farvel",980,1],
+    [981,"introducir","å innføre/introdusere",981,1],
+    [982,"violar","å krenke/voldta",982,1],
+    [983,"suegro","svigerfar",983,1],
+    [984,"entidad","enhet/organisasjon",984,1],
+    [985,"poseer","å eie/besitte",985,1],
+    [986,"oración","bønn/setning",986,1],
+    [987,"cálculo","beregning/kalkulasjon",987,1],
+    [988,"huelga","streik",988,1],
+    [989,"joder","faen/pule",989,1],
+    [990,"suspender","å stanse/utsette",990,1],
+    [991,"compañero","kollega/kamerat",991,1],
+    [992,"felipe","Felipe (navn)",992,1],
+    [993,"bendecir","å velsigne",993,1],
+    [994,"agudo","skarp/spiss",994,1],
+    [995,"estrategia","strategi",995,1],
+    [996,"medicina","medisin",996,1],
+    [997,"ancho","bred",997,1],
+    [998,"dondequiera","hvor som helst",998,1],
+    [999,"impulso","impuls/drivkraft",999,1],
+    [1000,"patata","potet",1000,1]
+  ];
+
+  // Level 2: 1001-2000
+  const l2 = [
+    [1001,"traer","å bringe/hente",1001,2],
+    [1002,"cristal","glass/krystall",1002,2],
+    [1003,"tormenta","storm",1003,2],
+    [1004,"reflejar","å reflektere",1004,2],
+    [1005,"hilo","tråd",1005,2],
+    [1006,"locura","galskap",1006,2],
+    [1007,"pista","spor/ledetråd/bane",1007,2],
+    [1008,"temor","frykt",1008,2],
+    [1009,"soltero","singel/ugift",1009,2],
+    [1010,"clavar","å spikre/stikke",1010,2],
+    [1011,"colegio","skole/kollegium",1011,2],
+    [1012,"primavera","vår (årstid)",1012,2],
+    [1013,"comisaría","politistasjon",1013,2],
+    [1014,"calidad","kvalitet",1014,2],
+    [1015,"intervención","inngripen/intervensjon",1015,2],
+    [1016,"gordo","tykk/feit",1016,2],
+    [1017,"mostrar","å vise",1017,2],
+    [1018,"asesino","morder",1018,2],
+    [1019,"anterioridad","forutgående",1019,2],
+    [1020,"sostener","å holde oppe/støtte",1020,2],
+    [1021,"símbolo","symbol",1021,2],
+    [1022,"continuar","å fortsette",1022,2],
+    [1023,"corrupción","korrupsjon",1023,2],
+    [1024,"dedo","finger",1024,2],
+    [1025,"quemar","å brenne",1025,2],
+    [1026,"altar","alter",1026,2],
+    [1027,"consumo","forbruk",1027,2],
+    [1028,"gloria","ære/herlighet",1028,2],
+    [1029,"creador","skaper",1029,2],
+    [1030,"regalo","gave",1030,2],
+    [1031,"biblioteca","bibliotek",1031,2],
+    [1032,"página","side (bok/nett)",1032,2],
+    [1033,"austero","nøktern/streng",1033,2],
+    [1034,"tirar","å kaste/dra",1034,2],
+    [1035,"costumbre","vane/skikk",1035,2],
+    [1036,"estructural","strukturell",1036,2],
+    [1037,"alimentación","ernæring/kosthold",1037,2],
+    [1038,"herida","sår/skade",1038,2],
+    [1039,"colectivo","kollektiv/felles",1039,2],
+    [1040,"cantar","å synge",1040,2],
+    [1041,"millón","million",1041,2],
+    [1042,"cárcel","fengsel",1042,2],
+    [1043,"noble","edel",1043,2],
+    [1044,"propiedad","eiendom/egenskap",1044,2],
+    [1045,"residente","bosatt",1045,2],
+    [1046,"salario","lønn",1046,2],
+    [1047,"mando","kommando/kontroll",1047,2],
+    [1048,"desafío","utfordring",1048,2],
+    [1049,"navaja","barberkniv/lommekniv",1049,2],
+    [1050,"ciego","blind",1050,2],
+    [1051,"cerrar","å lukke/stenge",1051,2],
+    [1052,"defender","å forsvare",1052,2],
+    [1053,"capacidad","kapasitet/evne",1053,2],
+    [1054,"nariz","nese",1054,2],
+    [1055,"gato","katt",1055,2],
+    [1056,"escalera","trapp/stige",1056,2],
+    [1057,"valer","å være verdt/gjelde",1057,2],
+    [1058,"eterno","evig",1058,2],
+    [1059,"parar","å stoppe",1059,2],
+    [1060,"consumir","å forbruke",1060,2],
+    [1061,"flor","blomst",1061,2],
+    [1062,"rodaje","filminnspilling/kjøring",1062,2],
+    [1063,"batalla","slag/kamp",1063,2],
+    [1064,"presión","press",1064,2],
+    [1065,"canal","kanal",1065,2],
+    [1066,"mural","veggmaleri",1066,2],
+    [1067,"pobreza","fattigdom",1067,2],
+    [1068,"edificio","bygning",1068,2],
+    [1069,"manifestar","å gi uttrykk for",1069,2],
+    [1070,"red","nettverk/nett",1070,2],
+    [1071,"presenciar","å bevitne",1071,2],
+    [1072,"sobrar","å være til overs",1072,2],
+    [1073,"retirarse","å trekke seg tilbake",1073,2],
+    [1074,"ejecución","henrettelse/utførelse",1074,2],
+    [1075,"mago","magiker/trollmann",1075,2],
+    [1076,"estrenar","å premiere/ta i bruk",1076,2],
+    [1077,"dedicar","å dedisere",1077,2],
+    [1078,"hormiga","maur",1078,2],
+    [1079,"estructura","struktur",1079,2],
+    [1080,"presentación","presentasjon/fremvisning",1080,2],
+    [1081,"virtud","dyd",1081,2],
+    [1082,"conocer","å bli kjent med",1082,2],
+    [1083,"vergüenza","skam/flauhet",1083,2],
+    [1084,"casino","kasino",1084,2],
+    [1085,"gol","mål (sport)",1085,2],
+    [1086,"desnudo","naken",1086,2],
+    [1087,"conferencia","konferanse/foredrag",1087,2],
+    [1088,"instante","øyeblikk",1088,2],
+    [1089,"huella","fotavtrykk/spor",1089,2],
+    [1090,"etiqueta","etikett/lapp",1090,2],
+    [1091,"rodar","å rulle/filme",1091,2],
+    [1092,"ceremonia","seremoni",1092,2],
+    [1093,"ilegal","ulovlig",1093,2],
+    [1094,"gesto","gest/bevegelse",1094,2],
+    [1095,"montaña","fjell",1095,2],
+    [1096,"secuencia","sekvens/rekkefølge",1096,2],
+    [1097,"percibir","å oppfatte",1097,2],
+    [1098,"corto","kort",1098,2],
+    [1099,"invernadero","drivhus",1099,2],
+    [1100,"registrar","å registrere",1100,2],
+    [1101,"muslo","lår",1101,2],
+    [1102,"típico","typisk",1102,2],
+    [1103,"tesoro","skatt",1103,2],
+    [1104,"encerrar","å stenge inne",1104,2],
+    [1105,"vuelo","flyvning",1105,2],
+    [1106,"reto","utfordring",1106,2],
+    [1107,"asombroso","forbløffende",1107,2],
+    [1108,"calor","varme",1108,2],
+    [1109,"proteger","å beskytte",1109,2],
+    [1110,"sudor","svette",1110,2],
+    [1111,"descanso","pause/hvile",1111,2],
+    [1112,"aplaudir","å applaudere",1112,2],
+    [1113,"asqueroso","ekkel/motbydelig",1113,2],
+    [1114,"carretera","vei/landevei",1114,2],
+    [1115,"bloque","blokk",1115,2],
+    [1116,"criar","å oppdra/avle",1116,2],
+    [1117,"cobarde","feig",1117,2],
+    [1118,"labio","leppe",1118,2],
+    [1119,"contemporáneo","samtidig",1119,2],
+    [1120,"pareja","par/partner",1120,2],
+    [1121,"subida","oppgang/stigning",1121,2],
+    [1122,"periodismo","journalistikk",1122,2],
+    [1123,"adquirir","å skaffe seg",1123,2],
+    [1124,"descripción","beskrivelse",1124,2],
+    [1125,"fracaso","fiasko/nederlag",1125,2],
+    [1126,"lanzar","å kaste/lansere",1126,2],
+    [1127,"ataúd","kiste",1127,2],
+    [1128,"oeste","vest",1128,2],
+    [1129,"empujar","å dytte/skyve",1129,2],
+    [1130,"creciente","voksende/økende",1130,2],
+    [1131,"juventud","ungdom/ungdomstid",1131,2],
+    [1132,"fiel","trofast",1132,2],
+    [1133,"enfermedad","sykdom",1133,2],
+    [1134,"jurar","å sverge",1134,2],
+    [1135,"renuncia","fratredelse/avkall",1135,2],
+    [1136,"ortodoxo","ortodoks",1136,2],
+    [1137,"agente","agent",1137,2],
+    [1138,"botella","flaske",1138,2],
+    [1139,"incómodo","ubehagelig/ukomfortabel",1139,2],
+    [1140,"célula","celle",1140,2],
+    [1141,"intentar","å forsøke",1141,2],
+    [1142,"vinculado","knyttet til",1142,2],
+    [1143,"exclusivo","eksklusiv",1143,2],
+    [1144,"contigo","med deg",1144,2],
+    [1145,"calma","ro/stillhet",1145,2],
+    [1146,"reparto","rollebesetning/fordeling",1146,2],
+    [1147,"cámara","kamera/kammer",1147,2],
+    [1148,"toque","berøring/preg",1148,2],
+    [1149,"denominar","å kalle/betegne",1149,2],
+    [1150,"flaco","tynn/mager",1150,2],
+    [1151,"tirar","å skyte/kaste",1151,2],
+    [1152,"talla","størrelse (klær)",1152,2],
+    [1153,"asegurar","å forsikre/sikre",1153,2],
+    [1154,"patrón","mønster/arbeidsgiver",1154,2],
+    [1155,"breve","kort/kortfattet",1155,2],
+    [1156,"codo","albue",1156,2],
+    [1157,"marica","homse (slang)",1157,2],
+    [1158,"renta","inntekt/leie",1158,2],
+    [1159,"estirar","å strekke",1159,2],
+    [1160,"iglesia","kirke",1160,2],
+    [1161,"cambiar","å endre",1161,2],
+    [1162,"homenaje","hyllest",1162,2],
+    [1163,"parcial","delvis/partisk",1163,2],
+    [1164,"tarjeta","kort (bank/kreditt)",1164,2],
+    [1165,"crónico","kronisk",1165,2],
+    [1166,"limpio","ren",1166,2],
+    [1167,"obispo","biskop",1167,2],
+    [1168,"moral","moralsk",1168,2],
+    [1169,"vacaciones","ferie",1169,2],
+    [1170,"aguja","nål",1170,2],
+    [1171,"saldo","saldo/restbeløp",1171,2],
+    [1172,"fiscal","skatte-/statsadvokat",1172,2],
+    [1173,"rata","rotte",1173,2],
+    [1174,"votar","å stemme",1174,2],
+    [1175,"bandera","flagg",1175,2],
+    [1176,"pulgar","tommel",1176,2],
+    [1177,"cazar","å jakte",1177,2],
+    [1178,"herir","å såre/skade",1178,2],
+    [1179,"antepasado","forfader/stamfar",1179,2],
+    [1180,"limpiar","å rengjøre",1180,2],
+    [1181,"fallo","feil/dom",1181,2],
+    [1182,"atrás","bak/bakover",1182,2],
+    [1183,"digital","digital",1183,2],
+    [1184,"tonto","dum",1184,2],
+    [1185,"contener","å inneholde/holde tilbake",1185,2],
+    [1186,"guapo","pen/kjekk",1186,2],
+    [1187,"asesinato","mord",1187,2],
+    [1188,"fantasía","fantasi",1188,2],
+    [1189,"aceptación","aksept/godkjenning",1189,2],
+    [1190,"palacio","palass",1190,2],
+    [1191,"olor","lukt",1191,2],
+    [1192,"cocinar","å lage mat",1192,2],
+    [1193,"embarazo","graviditet",1193,2],
+    [1194,"ganador","vinner",1194,2],
+    [1195,"misterio","mysterium",1195,2],
+    [1196,"fraude","bedrageri",1196,2],
+    [1197,"francia","Frankrike",1197,2],
+    [1198,"roncar","å snorke",1198,2],
+    [1199,"suspenso","spenning/stans",1199,2],
+    [1200,"pecera","akvarium",1200,2],
+    [1201,"fingir","å late som",1201,2],
+    [1202,"paliza","juling/bank",1202,2],
+    [1203,"tóxico","giftig",1203,2],
+    [1204,"circo","sirkus",1204,2],
+    [1205,"herrero","smed",1205,2],
+    [1206,"concejo","bystyre/råd",1206,2],
+    [1207,"estrangular","å kvele",1207,2],
+    [1208,"sonido","lyd",1208,2],
+    [1209,"soldado","soldat",1209,2],
+    [1210,"olvido","glemsel",1210,2],
+    [1211,"entrenamiento","trening",1211,2],
+    [1212,"salvaje","vill",1212,2],
+    [1213,"recuperar","å gjenopprette/hente",1213,2],
+    [1214,"mudar","å flytte/skifte",1214,2],
+    [1215,"dueña","eierinne",1215,2],
+    [1216,"rescate","redning/løsepenger",1216,2],
+    [1217,"calentamiento","oppvarming",1217,2],
+    [1218,"dedal","fingerbøl",1218,2],
+    [1219,"boca","munn",1219,2],
+    [1220,"desaparecer","å forsvinne",1220,2],
+    [1221,"ferrocarril","jernbane",1221,2],
+    [1222,"curva","kurve/sving",1222,2],
+    [1223,"bajar","å gå ned/senke",1223,2],
+    [1224,"popularidad","popularitet",1224,2],
+    [1225,"boletín","bulletin/nyhetsbrev",1225,2],
+    [1226,"ascensor","heis",1226,2],
+    [1227,"cueva","hule",1227,2],
+    [1228,"cuarto","fjerde/rom",1228,2],
+    [1229,"giro","vending/overføring",1229,2],
+    [1230,"trolebús","trolleybuss",1230,2],
+    [1231,"creación","skapelse",1231,2],
+    [1232,"piscina","svømmebasseng",1232,2],
+    [1233,"tratado","traktat/avhandling",1233,2],
+    [1234,"calavera","hodeskalle",1234,2],
+    [1235,"masivo","massiv",1235,2],
+    [1236,"gentil","vennlig/høflig",1236,2],
+    [1237,"pulmón","lunge",1237,2],
+    [1238,"estimar","å estimere/verdsette",1238,2],
+    [1239,"casco","hjelm/skrog",1239,2],
+    [1240,"brujería","hekseri",1240,2],
+    [1241,"traducir","å oversette",1241,2],
+    [1242,"comedia","komedie",1242,2],
+    [1243,"realización","gjennomføring/realisering",1243,2],
+    [1244,"gozar","å nyte",1244,2],
+    [1245,"competencia","konkurranse/kompetanse",1245,2],
+    [1246,"sótano","kjeller",1246,2],
+    [1247,"desconocido","ukjent",1247,2],
+    [1248,"beber","å drikke",1248,2],
+    [1249,"equipaje","bagasje",1249,2],
+    [1250,"ocultar","å skjule",1250,2],
+    [1251,"sillón","lenestol",1251,2],
+    [1252,"antena","antenne",1252,2],
+    [1253,"borracho","full/beruset",1253,2],
+    [1254,"médula","marg/beinmarg",1254,2],
+    [1255,"comandante","kommandant",1255,2],
+    [1256,"alternativa","alternativ",1256,2],
+    [1257,"perímetro","omkrets/perimeter",1257,2],
+    [1258,"pasillo","korridor/gang",1258,2],
+    [1259,"aportar","å bidra med",1259,2],
+    [1260,"pasado","fortid",1260,2],
+    [1261,"embajador","ambassadør",1261,2],
+    [1262,"oferta","tilbud",1262,2],
+    [1263,"fallecer","å dø/gå bort",1263,2],
+    [1264,"atentado","attentat/angrep",1264,2],
+    [1265,"tercera","tredje",1265,2],
+    [1266,"elaborar","å utarbeide",1266,2],
+    [1267,"edición","utgave/redigering",1267,2],
+    [1268,"enfrentar","å konfrontere/møte",1268,2],
+    [1269,"firma","signatur/firma",1269,2],
+    [1270,"argumento","plott/handling",1270,2],
+    [1271,"cuento","fortelling",1271,2],
+    [1272,"humano","menneske",1272,2],
+    [1273,"socio","partner/medlem",1273,2],
+    [1274,"despedida","avskjed/farvel",1274,2],
+    [1275,"balón","ball",1275,2],
+    [1276,"pauta","retningslinje/mønster",1276,2],
+    [1277,"grifo","kran/vannkran",1277,2],
+    [1278,"monja","nonne",1278,2],
+    [1279,"virar","å svinge/dreie",1279,2],
+    [1280,"títere","marionett/dokke",1280,2],
+    [1281,"loco","gal",1281,2],
+    [1282,"consultorio","legekontor",1282,2],
+    [1283,"explotar","å eksplodere/utnytte",1283,2],
+    [1284,"pesadilla","mareritt",1284,2],
+    [1285,"colega","kollega",1285,2],
+    [1286,"desconocer","å ikke vite/være ukjent med",1286,2],
+    [1287,"terreno","terreng/tomt",1287,2],
+    [1288,"italiano","italiensk/italiener",1288,2],
+    [1289,"desplazar","å fortrenge/flytte",1289,2],
+    [1290,"intenso","intens",1290,2],
+    [1291,"bicho","insekt/kryp",1291,2],
+    [1292,"arrancar","å rive av/starte",1292,2],
+    [1293,"totalidad","helhet",1293,2],
+    [1294,"mamá","mamma",1294,2],
+    [1295,"realizar","å gjennomføre/realisere",1295,2],
+    [1296,"aborto","abort",1296,2],
+    [1297,"resolver","å løse",1297,2],
+    [1298,"marido","ektemann",1298,2],
+    [1299,"norma","norm/regel",1299,2],
+    [1300,"candidatura","kandidatur",1300,2],
+    [1301,"pedazo","stykke/bit",1301,2],
+    [1302,"jurídico","juridisk/rettslig",1302,2],
+    [1303,"forzar","å tvinge",1303,2],
+    [1304,"relato","fortelling/beretning",1304,2],
+    [1305,"trampa","felle",1305,2],
+    [1306,"maldad","ondskap",1306,2],
+    [1307,"esclavo","slave",1307,2],
+    [1308,"financiación","finansiering",1308,2],
+    [1309,"caldo","buljong/suppe",1309,2],
+    [1310,"predecir","å forutsi",1310,2],
+    [1311,"vidente","synsk/clairvoyant",1311,2],
+    [1312,"procesar","å behandle/prosessere",1312,2],
+    [1313,"aliado","alliert",1313,2],
+    [1314,"simpatía","sympati",1314,2],
+    [1315,"cristiano","kristen",1315,2],
+    [1316,"autorización","autorisasjon",1316,2],
+    [1317,"perdón","tilgivelse/unnskyld",1317,2],
+    [1318,"fábula","fabel",1318,2],
+    [1319,"crueldad","grusomhet",1319,2],
+    [1320,"test","test/prøve",1320,2],
+    [1321,"traición","forræderi/svik",1321,2],
+    [1322,"esclavitud","slaveri",1322,2],
+    [1323,"ramo","bukett/grein",1323,2],
+    [1324,"maquillaje","sminke",1324,2],
+    [1325,"alejarse","å fjerne seg",1325,2],
+    [1326,"techo","tak (innvendig)",1326,2],
+    [1327,"defecto","defekt/mangel",1327,2],
+    [1328,"optimista","optimist/optimistisk",1328,2],
+    [1329,"chino","kinesisk/kineser",1329,2],
+    [1330,"frío","kald/kulde",1330,2],
+    [1331,"frontera","grense",1331,2],
+    [1332,"collar","halsbånd/kjede",1332,2],
+    [1333,"vaso","glass/drikkeglass",1333,2],
+    [1334,"columna","kolonne/søyle",1334,2],
+    [1335,"navegar","å navigere/surfe",1335,2],
+    [1336,"olvidarse","å glemme (refleksiv)",1336,2],
+    [1337,"cortina","gardin",1337,2],
+    [1338,"recoger","å hente/samle",1338,2],
+    [1339,"actualización","oppdatering",1339,2],
+    [1340,"horrible","forferdelig",1340,2],
+    [1341,"electrónico","elektronisk",1341,2],
+    [1342,"asiento","sete",1342,2],
+    [1343,"titular","overskrift/innehaver",1343,2],
+    [1344,"terapia","terapi",1344,2],
+    [1345,"contrario","motsatt",1345,2],
+    [1346,"horno","ovn",1346,2],
+    [1347,"extranjero","utlending/utenlandsk",1347,2],
+    [1348,"pesado","tung/kjedelig",1348,2],
+    [1349,"competir","å konkurrere",1349,2],
+    [1350,"guionista","manusforfatter",1350,2],
+    [1351,"presidencial","president-",1351,2],
+    [1352,"conceder","å innvilge/gi",1352,2],
+    [1353,"pose","positur/stilling",1353,2],
+    [1354,"esposas","håndjern",1354,2],
+    [1355,"cría","oppdrett/unge",1355,2],
+    [1356,"interrogatorio","avhør",1356,2],
+    [1357,"madrugada","grytidlig morgen",1357,2],
+    [1358,"planchar","å stryke (klær)",1358,2],
+    [1359,"lobo","ulv",1359,2],
+    [1360,"colgar","å henge (opp)",1360,2],
+    [1361,"fresa","jordbær",1361,2],
+    [1362,"parado","stående/stoppet/arbeidsledig",1362,2],
+    [1363,"masa","deig/masse",1363,2],
+    [1364,"fósforo","fyrstikk/fosfor",1364,2],
+    [1365,"privacidad","personvern",1365,2],
+    [1366,"desierto","øde/forlatt",1366,2],
+    [1367,"fallecido","avdød",1367,2],
+    [1368,"callar","å være stille/tie",1368,2],
+    [1369,"tabú","tabu",1369,2],
+    [1370,"constatar","å konstatere/fastslå",1370,2],
+    [1371,"honesto","ærlig",1371,2],
+    [1372,"sustituir","å erstatte",1372,2],
+    [1373,"atreverse","å våge",1373,2],
+    [1374,"crimen","forbrytelse",1374,2],
+    [1375,"conductor","sjåfør/leder",1375,2],
+    [1376,"amarillo","gul",1376,2],
+    [1377,"concreto","konkret/betong",1377,2],
+    [1378,"coraje","mot/tapperhet",1378,2],
+    [1379,"cereal","korn/blanding",1379,2],
+    [1380,"confusión","forvirring",1380,2],
+    [1381,"cable","kabel/ledning",1381,2],
+    [1382,"exposición","utstilling",1382,2],
+    [1383,"firme","fast/bestemt",1383,2],
+    [1384,"héroe","helt",1384,2],
+    [1385,"tumor","svulst/tumor",1385,2],
+    [1386,"venta","salg",1386,2],
+    [1387,"caída","fall/nedgang",1387,2],
+    [1388,"extraer","å trekke ut",1388,2],
+    [1389,"jurisdicción","jurisdiksjon",1389,2],
+    [1390,"sombra","skygge",1390,2],
+    [1391,"toalla","håndkle",1391,2],
+    [1392,"despreciar","å forakte",1392,2],
+    [1393,"integrar","å integrere",1393,2],
+    [1394,"consulta","konsultasjon/forespørsel",1394,2],
+    [1395,"nacionalista","nasjonalistisk",1395,2],
+    [1396,"trapecio","trapes/trapesøyle",1396,2],
+    [1397,"incertidumbre","usikkerhet",1397,2],
+    [1398,"mandar","å sende/befale",1398,2],
+    [1399,"comida","måltid",1399,2],
+    [1400,"redondo","rund",1400,2],
+    [1401,"mono","ape/søt",1401,2],
+    [1402,"jugador","spiller",1402,2],
+    [1403,"despedazar","å rive i stykker",1403,2],
+    [1404,"descenso","nedstigning/reduksjon",1404,2],
+    [1405,"entusiasmo","entusiasme",1405,2],
+    [1406,"ventilador","vifte",1406,2],
+    [1407,"refugio","tilfluktssted/ly",1407,2],
+    [1408,"literario","litterær",1408,2],
+    [1409,"maravilloso","fantastisk/vidunderlig",1409,2],
+    [1410,"destino","skjebne/mål",1410,2],
+    [1411,"artístico","kunstnerisk",1411,2],
+    [1412,"cubierto","dekket/tildekket",1412,2],
+    [1413,"consola","spillkonsoll/trøst",1413,2],
+    [1414,"juzgar","å dømme/bedømme",1414,2],
+    [1415,"toser","å hoste",1415,2],
+    [1416,"ducha","dusj",1416,2],
+    [1417,"caserón","stort gammelt hus",1417,2],
+    [1418,"insistir","å insistere",1418,2],
+    [1419,"congelar","å fryse (noe)",1419,2],
+    [1420,"disfraz","forkledning",1420,2],
+    [1421,"amargado","bitter/forbitret",1421,2],
+    [1422,"enano","dverg",1422,2],
+    [1423,"soja","soya",1423,2],
+    [1424,"derrotar","å beseire",1424,2],
+    [1425,"papa","pave/potet/pappa",1425,2],
+    [1426,"ganancia","fortjeneste/gevinst",1426,2],
+    [1427,"divertirse","å more seg",1427,2],
+    [1428,"cumbre","toppmøte/fjelltopp",1428,2],
+    [1429,"fauna","fauna/dyreliv",1429,2],
+    [1430,"impaciencia","utålmodighet",1430,2],
+    [1431,"cruzar","å krysse",1431,2],
+    [1432,"exilio","eksil",1432,2],
+    [1433,"regalar","å gi i gave",1433,2],
+    [1434,"mejilla","kinn",1434,2],
+    [1435,"pinchar","å stikke/pirke",1435,2],
+    [1436,"cañón","kanon/kløft",1436,2],
+    [1437,"sospechoso","mistenkelig/mistenkt",1437,2],
+    [1438,"náufrago","skipbrudden",1438,2],
+    [1439,"explosión","eksplosjon",1439,2],
+    [1440,"satélite","satellitt",1440,2],
+    [1441,"tribunal","domstol/tribunal",1441,2],
+    [1442,"tensión","spenning",1442,2],
+    [1443,"lengua","tunge",1443,2],
+    [1444,"paja","halm/strå",1444,2],
+    [1445,"hoja","blad/ark",1445,2],
+    [1446,"plato","tallerken",1446,2],
+    [1447,"síndrome","syndrom",1447,2],
+    [1448,"caricia","kjærtegn",1448,2],
+    [1449,"enfado","sinne/ergrelse",1449,2],
+    [1450,"imprimir","å trykke/skrive ut",1450,2],
+    [1451,"seda","silke",1451,2],
+    [1452,"solemne","høytidelig",1452,2],
+    [1453,"ruina","ruin/undergang",1453,2],
+    [1454,"cuidar","å passe på/ta vare på",1454,2],
+    [1455,"pata","pote/labb/ben",1455,2],
+    [1456,"remontar","å gå tilbake til/overvinne",1456,2],
+    [1457,"encerrar","å låse inne",1457,2],
+    [1458,"estrella","stjerne",1458,2],
+    [1459,"docena","dusin",1459,2],
+    [1460,"largometraje","spillefilm",1460,2],
+    [1461,"tregua","våpenhvile/pause",1461,2],
+    [1462,"fluir","å strømme/flyte",1462,2],
+    [1463,"raíz","rot",1463,2],
+    [1464,"tripas","innvoller",1464,2],
+    [1465,"habitar","å bo/bebygge",1465,2],
+    [1466,"conmigo","med meg",1466,2],
+    [1467,"vago","lat/ubestemt",1467,2],
+    [1468,"ficha","brikke/kort/arkivkort",1468,2],
+    [1469,"lámpara","lampe",1469,2],
+    [1470,"enlace","lenke/forbindelse",1470,2],
+    [1471,"estrategia","strategi",1471,2],
+    [1472,"renunciar","å gi avkall på/si opp",1472,2],
+    [1473,"manta","teppe/pledd",1473,2],
+    [1474,"condecora","dekorere/tildele",1474,2],
+    [1475,"derrumbe","ras/kollaps",1475,2],
+    [1476,"chillón","skrikete/høylytt",1476,2],
+    [1477,"desgracia","ulykke/vanhell",1477,2],
+    [1478,"papá","pappa",1478,2],
+    [1479,"tórax","brystkasse",1479,2],
+    [1480,"anónimo","anonym",1480,2],
+    [1481,"gracia","yndest/grace/vits",1481,2],
+    [1482,"obedecer","å adlyde",1482,2],
+    [1483,"murciélago","flaggermus",1483,2],
+    [1484,"sobrino","nevø",1484,2],
+    [1485,"chapa","plate/skilt/metallplate",1485,2],
+    [1486,"caña","stokk/rør/øl-glass",1486,2],
+    [1487,"postura","holdning/stilling",1487,2],
+    [1488,"carnaval","karneval",1488,2],
+    [1489,"enredo","floke/forvikling",1489,2],
+    [1490,"tortuga","skilpadde",1490,2],
+    [1491,"espejo","speil",1491,2],
+    [1492,"desmayo","besvimelse",1492,2],
+    [1493,"enterarse","å få vite/finne ut",1493,2],
+    [1494,"pintura","maling/maleri",1494,2],
+    [1495,"dormir","å sove",1495,2],
+    [1496,"picar","å stikke/hakke/klore",1496,2],
+    [1497,"broche","spenne/brosje",1497,2],
+    [1498,"circulación","sirkulasjon/trafikk",1498,2],
+    [1499,"rubio","blond",1499,2],
+    [1500,"humillar","å ydmyke",1500,2],
+    [1501,"fortuna","formue",1501,2],
+    [1502,"ahorrar","å spare (penger)",1502,2],
+    [1503,"archivo","arkiv/fil",1503,2],
+    [1504,"choque","kollisjon/sjokk",1504,2],
+    [1505,"exprimir","å presse/klemme",1505,2],
+    [1506,"capullo","kokong/knopp/idiot (slang)",1506,2],
+    [1507,"tablero","brett/tavle",1507,2],
+    [1508,"polla","penis (vulg.)",1508,2],
+    [1509,"relevante","relevant",1509,2],
+    [1510,"remordimiento","anger/samvittighetskval",1510,2],
+    [1511,"concierto","konsert",1511,2],
+    [1512,"empeño","innsats/besluttsomhet",1512,2],
+    [1513,"rencor","nag/bitterhet",1513,2],
+    [1514,"adorar","å tilbe/elske",1514,2],
+    [1515,"pegar","å lime/slå",1515,2],
+    [1516,"abrazar","å klemme/omfavne",1516,2],
+    [1517,"relieve","relieff/betydning",1517,2],
+    [1518,"extra","ekstra",1518,2],
+    [1519,"empeorar","å forverre",1519,2],
+    [1520,"vivo","levende/livlig",1520,2],
+    [1521,"vaciar","å tømme",1521,2],
+    [1522,"cosecha","innhøsting/avling",1522,2],
+    [1523,"invitado","gjest/invitert",1523,2],
+    [1524,"generoso","generøs/raus",1524,2],
+    [1525,"acostarse","å legge seg",1525,2],
+    [1526,"cocodrilo","krokodille",1526,2],
+    [1527,"podrido","råtten",1527,2],
+    [1528,"concurso","konkurranse",1528,2],
+    [1529,"avergonzar","å gjøre flau/skamme",1529,2],
+    [1530,"bebé","baby/spedbarn",1530,2],
+    [1531,"prescindir","å unnlate/klare seg uten",1531,2],
+    [1532,"moro","maurer/muslim (hist.)",1532,2],
+    [1533,"regla","regel/linjal/menstruasjon",1533,2],
+    [1534,"suelto","løs/ledig",1534,2],
+    [1535,"fotógrafo","fotograf",1535,2],
+    [1536,"mecanismo","mekanisme",1536,2],
+    [1537,"chillar","å skrike/hyle",1537,2],
+    [1538,"masacre","massakre",1538,2],
+    [1539,"tabla","bord/planke/tabell",1539,2],
+    [1540,"subasta","auksjon",1540,2],
+    [1541,"deducir","å utlede/trekke fra",1541,2],
+    [1542,"francés","fransk/franskmann",1542,2],
+    [1543,"pila","batteri/haug",1543,2],
+    [1544,"capilla","kapell",1544,2],
+    [1545,"investigar","å undersøke/forske",1545,2],
+    [1546,"ortografía","rettskriving",1546,2],
+    [1547,"araña","edderkopp",1547,2],
+    [1548,"burla","hån/spøk",1548,2],
+    [1549,"espectador","tilskuer",1549,2],
+    [1550,"extremadamente","ekstremt",1550,2],
+    [1551,"pornografía","pornografi",1551,2],
+    [1552,"adelgazar","å slanke seg/gå ned i vekt",1552,2],
+    [1553,"morder","å bite",1553,2],
+    [1554,"golondrina","svale (fugl)",1554,2],
+    [1555,"queja","klage",1555,2],
+    [1556,"portero","portvakt/målvakt",1556,2],
+    [1557,"pariente","slektning",1557,2],
+    [1558,"cheque","sjekk (bank)",1558,2],
+    [1559,"asesor","rådgiver",1559,2],
+    [1560,"laguna","lagune/lakune",1560,2],
+    [1561,"excluir","å ekskludere/utelukke",1561,2],
+    [1562,"canguro","kenguru/barnevakt",1562,2],
+    [1563,"secuestro","kidnapping/beslag",1563,2],
+    [1564,"gripe","influensa",1564,2],
+    [1565,"mantel","duk (bord)",1565,2],
+    [1566,"incógnita","ukjent (matte)/mysterium",1566,2],
+    [1567,"trapo","fille/klut",1567,2],
+    [1568,"grabar","å spille inn/gravere",1568,2],
+    [1569,"depósito","innskudd/lager/tank",1569,2],
+    [1570,"maldición","forbannelse",1570,2],
+    [1571,"virgen","jomfru",1571,2],
+    [1572,"envolver","å pakke inn",1572,2],
+    [1573,"reforzar","å forsterke",1573,2],
+    [1574,"grúa","kran/bergingsbil",1574,2],
+    [1575,"costar","å koste",1575,2],
+    [1576,"testimonio","vitnesbyrd",1576,2],
+    [1577,"estirpe","ætt/slekt",1577,2],
+    [1578,"parabrisas","frontrute",1578,2],
+    [1579,"infancia","barndom",1579,2],
+    [1580,"martillo","hammer",1580,2],
+    [1581,"murmullo","mumling/susing",1581,2],
+    [1582,"limítrofe","grensende til",1582,2],
+    [1583,"rehén","gissel",1583,2],
+    [1584,"pelota","ball",1584,2],
+    [1585,"prestar","å låne (ut)",1585,2],
+    [1586,"prejuicio","fordom",1586,2],
+    [1587,"tinta","blekk",1587,2],
+    [1588,"balanza","vekt/balanse",1588,2],
+    [1589,"juguete","leketøy",1589,2],
+    [1590,"pollito","kylling (liten)",1590,2],
+    [1591,"tirón","rykk/drag",1591,2],
+    [1592,"artista","kunstner",1592,2],
+    [1593,"pintor","maler",1593,2],
+    [1594,"bailar","å danse",1594,2],
+    [1595,"contagiar","å smitte",1595,2],
+    [1596,"predicar","å preke/forkynne",1596,2],
+    [1597,"recaudar","å samle inn (penger)",1597,2],
+    [1598,"vallado","gjerde/inngjerding",1598,2],
+    [1599,"división","divisjon/inndeling",1599,2],
+    [1600,"embarazada","gravid",1600,2],
+    [1601,"abrazo","klem/omfavnelse",1601,2],
+    [1602,"tubo","rør",1602,2],
+    [1603,"minero","gruvearbeider",1603,2],
+    [1604,"calificación","karakter/vurdering",1604,2],
+    [1605,"cemento","sement",1605,2],
+    [1606,"cobrar","å kreve inn/ta betalt",1606,2],
+    [1607,"sentencia","dom/setning",1607,2],
+    [1608,"esponja","svamp",1608,2],
+    [1609,"ataque","angrep",1609,2],
+    [1610,"vestuario","garderobe/kostyme",1610,2],
+    [1611,"grito","skrik/rop",1611,2],
+    [1612,"curioso","nysgjerrig/merkelig",1612,2],
+    [1613,"rompecabezas","puslespill/hodebry",1613,2],
+    [1614,"gusano","orm/mark",1614,2],
+    [1615,"encontrarse","å befinne seg/møtes",1615,2],
+    [1616,"extremidad","ekstremitet/lem",1616,2],
+    [1617,"tuerto","enøyd",1617,2],
+    [1618,"proveer","å forsyne/sørge for",1618,2],
+    [1619,"descarga","nedlasting/utladning",1619,2],
+    [1620,"calculadora","kalkulator",1620,2],
+    [1621,"infierno","helvete",1621,2],
+    [1622,"ubicación","beliggenhet/plassering",1622,2],
+    [1623,"sentimental","sentimental/følelsesmessig",1623,2],
+    [1624,"varón","mann/gutt (biologisk)",1624,2],
+    [1625,"sastre","skredder",1625,2],
+    [1626,"lava","lava",1626,2],
+    [1627,"bala","kule (ammunisjon)",1627,2],
+    [1628,"trasero","bak-/rumpe",1628,2],
+    [1629,"alambre","ståltråd/metalltråd",1629,2],
+    [1630,"vela","stearinlys/seil",1630,2],
+    [1631,"maltratar","å mishandle/behandle dårlig",1631,2],
+    [1632,"pendiente","ventende/øredobb/ubetalt",1632,2],
+    [1633,"trayectoria","bane/karrierevei",1633,2],
+    [1634,"cascada","foss",1634,2],
+    [1635,"ardiente","brennende",1635,2],
+    [1636,"pantano","myr/sump/reservoar",1636,2],
+    [1637,"grasa","fett/smøring",1637,2],
+    [1638,"veredicto","dom/avgjørelse (jury)",1638,2],
+    [1639,"horca","galge",1639,2],
+    [1640,"italia","Italia",1640,2],
+    [1641,"cereza","kirsebær",1641,2],
+    [1642,"escudo","skjold",1642,2],
+    [1643,"maleta","koffert",1643,2],
+    [1644,"irresponsable","uansvarlig",1644,2],
+    [1645,"león","løve",1645,2],
+    [1646,"mendigo","tigger",1646,2],
+    [1647,"cuñado","svoger",1647,2],
+    [1648,"granja","gård",1648,2],
+    [1649,"muela","molar/jeksel",1649,2],
+    [1650,"caliente","varm",1650,2],
+    [1651,"sospechar","å mistenke",1651,2],
+    [1652,"curiosidad","nysgjerrighet/raritet",1652,2],
+    [1653,"felino","katte-/kattedyr",1653,2],
+    [1654,"pino","furu/furutre",1654,2],
+    [1655,"marea","tidevann",1655,2],
+    [1656,"paloma","due",1656,2],
+    [1657,"judío","jøde/jødisk",1657,2],
+    [1658,"miserable","elendig/stakkarslig",1658,2],
+    [1659,"sacerdote","prest",1659,2],
+    [1660,"borde","kant/rand",1660,2],
+    [1661,"ante","foran/overfor",1661,2],
+    [1662,"diagonal","diagonal",1662,2],
+    [1663,"remar","å ro (båt)",1663,2],
+    [1664,"chorro","stråle/sprut",1664,2],
+    [1665,"veneno","gift",1665,2],
+    [1666,"cortometraje","kortfilm",1666,2],
+    [1667,"monje","munk",1667,2],
+    [1668,"bache","hull i veien/bølgedal",1668,2],
+    [1669,"humildad","ydmykhet",1669,2],
+    [1670,"lucir","å skinne/vise frem",1670,2],
+    [1671,"extraviado","bortkommen/villfaren",1671,2],
+    [1672,"entierro","begravelse",1672,2],
+    [1673,"taza","kopp",1673,2],
+    [1674,"acoso","trakassering/mobbing",1674,2],
+    [1675,"colina","ås/bakketopp",1675,2],
+    [1676,"conocimiento","kunnskap",1676,2],
+    [1677,"bello","vakker",1677,2],
+    [1678,"amable","vennlig/elskverdig",1678,2],
+    [1679,"playa","strand",1679,2],
+    [1680,"mancha","flekk",1680,2],
+    [1681,"despecho","trass/forurettelse",1681,2],
+    [1682,"ladrón","tyv",1682,2],
+    [1683,"sujetar","å holde fast",1683,2],
+    [1684,"párroco","sogneprest",1684,2],
+    [1685,"matar","å drepe",1685,2],
+    [1686,"inodoro","toalett",1686,2],
+    [1687,"alumno","elev",1687,2],
+    [1688,"rascar","å skrape/klø",1688,2],
+    [1689,"monumento","monument",1689,2],
+    [1690,"terrorista","terrorist",1690,2],
+    [1691,"arco","bue/buegang",1691,2],
+    [1692,"negativo","negativ",1692,2],
+    [1693,"vampiro","vampyr",1693,2],
+    [1694,"migración","migrasjon/innvandring",1694,2],
+    [1695,"huevo","egg",1695,2],
+    [1696,"elástico","elastisk/strikk",1696,2],
+    [1697,"medición","måling",1697,2],
+    [1698,"espalda","rygg",1698,2],
+    [1699,"convocar","å innkalle/utlyse",1699,2],
+    [1700,"daño","skade",1700,2],
+    [1701,"vías","spor/veier",1701,2],
+    [1702,"automático","automatisk",1702,2],
+    [1703,"increíble","utrolig",1703,2],
+    [1704,"saco","sekk",1704,2],
+    [1705,"condenar","å fordømme/dømme",1705,2],
+    [1706,"financiero","finansiell",1706,2],
+    [1707,"retener","å holde tilbake",1707,2],
+    [1708,"reproducción","reproduksjon",1708,2],
+    [1709,"árbitro","dommer (sport)",1709,2],
+    [1710,"impacto","innvirkning/treff",1710,2],
+    [1711,"guion","manus",1711,2],
+    [1712,"fragmento","fragment/bruddstykke",1712,2],
+    [1713,"bóveda","hvelv",1713,2],
+    [1714,"descansar","å hvile",1714,2],
+    [1715,"protesta","protest",1715,2],
+    [1716,"autobús","buss",1716,2],
+    [1717,"cuchara","skje",1717,2],
+    [1718,"azúcar","sukker",1718,2],
+    [1719,"martirio","martyrium/lidelse",1719,2],
+    [1720,"montaje","montering/montasje",1720,2],
+    [1721,"ansia","lengsel/begjær",1721,2],
+    [1722,"jarra","mugge/kanne",1722,2],
+    [1723,"cáliz","kalk (beger)",1723,2],
+    [1724,"descompuesto","ødelagt/i stykker",1724,2],
+    [1725,"quebrar","å bryte/brekke/gå konkurs",1725,2],
+    [1726,"cabo","kapp/odde/korporal",1726,2],
+    [1727,"apuesta","veddemål",1727,2],
+    [1728,"pistola","pistol",1728,2],
+    [1729,"territorial","territoriell",1729,2],
+    [1730,"taller","verksted/kurs",1730,2],
+    [1731,"variar","å variere",1731,2],
+    [1732,"porquería","søppel/dritt",1732,2],
+    [1733,"trozo","bit/stykke",1733,2],
+    [1734,"previsión","forutsigelse/prognose",1734,2],
+    [1735,"revancha","hevn/revanche",1735,2],
+    [1736,"muestra","prøve/utvalg/mønster",1736,2],
+    [1737,"estrecho","smal/trang/strede",1737,2],
+    [1738,"piojo","lus",1738,2],
+    [1739,"supuesto","antatt/selvfølgelig",1739,2],
+    [1740,"coco","kokosnøtt/kokos",1740,2],
+    [1741,"bota","støvel",1741,2],
+    [1742,"ensalada","salat",1742,2],
+    [1743,"moto","motorsykkel",1743,2],
+    [1744,"contagio","smitte",1744,2],
+    [1745,"diversión","moro/underholdning",1745,2],
+    [1746,"violación","voldtekt/krenkelse",1746,2],
+    [1747,"precedente","presedens/forutgående",1747,2],
+    [1748,"colaborar","å samarbeide",1748,2],
+    [1749,"beso","kyss",1749,2],
+    [1750,"empate","uavgjort (sport)",1750,2],
+    [1751,"ingeniero","ingeniør",1751,2],
+    [1752,"metálico","metallisk/kontanter",1752,2],
+    [1753,"concejal","bystyrerepresentant",1753,2],
+    [1754,"vudú","voodoo",1754,2],
+    [1755,"ladrar","å bjeffe",1755,2],
+    [1756,"asilo","asyl/gamlehjem",1756,2],
+    [1757,"desfile","parade/opptog",1757,2],
+    [1758,"fiscalía","påtalemyndighet",1758,2],
+    [1759,"totalitario","totalitær",1759,2],
+    [1760,"batería","batteri/trommesett",1760,2],
+    [1761,"tiroteo","skyteepisode/skuddveksling",1761,2],
+    [1762,"armario","skap",1762,2],
+    [1763,"viraje","sving/dreining",1763,2],
+    [1764,"tripa","tarm/mage",1764,2],
+    [1765,"calabozo","fangehull",1765,2],
+    [1766,"dificultad","vanskelighet",1766,2],
+    [1767,"elefante","elefant",1767,2],
+    [1768,"reino","kongerike/rike",1768,2],
+    [1769,"pensión","pensjon/pensjonat",1769,2],
+    [1770,"cura","prest/kur/behandling",1770,2],
+    [1771,"luna","måne",1771,2],
+    [1772,"bistec","biff",1772,2],
+    [1773,"intercambio","utveksling/bytte",1773,2],
+    [1774,"guardar","å oppbevare/vokte",1774,2],
+    [1775,"pinchazo","stikk/punktering",1775,2],
+    [1776,"gancho","krok/hekt",1776,2],
+    [1777,"calabaza","gresskar",1777,2],
+    [1778,"mimo","mime/kos/omsorg",1778,2],
+    [1779,"indicio","tegn/indisium",1779,2],
+    [1780,"sabor","smak",1780,2],
+    [1781,"sensible","sensitiv/følsom",1781,2],
+    [1782,"suela","såle",1782,2],
+    [1783,"esquimal","eskimo/inuitt",1783,2],
+    [1784,"pierna","bein (anat.)",1784,2],
+    [1785,"prohibir","å forby",1785,2],
+    [1786,"presentimiento","forutanelse",1786,2],
+    [1787,"gacela","gasell",1787,2],
+    [1788,"balcón","balkong",1788,2],
+    [1789,"petición","forespørsel/begjæring",1789,2],
+    [1790,"desatar","å løsne/slippe løs",1790,2],
+    [1791,"yegua","hoppe (hest)",1791,2],
+    [1792,"brillo","glans/skjær",1792,2],
+    [1793,"deducción","fradrag/utledning",1793,2],
+    [1794,"bancarrota","konkurs",1794,2],
+    [1795,"debilidad","svakhet",1795,2],
+    [1796,"algoritmo","algoritme",1796,2],
+    [1797,"croqueta","kroket (mat)",1797,2],
+    [1798,"cojín","pute (møbel)",1798,2],
+    [1799,"máquina","maskin",1799,2],
+    [1800,"rabia","raseri/rabies",1800,2],
+    [1801,"serio","seriøs/alvorlig",1801,2],
+    [1802,"límite","grense",1802,2],
+    [1803,"situar","å plassere",1803,2],
+    [1804,"burro","esel/dum person",1804,2],
+    [1805,"pupitre","skolepult",1805,2],
+    [1806,"cojo","halt/haltende",1806,2],
+    [1807,"filmar","å filme",1807,2],
+    [1808,"escalofrío","frysning/gysning",1808,2],
+    [1809,"plátano","banan",1809,2],
+    [1810,"trámite","formalitet/saksbehandling",1810,2],
+    [1811,"misterioso","mystisk",1811,2],
+    [1812,"cuchillo","kniv",1812,2],
+    [1813,"gaseosa","brus",1813,2],
+    [1814,"paisaje","landskap",1814,2],
+    [1815,"grieta","sprekk/revne",1815,2],
+    [1816,"caja","kasse/eske",1816,2],
+    [1817,"tropezar","å snuble",1817,2],
+    [1818,"plástico","plast/plastisk",1818,2],
+    [1819,"estupidez","dumhet",1819,2],
+    [1820,"miseria","elendighet/fattigdom",1820,2],
+    [1821,"apetito","appetitt",1821,2],
+    [1822,"detective","detektiv",1822,2],
+    [1823,"rodaja","skive (mat)",1823,2],
+    [1824,"regadera","vannkanne",1824,2],
+    [1825,"separación","separasjon/atskillelse",1825,2],
+    [1826,"travieso","rampete/skøyeraktig",1826,2],
+    [1827,"reposo","hvile/ro",1827,2],
+    [1828,"conquistar","å erobre",1828,2],
+    [1829,"granito","granitt/lite korn",1829,2],
+    [1830,"improvisar","å improvisere",1830,2],
+    [1831,"brujo","trollmann/heksemester",1831,2],
+    [1832,"acantilado","klippe/stup",1832,2],
+    [1833,"borrar","å slette/viske ut",1833,2],
+    [1834,"editar","å redigere",1834,2],
+    [1835,"arrodillarse","å knele",1835,2],
+    [1836,"arrepentirse","å angre",1836,2],
+    [1837,"champán","champagne",1837,2],
+    [1838,"electrodoméstico","elektrisk husholdningsapparat",1838,2],
+    [1839,"desván","loft/kott",1839,2],
+    [1840,"discapacidad","funksjonshemming",1840,2],
+    [1841,"pavo","kalkun",1841,2],
+    [1842,"riñón","nyre",1842,2],
+    [1843,"escritorio","skrivebord",1843,2],
+    [1844,"fideo","nuddel",1844,2],
+    [1845,"barca","båt/lekter",1845,2],
+    [1846,"meteorito","meteoritt",1846,2],
+    [1847,"embudo","trakt",1847,2],
+    [1848,"preferir","å foretrekke",1848,2],
+    [1849,"tarde","sen/ettermiddag",1849,2],
+    [1850,"carcajada","latterbrøl",1850,2],
+    [1851,"espía","spion",1851,2],
+    [1852,"infracción","overtredelse/forseelse",1852,2],
+    [1853,"mosca","flue",1853,2],
+    [1854,"latín","latin",1854,2],
+    [1855,"enfriar","å avkjøle",1855,2],
+    [1856,"párpado","øyelokk",1856,2],
+    [1857,"lanzamiento","oppskyting/lansering",1857,2],
+    [1858,"abundancia","overflod",1858,2],
+    [1859,"calambre","krampe/strømstøt",1859,2],
+    [1860,"barra","stang/bar",1860,2],
+    [1861,"tozudo","sta",1861,2],
+    [1862,"cantante","sanger",1862,2],
+    [1863,"cómic","tegneserie",1863,2],
+    [1864,"eje","aksel/akse",1864,2],
+    [1865,"reivindicar","å hevde/kreve",1865,2],
+    [1866,"feria","messe/marked",1866,2],
+    [1867,"rosario","rosenkrans",1867,2],
+    [1868,"percha","kleshenger/gardin",1868,2],
+    [1869,"cochera","garasje",1869,2],
+    [1870,"mentón","hake (anat.)",1870,2],
+    [1871,"encía","tannkjøtt",1871,2],
+    [1872,"parrillada","grillfest",1872,2],
+    [1873,"paño","klut/tørkle",1873,2],
+    [1874,"codiciar","å trakte etter/begjære",1874,2],
+    [1875,"quiosco","kiosk",1875,2],
+    [1876,"alcantarilla","kloakk/kum",1876,2],
+    [1877,"remolque","tilhenger/slep",1877,2],
+    [1878,"establo","stall",1878,2],
+    [1879,"huésped","gjest/vert",1879,2],
+    [1880,"cojera","halthet",1880,2],
+    [1881,"avispa","veps",1881,2],
+    [1882,"anillo","ring",1882,2],
+    [1883,"ovación","applaus/hyllest",1883,2],
+    [1884,"emboscada","bakhold",1884,2],
+    [1885,"vidriera","glassvindu/maleri",1885,2],
+    [1886,"anular","å annullere",1886,2],
+    [1887,"diosa","gudinne",1887,2],
+    [1888,"taponar","å tette igjen",1888,2],
+    [1889,"renovación","fornyelse",1889,2],
+    [1890,"mover","å flytte/bevege",1890,2],
+    [1891,"normativa","regelverk/normer",1891,2],
+    [1892,"paleta","spade/palett",1892,2],
+    [1893,"amenazar","å true",1893,2],
+    [1894,"dentadura","tenner/tannsett",1894,2],
+    [1895,"señuelo","lokkedue/agn",1895,2],
+    [1896,"chismoso","sladrehank",1896,2],
+    [1897,"foro","forum",1897,2],
+    [1898,"civilización","sivilisasjon",1898,2],
+    [1899,"golpista","kuppmaker",1899,2],
+    [1900,"aula","klasserom/auditorium",1900,2],
+    [1901,"resumen","sammendrag/oppsummering",1901,2],
+    [1902,"rociar","å spraye/dryss",1902,2],
+    [1903,"sabio","vis/klok",1903,2],
+    [1904,"papiro","papyrus",1904,2],
+    [1905,"conciencia","bevissthet/samvittighet",1905,2],
+    [1906,"grillo","siriss",1906,2],
+    [1907,"caimán","kaiman/alligator",1907,2],
+    [1908,"manejar","å håndtere/kjøre",1908,2],
+    [1909,"peinar","å gre (hår)/frisere",1909,2],
+    [1910,"importar","å importere/bry seg om",1910,2],
+    [1911,"ensimismado","fordypet i seg selv",1911,2],
+    [1912,"vasija","kar/beholder",1912,2],
+    [1913,"ajustar","å justere",1913,2],
+    [1914,"garantía","garanti",1914,2],
+    [1915,"solicitar","å søke om/be om",1915,2],
+    [1916,"sustituto","stedfortreder/erstatning",1916,2],
+    [1917,"aplastar","å knuse/klemme flat",1917,2],
+    [1918,"agrio","sur/syrlig",1918,2],
+    [1919,"aullar","å ule/hyle",1919,2],
+    [1920,"naufragio","skipsforlis",1920,2],
+    [1921,"aseo","hygiene/rengjøring/toalett",1921,2],
+    [1922,"plagio","plagiat",1922,2],
+    [1923,"toldo","markise/soltelt",1923,2],
+    [1924,"espejo","speil",1924,2]
+  ];
+
+  // === LEVELS 3-5: Generated from base data ===
+  function genWord(id, es, no, rank, level) { return [id, es, no, rank, level]; }
+
+  const l3base = [
+    ["abismo","avgrunn"],["acogedor","koselig"],["adorno","dekorasjon/pynt"],
+    ["agotar","utmatte/tømme"],["agradable","behagelig"],["aislar","isolere"],
+    ["albergar","huse/romme"],["alcance","rekkevidde/omfang"],["alegar","hevde/påstå"],["alentar","oppmuntre"],
+    ["alfombra","teppe/gulvteppe"],["alimentar","mate/ernære"],["almacenar","lagre"],["alquiler","leie"],
+    ["amanecer","gry/daggry"],["amasar","elte/samle"],["ambicioso","ambisiøs"],
+    ["amistad","vennskap"],["ampliar","utvide/forstørre"],["analfabeto","analfabet"],["anciano","eldre/gammel"],
+    ["andén","perrong"],["anécdota","anekdote"],["angustia","angst/kval"],["anhelo","lengsel"],
+    ["animar","oppmuntre/animate"],["anotar","notere"],["antigüedad","antikvitet/oldtid"],["anuario","årbok"],
+    ["aparcar","parkere"],["apestar","stinke"],["aplazar","utsette"],["apodo","kallenavn"],
+    ["apoyar","støtte"],["apreciar","verdsette"],["apretar","klemme/stramme"],
+    ["aprovechar","utnytte/dra nytte av"],["apto","egnet/skikket"],["árbol","tre"],["arder","brenne"],
+    ["arena","sand/arena"],["armonía","harmoni"],["aroma","aroma/duft"],["arquitecto","arkitekt"],
+    ["arriesgar","risikere"],["arroyo","bekk"],["arrastrar","slepe/dra"],["arreglar","ordne/reparere"],
+    ["arrepentimiento","anger"],["astucia","list/sluhet"],["asustar","skremme"],["atardecer","skumring"],
+    ["atraer","tiltrekke"],["atrapar","fange"],["atrevido","dristig/frekk"],["aturdir","bedøve/forvirre"],
+    ["audaz","dristig/modig"],["aumentar","øke"],["ausencia","fravær"],["autógrafo","autograf"],
+    ["autoridad","autoritet"],["avenida","aveny/bred gate"],["avería","havari/skade"],
+    ["ávido","ivrig/grådig"],["avisar","varsle/gi beskjed"],["ayudante","assistent/hjelper"],["azar","tilfeldighet"],
+    ["balde","bøtte"],["bañera","badekar"],["baraja","kortstokk"],["barba","skjegg"],
+    ["barranco","ravine/juv"],["barrer","feie/koste"],["barriga","mage/buk"],["basura","søppel"],
+    ["batir","slå/piske/visp"],["bautizar","døpe"],["bendición","velsignelse"],["beneficio","fordel/overskudd"],
+    ["besar","kysse"],["blandir","svinge (våpen)"],["bocadillo","sandwich/snack"],["bodega","vingård/kjeller"],
+    ["bolsillo","lomme"],["bondad","godhet"],["borrador","kladd/viskelær"],
+    ["bosque","skog"],["bote","boks/båt"],["botiquín","førstehjelpsskrin"],["bramar","brøle/brumme"],
+    ["brillar","skinne/stråle"],["brindar","skåle/gi"],["brisa","bris"],["brote","spire/utbrudd"],
+    ["brújula","kompass"],["bucear","dykke"],["bulto","bylt/klump"],["burbuja","boble"],
+    ["burgués","borgerlig"],["burlar","lure/unngå"],["butaca","lenestol/sete"],["cabalgata","kavalkade/opptog"],
+    ["cabaña","hytte"],["cadáver","lik"],["cadera","hofte"],
+    ["calentar","varme opp"],["callado","stille/taus"],["calzada","kjørebane/vei"],["cambalache","byttehandel/rot"],
+    ["camilla","båre/undersøkelsesbenk"],["camiseta","t-skjorte"],["campana","klokke/bjelle"],["campestre","landlig"],
+    ["canasta","kurv"],["cancelar","kansellere/avbestille"],["candado","hengelås"],["cansado","trøtt/sliten"],
+    ["caparazón","skall/panser"],["capataz","formann/arbeidsleder"],["capricho","innfall/lune"],
+    ["cápsula","kapsel"],["capturar","fange"],["caracol","snegl/snegle"],["caramelo","karamell"],
+    ["caravana","karavane/campingvogn"],["carbón","kull"],["cardenal","kardinal/blåmerke"],["carecer","mangle"],
+    ["carga","last/belastning"],["cariño","kjærlighet/ømhet"],["carpa","karpe/telt"],
+    ["carroza","vogn/karét"],["carta","brev/meny"],["cartel","plakat/kartell"],["cartera","lommebok/portefølje"],
+    ["casero","hjemmelaget/huseier"],["casete","kassett"],["casta","kaste/rase"],
+    ["castaña","kastanje"],["castigo","straff"],["catástrofe","katastrofe"],["catedral","katedral"],
+    ["cauce","elveløp/kanal"],["caucho","gummi"],["caviar","kaviar"],["cebolla","løk"],
+    ["ceder","gi etter/avstå"],["ceja","øyenbryn"],["celda","celle"],["celeste","himmelblå/himmelsk"],
+    ["cenar","spise middag"],["ceniza","aske"],["censura","sensur/kritikk"],
+    ["ceño","rynket panne"],["cepillar","børste"],["cepillo","børste/kost"],["cerca","nær/gjerde"],
+    ["cercano","nær/nærliggende"],["cerebral","hjerne-"],["cerilla","fyrstikk"],
+    ["cerro","ås/høyde"],["certamen","konkurranse/utstilling"],["cerveza","øl"],["cesar","opphøre/avskjedige"],
+    ["césped","plen/gress"],["cesta","kurv"],["chabola","brakke/skur"],["chal","sjal"],
+    ["chaleco","vest"],["champú","sjampo"],["chantaje","utpressing"],["chapuzón","dukkert"],
+    ["chaqueta","jakke"],["charla","prat/samtale"],["charlar","prate/snakke"],["chicle","tyggegummi"],
+    ["chimenea","peis/skorstein"],["chispa","gnist"],["chiste","vits"],["chocar","kollidere/støte"],
+    ["chorizo","chorizo (pølse)"],["chulo","kul/frekk/hallik"],["cicatriz","arr"],["ciclón","syklon"],
+    ["cierre","lukking/stenging"],["cima","topp/tinde"],["cimientos","grunnmur/fundament"],
+    ["cinta","bånd/tape"],["cintura","midje/liv"],["cinturón","belte"],
+    ["circuito","kretsløp/krets"],["cirujano","kirurg"],["cisne","svane"],
+    ["clamar","rope/klage høylytt"],["clan","klan"],["clarear","lysne/klarne"],
+    ["clave","nøkkel/kode"],["clavo","spiker/nellik"],
+    ["clinica","klinikk"],["cloro","klor"],["cobaya","marsvin/forsøkskanin"],["cocer","koke (mat)"],
+    ["codicia","grådighet"],["cofre","kiste/skrin"],["coincidir","sammenfalle"],
+    ["cola","hale/kø/lim"],["colcha","sengeteppe"],["colchón","madrass"],["coleccionar","samle (objekter)"],
+    ["colilla","sneip"],["colmena","bikube"],
+    ["colmo","høydepunkt/topp"],["colonizar","kolonisere"],["colono","nybygger/kolonist"],["colorido","fargerik"],
+    ["columpio","huske"],["comadre","venninne/gudmor"],["comarca","distrikt/region"],
+    ["combatir","kjempe/bekjempe"],["combinar","kombinere"],["comerciante","handelsmann"],["cometa","drage/komet"],
+    ["cometer","begå"],["comisario","kommissær/politiinspektør"],["cómodo","komfortabel"],["compadecer","synes synd på"],
+    ["compás","kompass/takt"],["compasivo","medfølende"],["competente","kompetent"],["complaciente","imøtekommende"],
+    ["cómplice","medskyldig"],["componente","komponent"],["comportar","innebære/oppføre seg"],
+    ["compostura","fatning/reparasjon"],["compota","kompott"],["comprender","forstå/omfatte"],["compresa","kompress/bind"],
+    ["compulsivo","tvangsmessig"],["computadora","datamaskin"],["comulgar","ta nattverd"],["concebir","unnfange/forstå"],
+    ["concentrar","konsentrere"],["conciliar","forene/forsone"],
+    ["condena","dom/straff"],["condesa","grevinne"],["conducta","oppførsel/adferd"],
+    ["conejo","kanin"],
+    ["confiar","stole på/betro"],["confitería","konditori"],
+    ["congreso","kongress"],["conjugar","bøye (verb)"],["conmemorar","minnes/markere"],["conmover","bevege/røre"],
+    ["consagrar","vie/innvie"],["conseguir","oppnå/skaffe"],["consejero","rådgiver"],
+    ["conservar","bevare/konservere"],["considerable","betydelig"],["consigna","slagord/instruks"],["consistir","bestå av"],
+    ["consorte","ektemake/gemal"],["constancia","utholdenhet/bevis"],
+    ["contable","regnskapsfører"],["contagioso","smittsom"],["contaminar","forurense"],["contemplar","betrakte/se på"],
+    ["contexto","kontekst"],["contorno","kontur/omriss"],["contradecir","motsi"],
+    ["contraer","trekke sammen/pådra seg"],["contraseña","passord"],["contraste","kontrast/motsetning"],["contratar","ansette/inngå avtale"],
+    ["convenio","avtale/overenskomst"],["convento","kloster"],["conversar","konversere/samtale"],["convertir","konvertere/omvende"],
+    ["convocatoria","innkalling/utlysning"],["cooperar","samarbeide"],["coordinar","koordinere"],["copa","glass/pokal/trekrone"],
+    ["coral","korall/kor-"],["coraza","panser/rustning"],["corcho","kork"],["cordero","lam (dyr)"],
+    ["cordial","hjertelig"],["cordillera","fjellkjede"],["cordura","fornuft/sindighet"],["coro","kor"],
+    ["correa","reim/lenke"],["corregir","korrigere/rette"],["corresponsal","korrespondent"],["cortés","høflig"],
+    ["coser","sy"],["cosmos","kosmos"],
+    ["costilla","ribben/kotelett"],["costoso","kostbar/dyr"],["cotidiano","daglig/hverdagslig"],["cráneo","hodeskalle"],
+    ["crepúsculo","tussmørke/skumring"],["criatura","skapning/vesen"],
+    ["criollo","kreol"],["cripta","krypt"],["crisol","smeltedigel"],
+    ["criterio","kriterium/vurdering"],["crónica","krønike/reportasje"],["crucificar","korsfeste"],["crudo","rå"],
+    ["cruel","grusom"],["crujir","knirke/knase"],["cruzada","korstog"],["cuaderno","skrivehefte/notatbok"],
+    ["cuadra","stall/kvartal"],["cuadro","maleri/bilde"],["cualidad","egenskap/kvalitet"],["cubierta","deksel/omslag/dekk"],
+    ["cubierto","bestikk"],["cubo","bøtte/kube"],["cucaracha","kakerlakk"],
+    ["cuerda","tau/streng"],["cuero","lær/skinn"],
+    ["cuestionar","stille spørsmål ved"],["culebra","slange"],["culminar","kulminere/toppe"],
+    ["cultivar","dyrke/kultivere"],["cuna","vugge"],
+    ["cuota","kontingent/andel"],["curandero","helbreder/kvakksalver"],["currar","jobbe (slang)"],["cursar","studere/gå på kurs"],
+    ["curso","kurs/retning/årskull"],["custodiar","vokte/bevokte"]
+  ];
+
+  for (let i = 0; i < l3base.length; i++) {
+    l3.push(genWord(2001 + i, l3base[i][0], l3base[i][1], 2001 + i, 3));
+  }
+
+  const l4 = [];
+  const l4base = [
+    ["daga","dolk"],["danza","dans"],["debatir","debattere"],["deber","plikt/skyld"],
+    ["década","tiår"],["decaer","forfalle/avta"],["decepcionar","skuffe"],["declarar","erklære/deklarere"],
+    ["decorar","dekorere"],["dedal","fingerbøl"],["defectuoso","defekt/mangelfull"],["definir","definere"],
+    ["degollar","skjære over halsen"],["delegar","delegere"],["delgado","tynn/slank"],["delicia","nytelse/delikatesse"],
+    ["delincuente","forbryter/kriminell"],["demás","øvrige/andre"],["demencia","demens/sinnssykdom"],["demoler","rive ned/demolere"],
+    ["demonio","demon/djevel"],["demora","forsinkelse"],["denso","tett/kompakt"],["dentro","inne/innenfor"],
+    ["denunciar","anmelde/fordømme"],["depilar","barbere/fjerne hår"],["deportar","deportere"],["depositar","deponere/sette inn"],
+    ["depurar","rense/utrense"],["derivar","avlede/stamme fra"],["derramar","søle/helle ut"],["derretir","smelte"],
+    ["derrumbar","rase sammen/kollapse"],["desabrochar","kneppe opp"],["desacuerdo","uenighet"],["desafar","utfordre"],
+    ["desahuciar","kaste ut/fradømme håp"],["desangrar","forblø"],["desaprobar","mislike/avvise"],["desarmar","avvæpne/demontere"],
+    ["desarrollar","utvikle"],["desastre","katastrofe"],["desatar","løsne/utløse"],["desayunar","spise frokost"],
+    ["desbordar","oversvømme/overvelde"],["descanso","pause"],["descargar","laste ned/utlade"],["descender","gå ned/senke"],
+    ["descolgar","ta ned/løfte av"],["descomponer","bryte ned/ødelegge"],["desconfiar","mistro"],["desconocido","ukjent"],
+    ["describir","beskrive"],["descubrimiento","oppdagelse"],["descuento","rabatt"],["descuidar","forsømme"],
+    ["desear","ønske"],["desechar","forkaste/kaste"],["desembocar","munne ut/ende"],["desempeñar","utføre/bekle (stilling)"],
+    ["desencadenar","utløse/forårsake"],["desengaño","skuffelse/desillusjon"],["desequilibrio","ubalanse"],["desertar","desertere/forlate"],
+    ["desfilar","paradere/defilere"],["desgastar","slite (ned)"],["desgracia","ulykke"],["deshacer","oppløse/ødelegge"],
+    ["desierto","ørken"],["designar","utpeke/utnevne"],["desigual","ulik/ujevn"],["desinfectar","desinfisere"],
+    ["deslizar","skli/glide"],["deslumbrar","blende/imponere"],["desmayar","besvime"],["desmentir","avkrefte/dementere"],
+    ["desnivel","høydeforskjell/ujevnhet"],["desnudo","naken"],["desobedecer","være ulydig"],["desocupado","ledig/arbeidsledig"],
+    ["desorden","uorden/rot"],["despacio","sakte/langsomt"],["despecho","trass"],["despedazar","rive i stykker"],
+    ["despegar","ta av (fly)/løsne"],["desperdicio","sløsing/avfall"],["despertar","vekke/våkne"],["despiadado","nådeløs"],
+    ["desplazar","fortrenge"],["desplegar","folde ut/utplassere"],["despojo","bytte/rov"],["despreciar","forakte"],
+    ["desprender","løsne/frigjøre"],["desprevenido","uforberedt"],["destacar","fremheve"],["destapar","åpne/ta av lokket"],
+    ["desterrar","landsforvise"],["destilar","destillere"],["destinar","tildele/øremerke"],["destituir","avsette (fra stilling)"],
+    ["destreza","ferdighet/dyktighet"],["destruir","ødelegge"],["desvanecer","visne/forsvinne"],["desvelar","avsløre"],
+    ["desviar","avlede/avvike"],["detallado","detaljert"],["detectar","oppdage/detektere"],["deteriorar","forringe/skade"],
+    ["determinar","fastslå/bestemme"],["detonar","sprenge/utløse"],["deuda","gjeld"],["devastar","ødelegge/rasere"],
+    ["devenir","bli/utvikle seg til"],["devoción","hengivenhet/andakt"],["devorar","sluke/fortære"],["diagnosticar","diagnostisere"],
+    ["diálogo","dialog/samtale"],["diario","daglig/dagbok"],["dibujar","tegne"],["dictadura","diktatur"],
+    ["diestro","høyrehendt/dyktig"],["difundir","spre/kringkaste"],["difunto","avdød"],["digerir","fordøye"],
+    ["digno","verdig"],["diluir","fortynne/utvanne"],["dimension","dimensjon"],["dimisión","avskjed/fratreden"],
+    ["diminuto","bitte liten"],["dinastía","dynasti"],["diplomacia","diplomati"],["diputado","representant/stortingsmedlem"],
+    ["dirección","retning"],["director","regissør"],["dirigible","luftskip"],["discernir","skjelne/avgjøre"],
+    ["disciplina","disiplin"],["disco","disk/plate"],["discordia","uenighet/splid"],["discrepar","være uenig/avvike"],
+    ["disculpar","unnskylde"],["discutir","diskutere"],["disecar","dissekere"],["diseminar","spre/strø"],
+    ["disfrazar","kle seg ut/forkle"],["disfrutar","nyte"],["disgustar","mishage/irritere"],["disimular","skjule/late som ingenting"],
+    ["disipar","spre/fordrive"],["disminuir","minske/redusere"],["disolver","oppløse"],["disparar","skyte"],
+    ["dispersar","spre (seg)"],["disponer","stille til rådighet/ordne"],["disputa","disputt/tvist"],["distinguir","skjelne/utmerke"],
+    ["distorsionar","forvrenge/fordreie"],["distribuir","distribuere/fordele"],["disuadir","fraråde/overtale til å la være"],["divagar","sveve ut/digresjonere"],
+    ["divergencia","divergens/avvik"],["diverso","forskjellig/mangfoldig"],["divertir","underholde/more"],["dividir","dele/dividere"],
+    ["divinidad","guddommelighet"],["divisa","valuta/devise"],["divorcio","skilsmisse"],["divulgar","offentliggjøre/bekjentgjøre"],
+    ["doblar","bøye/doble/dubbe"],["doler","gjøre vondt"],["domesticar","temme/domestisere"],["dominante","dominerende"],
+    ["dominar","dominere/beherske"],["donante","donor/giver"],["dorado","gyllen/forgylt"],["dormitar","døse/blunde"],
+    ["dorsal","rygg-/dorsal"],["dosificar","dosere/porsjonere"],["drama","drama"],["drenar","drenere/tørke ut"],
+    ["droga","narkotika/medikament"],["ducha","dusj"],["duda","tvil"],["duelo","duell/sorg"],
+    ["dulce","søt"],["duna","sanddyne"],["duplicar","duplisere/fordoble"],["duradero","varig/holdbar"],
+    ["dureza","hardhet"],["echar","kaste/helle/gi"],["eclipse","formørkelse"],["edad","alder"]
+  ];
+  for (let i = 0; i < l4base.length; i++) {
+    l4.push(genWord(3001 + i, l4base[i][0], l4base[i][1], 3001 + i, 4));
+  }
+
+  const l5 = [];
+  const l5base = [
+    ["editorial","lederartikkel/forlag"],["educar","utdanne/oppdra"],["efectivo","effektiv/kontanter"],["ejecutar","utføre/henrette"],
+    ["ejemplar","eksemplar/forbilledlig"],["ejercer","utøve/praktisere"],["elaborar","utarbeide"],["elegancia","eleganse"],
+    ["elegir","velge"],["elevar","heve/løfte"],["elogiar","rose/lovprise"],["emanar","utstråle/komme fra"],
+    ["embajada","ambassade"],["embalar","pakke/emballere"],["embalsamar","balsamere"],["embarazoso","pinlig/flaut"],
+    ["embarcar","gå om bord/skipe"],["embargo","beslag/embargo"],["embellecer","forskjønne"],["embestir","storme/angripe"],
+    ["emblema","emblem/symbol"],["emborrachar","beruse/drikke full"],["emboscada","bakholdsangrep"],["embrión","embryo"],
+    ["embrujar","forhekse"],["embuste","løgn/bedrag"],["emergencia","nødsituasjon"],["emerger","dukke opp/stige frem"],
+    ["emigrar","emigrere/utvandre"],["emitir","utsende/avgi"],["empacar","pakke"],["empalme","skjøt/sammenføyning"],
+    ["empañar","dugge/tilsløre"],["empapar","gjennomvæte"],["empaquetar","pakke inn"],["emparentado","beslektet"],
+    ["empatar","spille uavgjort"],["empellón","dytt/skubb"],["empeorar","forverre"],["emperador","keiser"],
+    ["empezar","begynne"],["empinado","bratt/steil"],["emplazamiento","plassering/sted"],["emplear","ansette/bruke"],
+    ["empobrecer","utarme/gjøre fattig"],["empollar","ruge/pugge"],["emprender","påbegynne/starte"],["empujón","dytt"],
+    ["empuñar","gripe (våpen)"],["enamorado","forelsket"],["enano","dverg"],["encabezar","lede/stå i spissen for"],
+    ["encadenar","lenke fast"],["encajar","passe inn/tilpasse"],["encaminar","lede/rette"],["encandilar","blende/fascinere"],
+    ["encantar","fortrylle/elske"],["encarcelar","fengsle"],["encargar","bestille/gi i oppdrag"],["encariñar","bli glad i"],
+    ["encarnación","inkarnasjon/legemliggjøring"],["encender","tenne/slå på"],["encerrar","stenge inne"],["encía","tannkjøtt"],
+    ["enciclopedia","leksikon"],["encima","oppå/i tillegg"],["encoger","krympe/trekke sammen"],["encomendar","betro/overlate"],
+    ["encontrar","finne"],["encrucijada","veikryss/dilemma"],["encubrir","skjule/dekke over"],["encuesta","spørreundersøkelse"],
+    ["enderezar","rette opp/glatte"],["endulzar","søte/ forsøte"],["endurecer","herde/gjøre hard"],["enemigo","fiende"],
+    ["enfadar","irritere/gjøre sint"],["enfermería","sykestue"],["enfermizo","sykelig/svakelig"],["enfermo","syk"],
+    ["enfilar","sikte/rette inn"],["enfoque","fokus/tilnærming"],["enfrentamiento","konfrontasjon"],["enfriamiento","avkjøling/forkjølelse"],
+    ["engalanar","pynte/smykke"],["engañar","lure/bedra"],["engaño","bedrag/lureri"],["engendrar","avle/skape"],
+    ["englobar","omfatte/inkludere"],["engordar","legge på seg/bli tykk"],["engranaje","tannhjul/gir"],["enigma","gåte/mysterium"],
+    ["enjabonar","såpe inn"],["enjaular","sette i bur"],["enjuagar","skylle"],["enjugar","tørke"],
+    ["enlace","lenke"],["enlazar","knytte sammen/linke"],["enloquecer","bli gal"],["enmarcar","ramme inn"],
+    ["enmendar","rette opp/endre"],["enojar","irritere/ergre"],["enorgullecer","gjøre stolt"],["enorme","enorm"],
+    ["enredar","vikle inn/forvirre"],["enrevesado","innviklet/komplisert"],["enriquecer","berike"],["enrollar","rulle sammen"],
+    ["ensamblar","montere/sette sammen"],["ensanchar","utvide/gjøre bredere"],["ensangrentar","tilsøle med blod"],["ensayo","prøve/essay/øvelse"],
+    ["enseñanza","undervisning/lære"],["enseres","eiendeler/utstyr"],["ensillar","sale"],["ensordecer","overdøve/gjøre døv"],
+    ["ensuciar","skitne til"],["entablar","innlede/legge (gulv)"],["ente","vesen/entitet"],["entero","hel/intakt"],
+    ["enterrar","begrave"],["entidad","enhet"],["entonar","intonere/synge"],["entorpecer","hindre/vanskeliggjøre"],
+    ["entraña","innvoll/kjerne"],["entrañable","nær/kjær/inderlig"],["entreabrir","åpne på gløtt"],["entreacto","mellomakt/pause"],
+    ["entrecortado","avbrutt/hakkete"],["entredicho","tvil/omstridt"],["entregar","levere/overrekke"],["entrelazar","flette sammen"],
+    ["entremés","mellomrett/appetittvekker"],["entrenar","trene"],["entrever","skimte/ane"],["entrevista","intervju"],
+    ["entristecer","gjøre trist"],["entrometerse","blande seg inn"],["entumecido","stiv/nummen"],["entusiasmar","begeistre"],
+    ["enumerar","regne opp/liste"],["enunciar","formulere/uttrykke"],["envainar","stikke i sliren"],["envasar","pakke/tappe"],
+    ["envejecer","bli gammel/eldes"],["envenenar","forgifte"],["envergadura","omfang/vingespenn"],["enviar","sende"],
+    ["envidia","misunnelse"],["envidiar","misunne"],["envilecer","fornedre"],["enviudar","bli enke/enkemann"],
+    ["envoltorio","innpakning/omslag"],["enyesar","gipse"],["enzarzarse","vikle seg inn/havne i krangel"],["época","epoke/tidsalder"],
+    ["equidad","rettferdighet/likhet"],["equilibrar","balansere"],["equipar","utstyre"],["equitación","ridning/hestesport"],
+    ["equivalente","tilsvarende/ekvivalent"],["equivocar","ta feil/forveksle"],["erigir","reise/oppføre"],["erizar","reise bust"],
+    ["erosionar","erodere/nedbryte"],["erradicar","utrydde"],["errante","omstreifende/vandrende"],["errata","trykkfeil"],
+    ["erróneo","feilaktig"],["eructar","rape"],["erudito","lærd/velinformert"],["esbelto","slank/smekker"],
+    ["esbozar","skissere/antydning"],["escabroso","vanskelig/skabrøs"],["escalar","klatre/skalere"],["escaldar","skålde"],
+    ["escama","skjell/fiskeskjell"],["escampar","klarne opp/holde opp"],["escándalo","skandale"],["escapar","rømme/unnslippe"],
+    ["escaparate","utstillingsvindu"],["escarbar","grave/rote"],["escarmentar","straffe/gi en lærepenge"],["escarpado","bratt/steil"],
+    ["escasear","være mangel på"],["escaso","knapp/lite"],["escayola","gips (med.)"],["escenario","scene/scenario"],
+    ["esclarecer","oppklare/belyse"],["esclusa","sluse"],["escoba","kost/feiekost"],["escoger","velge (ut)"],
+    ["escolar","skole-"],["escombro","ruin/grus"],["esconder","gjemme/skjule"],["escopeta","hagle/gevær"],
+    ["escorpión","skorpion"],["escribano","skriver/notarius"],["escrito","skrift/dokument"],["escrúpulo","skruppel/betenkelighet"],
+    ["escuadrón","skvadron"],["escuchar","lytte"],["escudar","skjerme/beskytte"],["escudriñar","granske/undersøke nøye"],
+    ["escuela","skole"],["esculpir","skulptere/hugge"],["escupir","spytte"],["escurrir","renne av/klemme ut"],
+    ["esencia","essens"],["esférico","sfærisk/kuleformet"],["esfinge","sfinks"],["esforzar","anstrenge seg"],
+    ["esfumar","viske ut/forsvinne"],["esgrimir","svinge/fehte (med)"],["esguince","forstuelse/vridning"],["eslabón","ledd (kjede)"],
+    ["eslogan","slagord/slogan"],["esmaltar","emaljere/lakkere"],["esmeralda","smaragd"],["esmero","omhu/flid"],
+    ["espacioso","romslig"],["espada","sverd"],["espalda","rygg"],["espantar","skremme/jage"],
+    ["esparadrapo","plaster/heft"],["esparcir","spre/strø"],["especialidad","spesialitet"],["especie","art"],
+    ["especificar","spesifisere"],["espécimen","eksemplar/prøve"],["espectro","spekter/spøkelse"],["espejismo","luftspeiling"],
+    ["espeso","tykk/tett"],["espiar","spionere"],["espiga","aks/plugg"],["espina","torn/fiskebein"],
+    ["espinilla","hudorm/skinneben"],["espiral","spiral"],["espliego","lavendel"],["espolón","spore (fugl)/bølgebryter"],
+    ["esponjoso","svampete/luftig"],["esposar","sette håndjern på"],["espuma","skum"],["espurio","uekte/falsk"],
+    ["esquela","dødsannonse/brev"],["esqueleto","skjelett"],["esquema","diagram/skjema"],["esquina","hjørne"],
+    ["esquivar","unnvike/unngå"],["estabilidad","stabilitet"],["establo","stall"],["estaca","påle/stav"],
+    ["estación","stasjon"],["estacionar","parkere"],["estadio","stadion/stadium"],["estafa","svindel/bedrageri"],
+    ["estafar","svindle"],["estallar","eksplodere/bryte ut"],["estampa","bilde/illustrasjon"],["estancar","stagnere"],
+    ["estanco","vanntett/tobakksbutikk"],["estándar","standard"],["estanque","dam/basseng"],["estante","hylle/reol"],
+    ["estaño","tinn"],["estatua","statue"],["estatura","høyde/statur"],["estela","kjølvann/stele"],
+    ["estercolero","gjødselhaug/søppelfylling"],["estereotipo","stereotypi"],["estéril","steril/ufruktbar"],["estilo","stil"],
+    ["estimar","estimere"],["estipular","fastsette/stipulere"],["estirar","strekke"],["estofa","kvalitet/kaliber"],
+    ["estoico","stoisk"],["estomacal","mage-"],["estorbar","være i veien/hindre"],["estornudar","nyse"],
+    ["estrado","podie/plattform"],["estrafalario","ekstravagant/merkelig"],["estragar","ødelegge/forderve"],["estrangular","kvele"],
+    ["estratagema","list/knep"],["estrechar","smale inn/klemme"],["estregar","gni/skrubbe"],["estremecer","skjelve/gyse"],
+    ["estrenar","premiere/ta i bruk for første gang"],["estreñir","forstoppe"],["estrépito","bråk/rabalder"],["estría","stripe/fure"],
+    ["estribar","støtte seg/bero på"],["estribillo","refreng/omkved"],["estropear","ødelegge/skade"],["estruendo","bulder/drønn"],
+    ["estrujar","klemme/presse"],["estuche","etui/pennal"],["estudiantil","student-"],["estufa","ovn"],
+    ["estupefacto","forbløffet/lamslått"],["estupendo","fantastisk/fremragende"],["estúpido","dum/tåpelig"],["etapa","etappe"],
+    ["etéreo","eterisk/overjordisk"],["etnia","etnisitet/folkegruppe"],["eucaristía","nattverd/eukaristi"],["euforia","eufori/oppstemthet"],
+    ["evacuar","evakuere/tømme"],["evadir","unndra/unngå"],["evaluar","evaluere/vurdere"],["evangelio","evangelium"],
+    ["evaporar","fordampe"],["evidencia","bevis/åpenbarhet"],["evitar","unngå"],["evocar","vekke/minner om"],
+    ["evolucionar","utvikle seg/evolvere"],["exacerbar","forverre/skjærpe"],["exacto","nøyaktig/eksakt"],["exagerar","overdrive"],
+    ["exaltar","opphøye/hylle"],["examinar","undersøke/eksaminere"],["excarcelar","løslate"],["excavar","grave ut"],
+    ["exceder","overskride/overgå"],["excelencia","fortreffelighet"],["excéntrico","eksentrisk"],["excepción","unntak"],
+    ["excesivo","overdreven"],["excitar","opphisse/egge"],["exclamar","utbryte/rope"],["excremento","avføring/ekskrement"],
+    ["excursión","utflukt/ekskursjon"],["excusar","unnskylde"],["exhalar","ånde ut"],["exhausto","utmattet/utslitt"],
+    ["exhibir","vise frem/stille ut"],["exhortar","formane/oppfordre"],["exhumar","grave opp (lik)"],["exigente","krevende"],
+    ["eximir","frita/gi dispensasjon"],["existente","eksisterende"],["éxodo","utvandring/eksodus"],["exonerar","frikjenne/frita"],
+    ["exorbitante","ublu/ekstremt høy"],["exorcista","eksorsist"],["exótico","eksotisk"],["expandir","utvide/ekspandere"],
+    ["expectativa","forventning"],["expedición","ekspedisjon"],["expediente","saksmappe/arkiv"],["expeler","drive ut/støte ut"],
+    ["experimentar","oppleve/erfare"],["experto","ekspert/kyndig"],["expiar","sone/bøte for"],["expirar","utløpe/ånde ut"],
+    ["explanada","åpen plass/slette"],["explayar","utdype/brette ut"],["explicación","forklaring"],["explícito","uttrykkelig/eksplisitt"],
+    ["explorar","utforske"],["explotar","utnytte"],["exponer","stille ut/fremføre"],["exportar","eksportere"],
+    ["expresar","uttrykke"],["expropiar","ekspropriere"],["expuesto","utsatt"],["expulsar","utvise/kaste ut"],
+    ["expurgar","rense/sensurere"],["exquisito","utsøkt/forfinet"],["extender","utvide/strekke ut"],["extenuante","utmattende"],
+    ["exterminar","utrydde"],["extinguir","slokke/utrydde"],["extintor","brannslukningsapparat"],["extorsión","utpressing"],
+    ["extraer","trekke ut"],["extramuros","utenfor murene"],["extranjería","utlendingsvesen"],["extraño","rar/fremmed"],
+    ["extraordinario","ekstraordinær"],["extravagante","ekstravagant/overdådig"],["extraviar","miste/forlegge"],["extremar","ytterliggjøre/forsterke"],
+    ["extremista","ekstremist"],["extremo","ytterst/ekstrem"],["exuberante","frodig/overdådig"],["exultar","juble/fryde seg"],
+    ["eyacular","ejakulere"],["fachada","fasade"],["facilitar","tilrettelegge/forenkle"],["factor","faktor"],
+    ["factura","faktura/regning"],["facultad","fakultet"],["faena","arbeidsoppgave/jobb"],["faisán","fasan"],
+    ["faja","belte/korsett"],["falacia","feilslutning/villfarelse"],["falda","skjørt/fjellside"],["fallar","svikte/felle dom"],
+    ["fallecer","dø/gå bort"],["fallo","feil/dom"],["falsificar","forfalske"],["falta","mangel/feil/fravær"],
+    ["fama","berømmelse/rykte"],["familiar","familie-/kjent"],["fango","gjørme/søle"],["fantasía","fantasi"],
+    ["farándula","teaterverden/artistmiljø"],["fardo","bylt/ballot"],["faro","fyrtårn/lykt"],["farol","lanterne/gatelykt"],
+    ["farsa","farse/komedie"],["fascinante","fasinerende"],["fase","fase"],["fastidiar","plage/irritere"],
+    ["fatal","skjebnesvanger/forferdelig"],["fatiga","tretthet/utmattelse"],["fatuo","forfengelig/innbilsk"],["fauna","fauna"],
+    ["favorito","favoritt"],["fecundar","befrukte"],["federal","føderal"],["felicidad","lykke"],
+    ["feligrés","kirkegjenger/menighetsmedlem"],["feliz","lykkelig"],["fenómeno","fenomen"],["feraz","fruktbar"],
+    ["féretro","båre/likkiste"],["feria","messe"],["fermento","gjær/ferment"],["feroz","villsint/aggressiv"],
+    ["férreo","jern-/urokkelig"],["ferrocarril","jernbane"],["fértil","fruktbar"],["ferviente","glødende/inderlig"],
+    ["festín","festmåltid"],["festivo","festlig/helligdag"],["feudal","føydal"],["fiambre","kald pålegg/kald mat"],
+    ["fianza","kausjon/depositum"],["fiar","selge på kreditt/stole på"],["fibra","fiber"],["ficción","fiksjon/oppdiktning"],
+    ["ficha","brikke"],["fidelidad","trofasthet"],["fiebre","feber"],["fiera","villdyr"],
+    ["fiero","stolt/vill"],["fiesta","fest"],["figura","figur/skikkelse"],["fijar","feste/fastsette"],
+    ["fila","rad/rekke"],["filantropía","filantropi/menneskekjærlighet"],["filial","datter-/avdeling"],["filigrana","filigran/detaljarbeid"],
+    ["filmar","filme"],["filtro","filter"],["financiar","finansiere"],["finca","eiendom/gård"],
+    ["fineza","finhet/høflighet"],["fingir","late som"],["finiquito","sluttoppgjør/kvittering"],["finito","endelig/begrenset"],
+    ["firmeza","fasthet/bestemthet"],["fiscalizar","kontrollere/overvåke"],["fisco","skattevesen/statens kasse"],["fisgar","snoke/spionere"],
+    ["físico","fysisk/fysiker"],["fisura","sprekk/fissur"],["flacidez","slapphet"],["flaco","mager"],
+    ["flagelo","svøpe/plage"],["flagrante","åpenbar/på fersk gjerning"],["flamante","flunkende ny"],["flan","flan/karamellpudding"],
+    ["flanco","flanke/side"],["flash","blitz/glimt"],["flauta","fløyte"],["flecha","pil"],
+    ["flemático","flegmatisk/rolig"],["fletar","chartre/befrakte"],["flexible","fleksibel"],["flojera","slapphet/latskap"],
+    ["flor","blomst"],["flora","flora/planteliv"],["florecer","blomstre"],["florero","blomstervase"],
+    ["flota","flåte"],["fluctuar","fluktuere/variere"],["fluidez","flyt/ledighet"],["fluvial","elve-/fluvial"],
+    ["fobia","fobi"],["foco","fokus/lyskaster"],["fogata","bål"],["fogón","ildsted/komfyr"],
+    ["folclore","folkeminne/folklore"],["fomentar","fremme/oppmuntre"],["fonda","vertshus/gjestgiveri"],["fondeadero","ankarplass"],
+    ["fondo","bunn"],["fonema","fonem/språklyd"],["fontanería","rørleggerarbeid"],["forajido","fredløs/banditt"],
+    ["forastero","fremmed/utenbygds"],["forcejear","kjempe imot/stritte imot"],["forense","rettsmedisinsk"],["forja","smi/smie"],
+    ["forjar","smi/forme"],["forma","form"],["formación","utdanning"],["formal","formell"],["formidable","formidabel/enorm"],
+    ["fórmula","formel"],["fornido","kraftig/robust"],["foro","forum"],["forraje","fôr (dyremat)"],
+    ["fortalecer","styrke"],["fortaleza","festning/styrke"],["fortuito","tilfeldig"],["forzar","tvinge"],
+    ["fosa","grop/grav"],["fósil","fossil"],["foso","vollgrav/grop"],["frac","kjole og hvitt"],
+    ["fracasar","mislykkes"],["fracción","brøkdel/fraksjon"],["fractura","brudd/fraktur"],["fragancia","duft/velduft"],
+    ["frágil","skjør/skrøpelig"],["fragor","drønn/bulder"],["fragua","smi/esse"],["fraile","munk/bror"],
+    ["frambuesa","bringebær"],["franco","åpen/oppriktig/frank"],["franja","stripe/sone"],["franquear","frankere/krysse"],
+    ["frasco","flaske/krukke"],["fraternal","broderlig"],["fraude","bedrageri"],["fray","bror (munk)"],
+    ["frecuencia","frekvens/hyppighet"],["fregar","vaske opp/skrubbe"],["freír","steke/frityrsteke"],["frenar","bremse"],
+    ["frenesí","vanvidd/ekstase"],["freno","brems/tøyle"],["frente","panne"],["fresa","jordbær"],
+    ["fresco","fersk/frisk/kjølig"],["frialdad","kulde/kjølighet"],["fricción","friksjon/gnidning"],["friega","oppvask/skrubbing"],
+    ["frigorífico","kjøleskap"],["fríjol","bønne"],["frío","kald"],["friolento","frossen/frysen"],
+    ["frito","stekt"],["frivolidad","overflatiskhet/lettsindighet"],["frondoso","løvrik/frodig"],["frontón","fronton/pelota-bane"],
+    ["frotar","gni"],["fructífero","fruktbar"],["frugal","nøysom/enkel"],["frunce","rynke/fold"],
+    ["frustrar","frustrere/forhindre"],["fruta","frukt"],["fruto","frukt/resultat"],["fuego","ild"],
+    ["fuel","brensel"],["fuente","fontene"],["fuera","ute"],["fuero","jurisdiksjon/privilegium"],
+    ["fuerte","sterk"],["fuga","flukt/lekkasje"],["fugaz","flyktig/kortvarig"],["fugitivo","flyktning/rømling"],
+    ["fulgor","glans/skjær"],["fulminante","lynrask/ødeleggende"],["fumigar","fumigere/desinfisere"],["función","funksjon/forestilling"],
+    ["fundación","stiftelse/fundament"],["fundamental","grunnleggende"],["fundar","grunnlegge"],["fundir","smelte/sammenføye"],
+    ["fúnebre","sørgelig/begravelses-"],["funeral","begravelse"],["funesto","skjebnesvanger/sørgelig"],["furia","raseri"],
+    ["furioso","rasende"],["furor","vanvidd/raserianfall"],["furtivo","hemmelig/lumsk"],["fusible","sikring (elek.)"],
+    ["fusil","rifle/gevær"],["fusionar","slå sammen/fusjonere"],["fusta","pisk/ridepisk"],["fustigar","piske/kritisere"],
+    ["fútil","ubetydelig/overflødig"],["futuro","fremtid"],["gabinete","kabinett/kontor"]
+  ];
+  for (let i = 0; i < l5base.length; i++) {
+    l5.push(genWord(4001 + i, l5base[i][0], l5base[i][1], 4001 + i, 5));
+  }
+
+  // Extend to fill up to 5000 for each level as needed
+  function fillLevel(arr, targetLen, startId, startRank, level, sourceArr) {
+    while (arr.length < targetLen && sourceArr.length > 0) {
+      const w = sourceArr.shift();
+      arr.push([startId + arr.length - (startId - startRank), w[0], w[1], startRank + arr.length - (startId - startRank), level]);
+    }
+  }
+
+  // Add more words to reach 1000 per level; reuse and extend from the base arrays
+  const extraWords = [
+    ["zanahoria","gulrot"],["zapato","sko"],["zar","tsar"],["zarpa","pote/klo"],
+    ["zarpar","seile/avgang"],["zarza","bjørnebær"],["zona","sone"],["zoo","dyrehage"],
+    ["zumbar","summe/svirre"],["zurdo","venstrehendt"],["ábaco","kuleramme/abakus"],["abatir","felle/slå ned"],
+    ["abdomen","mage/buk"],["abeto","gran/edelgran"],["abismo","avgrunn"],["ablandar","mykne/bløtgjøre"],
+    ["abnegación","selvoppofrelse"],["abochornar","gjøre flau"],["abofetear","fike til/klapse"],["abolir","avskaffe"],
+    ["abollar","bulke"],["abominar","avsky"],["abonar","gjødsle/betale"],["abordar","ta opp/entre"],
+    ["aborrecer","avsky"],["abortar","abortere/avbryte"],["abotargar","hovne opp"],["abrasar","brenne/forsenge"],
+    ["abrazadera","klemme/bøyle"],["abrebotellas","flaskeåpner"],["abrelatas","boksåpner"],["abrevadero","vanningssted"],
+    ["abreviar","forkorte"],["abrigar","varme/beskytte"],["abril","april"],["abrillantar","polere"],
+    ["abrochar","kneppe igjen"],["abrumar","overvelde/tynge"],["absolutismo","enevelde"],["absolver","frikjenne"],
+    ["absorber","absorbere/oppta"],["abstemio","avholdsmann"],["abstenerse","avholde seg"],["abstraer","abstrahere"],
+    ["absurdo","absurd/meningsløs"],["abuchear","bue/pipe ut"],["abuelo","bestefar"],["abultar","være stor/oppsvulmet"],
+    ["abundar","være rikelig"],["aburrir","kjede"],["abusar","misbruke"],["acá","her/hit"],
+    ["acabar","avslutte/ende"],["academia","akademi"],["acaecer","hende/inntreffe"],["acallar","bringe til taushet"],
+    ["acampar","campe/slå leir"],["acanalar","kanalisere/rille"],["acantilar","klippe/stup"],["acaparar","hamstre/legge beslag på"],
+    ["acariciar","kjærtegne/stryke"],["acarrear","medføre/transportere"],["acaso","kanskje/tilfeldigvis"],["acatar","respektere/etterkomme"],
+    ["acaudillar","anføre/lede"],["acceder","få tilgang/gå med på"],["acechar","lure på/ligge på lur"],["acedera","engsyre (plante)"],
+    ["aceitar","olje/smøre"],["acelerar","akselerere/fremskynde"],["acelga","mangold (grønnsak)"],["acento","aksent/trykk"],
+    ["acentuar","understreke/betone"],["acepillar","børste/høvle"],["acera","fortau"],["acerca","om/angående"],
+    ["acercar","nærme seg/bringe nærmere"],["acero","stål"],["acérrimo","svoren/inderlig"],["acetato","acetat"],
+    ["acetona","aceton"],["achacar","tillegge skyld"],["achaque","plage/sykdom"],["achicar","forminske/øse (vann)"],
+    ["achicharrar","brenne/forkulle"],["achispar","beruse lett"],["achuchar","klemme/mase på"],["acicalar","pynte/stelle"],
+    ["acidez","surhet"],["acidificar","surgjøre"],["acierto","treff/riktig valg"],["aclamar","hylle/rope hurra"],
+    ["aclarar","klargjøre/oppklare"],["aclimatar","akklimatisere/venne seg til"],["acné","akne/kviser"],["acobardar","skremme/gjøre feig"],
+    ["acodar","støtte albuen/bøye"],["acoger","ta imot/innvilge"],["acolchar","vattere/polstre"],["acometer","angripe/gå løs på"],
+    ["acomodar","tilpasse/innkvartere"],["acompañar","følge/ledsage"],["acompasar","tilpasse takt"],["aconsejar","rådgi"],
+    ["acopiar","samle/lagre"],["acoplar","koble sammen"],["acoquinar","skremme/kue"],["acordar","avtale/enes om"],
+    ["acordeón","trekkspill"],["acorralar","omringe/jage inn i et hjørne"],["acortar","forkorte"],["acosar","forfølge/trakassere"],
+    ["acostar","legge seg"],["acotar","avgrense/notere"],["acrecentar","øke/forstørre"],["acreditar","akkreditere/bekrefte"],
+    ["acribillar","gjennomhulle/peppre"],["acróbata","akrobat"],["acta","protokoll/dokument"],["actitud","holdning/innstilling"],
+    ["activar","aktivere"],["acto","handling"],["actor","skuespiller"],["actuación","opptreden/forestilling"],
+    ["actual","nåværende"],["actuar","opptre"],["acuarela","akvarell/vannfarge"],["acuario","akvarium"],
+    ["acuartelar","innkvartere (militær)"],["acuchillar","knivstikke"],["acudir","møte opp/henvende seg"],["acueducto","akvedukt"],
+    ["acuerdo","avtale"],["acumular","akkumulere/samle"],["acunar","vugge (baby)"],["acuñar","mynte/preges"],
+    ["acuoso","vannholdig/vassen"],["acupuntura","akupunktur"],["acurrucarse","krype sammen/kose seg"],["acusar","anklage/beskylde"],
+    ["adaptar","tilpasse"],["adecentar","gjøre presentabel"],["adelantar","fremrykke/forbi"],["adeudo","gjeld/debet"],
+    ["adherir","feste/hefte"],["adición","tilføyelse/addisjon"],["adicto","avhengig/tilhenger"],["adiestrar","trene/dressere"],
+    ["adinerar","berike"],["adiós","farvel/ha det"],["aditivo","tilsetningsstoff"],["adivinar","gjette/spå"],
+    ["adjudicar","tildele"],["adjuntar","vedlegge"],["administrar","administrere/forvalte"],["admiración","beundring"],
+    ["admirar","beundre"],["admitir","innrømme/innvilge"],["adobar","marinere"],["adolecer","lide av"],
+    ["adolescente","tenåring/ungdom"],["adonde","hvorhen/dit"],["adoptar","adoptere/ta i bruk"],["adoquín","brostein"],
+    ["adoración","tilbedelse"],["adormecer","søvndysse"],["adornar","dekorere"],["adosar","stille inntil/anbringe"],
+    ["adquirir","erverve"],["adrede","med vilje"],["adrenalina","adrenalin"],["aduana","toll"],
+    ["adueñarse","ta kontroll over"],["adulterio","utroskap"],["adulto","voksen"],["adversario","motstander"],
+    ["adversidad","motgang"],["advertir","advare/gjøre oppmerksom"],["adyacente","tilstøtende"],["aéreo","luft-/fly-"],
+    ["aerodinámico","aerodynamisk"],["aerolínea","flyselskap"],["aeropuerto","flyplass"],["afable","vennlig/omgjengelig"],
+    ["afán","iver/bestrebelse"],["afear","gjøre stygg/skamflaut"]];
+  
+  // Distribute extra words to fill each level to 1000 (l1/l2 already full)
+  fillLevel(l3, 1000, 3001, 3001, 3, extraWords);
+  fillLevel(l4, 1000, 4001, 4001, 4, extraWords);
+  fillLevel(l5, 1000, 5001, 5001, 5, extraWords);
+
+  // Merge all levels
+  WORDS.push(...l1, ...l2, ...l3, ...l4, ...l5);
+  
+  // Ensure unique IDs
+  const seen = new Set();
+  const deduped = [];
+  for (const w of WORDS) {
+    if (!seen.has(w[0])) { seen.add(w[0]); deduped.push(w); }
+  }
+  WORDS.length = 0; WORDS.push(...deduped);
+})();
+
+// ==================== APP STATE ====================
+const LS_KEYS = {
+  PROGRESS: 'sp_vocab_progress',
+  SRS: 'sp_vocab_srs',
+  STATS: 'sp_vocab_stats',
+  SETTINGS: 'sp_vocab_settings',
+  DAILY: 'sp_vocab_daily',
+  AI_BANK: 'sp_vocab_ai_bank'
+};
+
+function loadJSON(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch { return fallback; }
+}
+function saveJSON(key, obj) {
+  try { localStorage.setItem(key, JSON.stringify(obj)); } catch(e) {
+    showToast('Lagringsplassen er full! Rydd localStorage.');
+  }
+}
+
+let progress = loadJSON(LS_KEYS.PROGRESS, {}); // { wordId: { correct, partial, wrong, lastSeen, status: 'new'|'learning'|'learned'|'weak' } }
+let srsData = loadJSON(LS_KEYS.SRS, {});       // { wordId: { nextReview, interval, easeFactor, repetitions } }
+let stats = loadJSON(LS_KEYS.STATS, { totalTested: 0, totalCorrect: 0, totalPartial: 0, totalWrong: 0, streak: 0, lastActiveDate: '', sessionCorrect: 0, sessionTested: 0 });
+let settings = loadJSON(LS_KEYS.SETTINGS, { darkMode: false, autoSpeak: true, dailyGoal: 20 });
+let dailyData = loadJSON(LS_KEYS.DAILY, { date: '', newWordsToday: 0, reviewedToday: 0 });
+let aiBank = loadJSON(LS_KEYS.AI_BANK, []);
+
+// Ensure date tracking
+const today = new Date().toISOString().split('T')[0];
+if (dailyData.date !== today) {
+  dailyData = { date: today, newWordsToday: 0, reviewedToday: 0 };
+  saveJSON(LS_KEYS.DAILY, dailyData);
+}
+
+// Streak
+if (stats.lastActiveDate) {
+  const last = new Date(stats.lastActiveDate);
+  const cur = new Date(today);
+  const diff = Math.floor((cur - last) / (1000 * 60 * 60 * 24));
+  if (diff === 1) stats.streak++;
+  else if (diff > 1) stats.streak = 0;
+} else {
+  stats.streak = 1;
+}
+stats.lastActiveDate = today;
+
+let currentQuizWord = null;
+let answerRevealed = false;
+let currentTab = 'quiz';
+
+// ==================== DOM REFS ====================
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+const tabQuiz = $('#tab-quiz'), tabSRS = $('#tab-srs'), tabWordlist = $('#tab-wordlist'), tabAI = $('#tab-ai'), tabStats = $('#tab-stats');
+const quizWord = $('#quiz-word'), quizAnswer = $('#quiz-answer'), answerReveal = $('#answer-reveal');
+const feedbackBtns = $('#feedback-btns'), exampleSentence = $('#example-sentence');
+const btnReveal = $('#btn-reveal'), btnSkip = $('#btn-skip'), speakCurrent = $('#speak-current');
+const quizLevel = $('#quiz-level'), quizPriority = $('#quiz-priority');
+const darkToggle = $('#darkToggle'), autoSpeakToggle = $('#autoSpeakToggle');
+const goalIndicator = $('#goal-indicator'), dailyGoalInput = $('#daily-goal-input'), saveGoalBtn = $('#save-goal');
+const goalFill = $('#goal-fill'), goalText = $('#goal-text');
+const srsBadge = $('#srs-badge'), srsList = $('#srs-list'), srsStats = $('#srs-stats');
+const wlBody = $('#wl-body'), wlSearch = $('#wl-search'), wlLevel = $('#wl-level'), wlStatus = $('#wl-status'), wlCount = $('#wl-count');
+const stTotal = $('#st-total'), stLearned = $('#st-learned'), stStreak = $('#st-streak'), stAccuracy = $('#st-accuracy');
+const levelProgress = $('#level-progress');
+// AI tab refs
+const aiTopic = $('#ai-topic'), btnGenerate = $('#btn-generate'), aiLoading = $('#ai-loading'), aiResults = $('#ai-results');
+const aiBankCount = $('#ai-bank-count'), aiBankSearch = $('#ai-bank-search'), aiBankList = $('#ai-bank-list');
+const btnExportAI = $('#btn-export-ai'), btnClearAI = $('#btn-clear-ai');
+
+// ==================== SPEECH ====================
+let speechSynth = window.speechSynthesis;
+let spanishVoice = null;
+
+function findSpanishVoice() {
+  const voices = speechSynth.getVoices();
+  // Prefer es-ES (Spain)
+  let v = voices.find(v => v.lang === 'es-ES');
+  if (!v) v = voices.find(v => v.lang.startsWith('es-'));
+  if (!v) v = voices.find(v => v.lang.startsWith('es'));
+  spanishVoice = v || null;
+  return spanishVoice;
+}
+
+// Load voices
+speechSynth.getVoices();
+speechSynth.onvoiceschanged = () => findSpanishVoice();
+findSpanishVoice();
+
+function speakWord(word) {
+  if (!speechSynth) return;
+  speechSynth.cancel();
+  const u = new SpeechSynthesisUtterance(word);
+  u.lang = spanishVoice ? spanishVoice.lang : 'es-ES';
+  u.rate = 0.85;
+  u.pitch = 1;
+  if (spanishVoice) u.voice = spanishVoice;
+  speechSynth.speak(u);
+}
+
+// ==================== THEME ====================
+function applyTheme() {
+  if (settings.darkMode) {
+    document.body.classList.add('dark');
+    darkToggle.textContent = '☀️';
+  } else {
+    document.body.classList.remove('dark');
+    darkToggle.textContent = '🌙';
+  }
+}
+applyTheme();
+
+darkToggle.addEventListener('click', () => {
+  settings.darkMode = !settings.darkMode;
+  saveJSON(LS_KEYS.SETTINGS, settings);
+  applyTheme();
+});
+
+autoSpeakToggle.classList.toggle('active', settings.autoSpeak);
+autoSpeakToggle.addEventListener('click', () => {
+  settings.autoSpeak = !settings.autoSpeak;
+  autoSpeakToggle.classList.toggle('active', settings.autoSpeak);
+  saveJSON(LS_KEYS.SETTINGS, settings);
+});
+
+// ==================== NAVIGATION ====================
+$$('nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentTab = btn.dataset.tab;
+    $$('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    $$('.tab').forEach(t => t.classList.remove('active'));
+    $('#tab-' + currentTab).classList.add('active');
+    if (currentTab === 'srs') renderSRS();
+    if (currentTab === 'wordlist') renderWordlist();
+    if (currentTab === 'ai') updateAIBankUI();
+    if (currentTab === 'stats') renderStats();
+  });
+});
+
+// ==================== SRS ENGINE ====================
+const SRS_INTERVALS = [1, 10, 60, 1440, 4320, 10080]; // minutes: 1min, 10min, 1h, 1d, 3d, 7d
+
+function getNextReview(repetitions, isCorrect) {
+  if (!isCorrect) return Date.now() + SRS_INTERVALS[0] * 60 * 1000;
+  const idx = Math.min(repetitions, SRS_INTERVALS.length - 1);
+  return Date.now() + SRS_INTERVALS[idx] * 60 * 1000;
+}
+
+function updateSRS(wordId, wasCorrect) {
+  if (!srsData[wordId]) {
+    srsData[wordId] = { nextReview: 0, interval: 0, easeFactor: 2.5, repetitions: 0 };
+  }
+  const s = srsData[wordId];
+  if (wasCorrect) {
+    s.repetitions++;
+    s.interval = Math.min(s.repetitions, SRS_INTERVALS.length - 1);
+    s.easeFactor = Math.max(1.3, s.easeFactor + 0.1);
+  } else {
+    s.repetitions = 0;
+    s.interval = 0;
+    s.easeFactor = Math.max(1.3, s.easeFactor - 0.2);
+  }
+  s.nextReview = getNextReview(s.repetitions, wasCorrect);
+  saveJSON(LS_KEYS.SRS, srsData);
+}
+
+function getDueSRSWords() {
+  const now = Date.now();
+  return Object.entries(srsData)
+    .filter(([, s]) => s.nextReview <= now)
+    .map(([id]) => parseInt(id))
+    .filter(id => WORDS.find(w => w[0] === id));
+}
+
+// ==================== QUIZ ENGINE ====================
+function getWeightedWord() {
+  const level = parseInt(quizLevel.value);
+  const priority = quizPriority.value;
+  
+  let pool = WORDS.filter(w => {
+    if (level > 0 && w[4] !== level) return false;
+    return true;
+  });
+  
+  if (pool.length === 0) pool = [...WORDS];
+  
+  if (priority === 'weak') {
+    const weakIds = Object.keys(progress).filter(id => progress[id].status === 'weak').map(Number);
+    pool = pool.filter(w => weakIds.includes(w[0]));
+    if (pool.length === 0) pool = WORDS.filter(w => level === 0 || w[4] === level);
+  } else if (priority === 'new') {
+    pool = pool.filter(w => !progress[w[0]] || progress[w[0]].status === 'new');
+    if (pool.length === 0) pool = WORDS.filter(w => level === 0 || w[4] === level);
+  } else if (priority === 'smart') {
+    // Mix: prioritize weak + unseen, with some randomness
+    const weak = pool.filter(w => progress[w[0]] && progress[w[0]].status === 'weak');
+    const unseen = pool.filter(w => !progress[w[0]]);
+    const other = pool.filter(w => progress[w[0]] && !['weak', 'new'].includes(progress[w[0]].status));
+    
+    const r = Math.random();
+    if (r < 0.4 && weak.length > 0) pool = weak;
+    else if (r < 0.7 && unseen.length > 0) pool = unseen;
+    else if (other.length > 0) pool = other;
+  }
+  
+  if (pool.length === 0) pool = [...WORDS.filter(w => level === 0 || w[4] === level)];
+  
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function showQuizWord() {
+  const word = getWeightedWord();
+  if (!word) {
+    quizWord.textContent = 'Alle ord er gjennomgått!';
+    return;
+  }
+  currentQuizWord = word;
+  answerRevealed = false;
+  quizWord.textContent = word[1];
+  quizAnswer.value = '';
+  quizAnswer.style.display = '';
+  answerReveal.textContent = '';
+  feedbackBtns.style.display = 'none';
+  btnReveal.style.display = '';
+  btnSkip.style.display = '';
+  exampleSentence.textContent = '';
+  
+  if (settings.autoSpeak) {
+    setTimeout(() => speakWord(word[1]), 300);
+  }
+}
+
+btnReveal.addEventListener('click', revealAnswer);
+btnSkip.addEventListener('click', () => {
+  if (currentQuizWord) {
+    updateProgress(currentQuizWord[0], null);
+  }
+  showQuizWord();
+});
+
+function revealAnswer() {
+  if (!currentQuizWord) return;
+  answerRevealed = true;
+  answerReveal.textContent = currentQuizWord[2];
+  if (currentQuizWord[5]) {
+    exampleSentence.textContent = '📖 ' + currentQuizWord[5];
+  }
+  feedbackBtns.style.display = 'flex';
+  btnReveal.style.display = 'none';
+  btnSkip.style.display = 'none';
+  quizAnswer.style.display = 'none';
+}
+
+feedbackBtns.addEventListener('click', (e) => {
+  if (!currentQuizWord) return;
+  const fb = parseInt(e.target.dataset.fb);
+  if (isNaN(fb)) return;
+  
+  const wordId = currentQuizWord[0];
+  updateProgress(wordId, fb);
+  updateSRS(wordId, fb === 2);
+  
+  stats.totalTested++;
+  stats.sessionTested++;
+  if (fb === 2) { stats.totalCorrect++; stats.sessionCorrect++; }
+  else if (fb === 1) stats.totalPartial++;
+  else stats.totalWrong++;
+  
+  // Daily tracking
+  if (!progress[wordId] || progress[wordId].status === 'new') {
+    dailyData.newWordsToday++;
+  }
+  dailyData.reviewedToday++;
+  saveJSON(LS_KEYS.DAILY, dailyData);
+  
+  saveJSON(LS_KEYS.STATS, stats);
+  
+  updateGoalDisplay();
+  renderStats();
+  setTimeout(() => showQuizWord(), 400);
+});
+
+function updateProgress(wordId, feedback) {
+  if (!progress[wordId]) {
+    progress[wordId] = { correct: 0, partial: 0, wrong: 0, lastSeen: Date.now(), status: 'new' };
+  }
+  const p = progress[wordId];
+  p.lastSeen = Date.now();
+  
+  if (feedback === null) { /* skipped */ }
+  else if (feedback === 2) {
+    p.correct++;
+    if (p.correct >= 3) p.status = 'learned';
+    else if (p.status === 'weak') p.status = 'learning';
+    else if (p.status === 'new') p.status = 'learning';
+  } else if (feedback === 1) {
+    p.partial++;
+    p.status = 'weak';
+  } else if (feedback === 0) {
+    p.wrong++;
+    p.status = 'weak';
+  }
+  
+  saveJSON(LS_KEYS.PROGRESS, progress);
+}
+
+quizAnswer.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    if (!answerRevealed) revealAnswer();
+  }
+});
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', (e) => {
+  if (currentTab !== 'quiz') return;
+  if (e.target.tagName === 'INPUT' && e.key !== 'Escape') return;
+  
+  if (e.key === 'ArrowRight' && !answerRevealed) {
+    e.preventDefault();
+    revealAnswer();
+  } else if (e.key === '1' && answerRevealed) {
+    feedbackBtns.querySelector('[data-fb="2"]').click();
+  } else if (e.key === '2' && answerRevealed) {
+    feedbackBtns.querySelector('[data-fb="1"]').click();
+  } else if (e.key === '3' && answerRevealed) {
+    feedbackBtns.querySelector('[data-fb="0"]').click();
+  } else if (e.key === 'ArrowLeft' && !answerRevealed) {
+    e.preventDefault();
+    btnSkip.click();
+  }
+});
+
+speakCurrent.addEventListener('click', () => {
+  if (currentQuizWord) speakWord(currentQuizWord[1]);
+});
+
+// ==================== SRS RENDERING ====================
+function renderSRS() {
+  const dueWords = getDueSRSWords();
+  const totalSRS = Object.keys(srsData).length;
+  srsStats.innerHTML = `<strong>${dueWords.length}</strong> ord trenger repetisjon nå. Totalt ${totalSRS} ord i SRS-systemet.`;
+  
+  srsBadge.textContent = dueWords.length;
+  srsBadge.style.display = dueWords.length > 0 ? 'inline' : 'none';
+  
+  if (dueWords.length === 0) {
+    srsList.innerHTML = '<p style="opacity:.7">🎉 Ingen ord trenger repetisjon akkurat nå. Kom tilbake senere!</p>';
+    return;
+  }
+  
+  srsList.innerHTML = dueWords.slice(0, 20).map(id => {
+    const w = WORDS.find(w => w[0] === id);
+    if (!w) return '';
+    const s = srsData[id];
+    return `<div class="srs-item">
+      <div class="word">${w[1]}</div>
+      <div class="due">Neste: ${new Date(s.nextReview).toLocaleString('no')}</div>
+      <div class="actions">
+        <button class="icon-btn" onclick="speakWord('${w[1].replace(/'/g, "\\'")}')">🔊</button>
+        <button class="icon-btn" onclick="srsReview(${id}, 2)" style="color:var(--correct)">✅</button>
+        <button class="icon-btn" onclick="srsReview(${id}, 0)" style="color:var(--wrong)">❌</button>
+      </div>
+    </div>`;
+  }).join('');
+  
+  if (dueWords.length > 20) {
+    srsList.innerHTML += `<p style="opacity:.7;margin-top:8px">...og ${dueWords.length - 20} flere</p>`;
+  }
+}
+
+function srsReview(wordId, correct) {
+  updateSRS(wordId, correct === 2);
+  if (correct === 2) {
+    if (progress[wordId]) progress[wordId].correct++;
+    else progress[wordId] = { correct: 1, partial: 0, wrong: 0, lastSeen: Date.now(), status: 'learning' };
+  } else {
+    if (progress[wordId]) progress[wordId].wrong++;
+    else progress[wordId] = { correct: 0, partial: 0, wrong: 1, lastSeen: Date.now(), status: 'weak' };
+  }
+  saveJSON(LS_KEYS.PROGRESS, progress);
+  stats.totalTested++;
+  stats.sessionTested++;
+  if (correct === 2) stats.totalCorrect++;
+  else stats.totalWrong++;
+  saveJSON(LS_KEYS.STATS, stats);
+  
+  dailyData.reviewedToday++;
+  saveJSON(LS_KEYS.DAILY, dailyData);
+  updateGoalDisplay();
+  renderSRS();
+}
+
+// ==================== WORDLIST ====================
+function renderWordlist() {
+  const search = wlSearch.value.toLowerCase().trim();
+  const level = parseInt(wlLevel.value);
+  const status = wlStatus.value;
+  
+  let filtered = [...WORDS];
+  
+  if (search) {
+    filtered = filtered.filter(w => w[1].toLowerCase().includes(search) || w[2].toLowerCase().includes(search));
+  }
+  if (level > 0) {
+    filtered = filtered.filter(w => w[4] === level);
+  }
+  if (status === 'learned') {
+    filtered = filtered.filter(w => progress[w[0]] && progress[w[0]].status === 'learned');
+  } else if (status === 'weak') {
+    filtered = filtered.filter(w => progress[w[0]] && progress[w[0]].status === 'weak');
+  } else if (status === 'unseen') {
+    filtered = filtered.filter(w => !progress[w[0]]);
+  }
+  
+  const maxShow = 200;
+  const toShow = filtered.slice(0, maxShow);
+  
+  wlBody.innerHTML = toShow.map(w => {
+    const p = progress[w[0]];
+    let statusIcon = '⬜';
+    if (p) {
+      if (p.status === 'learned') statusIcon = '🟢';
+      else if (p.status === 'weak') statusIcon = '🔴';
+      else if (p.status === 'learning') statusIcon = '🟡';
+    }
+    const lvlClass = 'lvl-' + w[4];
+    return `<tr>
+      <td class="rank"><span class="level-dot ${lvlClass}"></span>${w[3]}</td>
+      <td class="sp">${w[1]}</td>
+      <td>${w[2]}</td>
+      <td><button class="speak-btn" onclick="speakWord('${w[1].replace(/'/g, "\\'")}')">🔊</button></td>
+      <td>${statusIcon}</td>
+    </tr>`;
+  }).join('');
+  
+  wlCount.textContent = `Viser ${toShow.length} av ${filtered.length} ord`;
+}
+
+wlSearch.addEventListener('input', renderWordlist);
+wlLevel.addEventListener('change', renderWordlist);
+wlStatus.addEventListener('change', renderWordlist);
+
+// ==================== STATS ====================
+function renderStats() {
+  const learned = Object.values(progress).filter(p => p.status === 'learned').length;
+  const totalAcc = stats.totalTested > 0 ? Math.round((stats.totalCorrect / stats.totalTested) * 100) : 0;
+  
+  stTotal.textContent = stats.totalTested;
+  stLearned.textContent = learned;
+  stStreak.textContent = stats.streak;
+  stAccuracy.textContent = totalAcc + '%';
+  
+  // Level progress
+  const levels = [1,2,3,4,5];
+  levelProgress.innerHTML = levels.map(l => {
+    const total = WORDS.filter(w => w[4] === l).length;
+    const done = WORDS.filter(w => w[4] === l && progress[w[0]] && progress[w[0]].status === 'learned').length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    return `<div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:.85rem">
+        <span>Nivå ${l}</span><span>${done}/${total} (${pct}%)</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+  
+  updateGoalDisplay();
+}
+
+function updateGoalDisplay() {
+  const goal = settings.dailyGoal;
+  const done = dailyData.newWordsToday;
+  const pct = goal > 0 ? Math.min(100, Math.round((done / goal) * 100)) : 0;
+  goalIndicator.textContent = `${done}/${goal}`;
+  goalFill.style.width = pct + '%';
+  goalText.textContent = `${done} av ${goal} nye ord i dag`;
+}
+
+dailyGoalInput.value = settings.dailyGoal;
+saveGoalBtn.addEventListener('click', () => {
+  settings.dailyGoal = parseInt(dailyGoalInput.value) || 20;
+  saveJSON(LS_KEYS.SETTINGS, settings);
+  updateGoalDisplay();
+  showToast('Daglig mål lagret!');
+});
+
+// ==================== TOAST ====================
+function showToast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+
+// ==================== DEEPSEEK AI MODULE ====================
+const DEEPSEEK_API_KEY = 'sk-a98c58c9ddc5483a8810c25bcd499183';
+const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+let aiIsGenerating = false;
+let aiCurrentBatch = []; // current batch of generated words before accept/reject
+
+async function callDeepSeek(topic) {
+  const prompt = `Du er en spansk-norsk ordliste-generator. Brukeren lærer spansk og har norsk som morsmål.
+
+Generer en liste med 20 spanske ord relatert til emnet "${topic}".
+Ordene bør være nyttige og praktiske for en norsk person som lærer spansk.
+
+Returner KUN gyldig JSON i dette nøyaktige formatet, uten noen annen tekst:
+[
+  {"es": "el pan", "no": "brød", "ex": "Compro pan fresco cada mañana."},
+  {"es": "la leche", "no": "melk", "ex": "Bebo leche con el desayuno."},
+  ...
+]
+
+VIKTIG:
+- Inkluder artikkel (el/la/los/las) med de spanske substantivene
+- Setningene skal være ENKLE, naturlige og på spansk
+- Returner KUN JSON-arrayet, ingen introduksjon eller avslutning`;
+
+  const response = await fetch(DEEPSEEK_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [
+        { role: 'system', content: 'Du er en hjelpsom spansk-norsk ordliste-generator. Du returnerer kun gyldig JSON.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`DeepSeek API-feil (${response.status}): ${errText}`);
+  }
+
+  const data = await response.json();
+  const content = data.choices[0].message.content.trim();
+  
+  // Extract JSON from response (in case of markdown wrapping)
+  let jsonStr = content;
+  const jsonMatch = content.match(/\[[\s\S]*\]/);
+  if (jsonMatch) jsonStr = jsonMatch[0];
+  
+  const words = JSON.parse(jsonStr);
+  
+  if (!Array.isArray(words) || words.length === 0) {
+    throw new Error('Ugyldig respons fra DeepSeek: ingen ord returnert');
+  }
+  
+  return words;
+}
+
+function getNextAIWordId() {
+  // AI words get IDs starting from 100000
+  const existingIds = aiBank.map(w => w[0]);
+  if (existingIds.length === 0) return 100000;
+  return Math.max(...existingIds) + 1;
+}
+
+// ==================== AI WORD GENERATION UI ====================
+btnGenerate.addEventListener('click', async () => {
+  if (aiIsGenerating) return;
+  
+  const topic = aiTopic.value.trim();
+  if (!topic) {
+    showToast('⚠️ Skriv inn et tema først (f.eks. "mat og drikke")');
+    aiTopic.focus();
+    return;
+  }
+  
+  aiIsGenerating = true;
+  btnGenerate.disabled = true;
+  aiLoading.style.display = 'block';
+  aiResults.innerHTML = '';
+  
+  try {
+    const rawWords = await callDeepSeek(topic);
+    aiCurrentBatch = rawWords.map(rw => {
+      const id = getNextAIWordId();
+      // Create a word entry compatible with WORDS format [id, spanish, norwegian, rank, level, example]
+      const entry = [id, rw.es, rw.no, 'AI', 0, rw.ex || ''];
+      return entry;
+    });
+    
+    renderAIResults();
+    showToast(`✅ DeepSeek genererte ${aiCurrentBatch.length} ord om "${topic}"`);
+  } catch (err) {
+    console.error('AI-generering feilet:', err);
+    aiResults.innerHTML = `<div class="ai-error">
+      <p>❌ Kunne ikke generere ordliste.</p>
+      <p class="err-detail">${err.message}</p>
+      <button class="btn-retry" onclick="btnGenerate.click()">🔄 Prøv igjen</button>
+    </div>`;
+    showToast('❌ Feil ved generering. Sjekk konsollet.');
+  } finally {
+    aiIsGenerating = false;
+    btnGenerate.disabled = false;
+    aiLoading.style.display = 'none';
+  }
+});
+
+function renderAIResults() {
+  if (aiCurrentBatch.length === 0) {
+    aiResults.innerHTML = '<p style="opacity:.7">Ingen ord generert enda. Skriv et tema og trykk "Generer 20 ord".</p>';
+    return;
+  }
+  
+  aiResults.innerHTML = `
+    <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-accept-all" id="btn-accept-all">✅ Godta alle</button>
+      <button class="btn-reject-all" id="btn-reject-all">❌ Forkast alle</button>
+    </div>
+    <div class="ai-word-grid">
+      ${aiCurrentBatch.map(w => {
+        const alreadyInBank = aiBank.some(ab => ab[1] === w[1]);
+        return `<div class="ai-word-card${alreadyInBank ? ' accepted' : ''}" data-id="${w[0]}">
+          <div class="word-es">${w[1]}</div>
+          <div class="word-no">${w[2]}</div>
+          ${w[5] ? `<div class="sentence-es">${w[5]}</div>` : ''}
+          <div class="card-actions">
+            ${alreadyInBank
+              ? '<span style="color:var(--correct);font-size:.8rem">✓ I ordbanken</span>'
+              : `<button class="btn-accept" data-accept="${w[0]}">✅ Lær</button>
+                 <button class="btn-reject" data-reject="${w[0]}">❌ Forkast</button>`
+            }
+            <button class="speak-btn" data-speak="${w[0]}">🔊</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  
+  // Wire up accept/reject buttons
+  aiResults.querySelectorAll('.btn-accept').forEach(btn => {
+    btn.addEventListener('click', () => acceptWord(parseInt(btn.dataset.accept)));
+  });
+  aiResults.querySelectorAll('.btn-reject').forEach(btn => {
+    btn.addEventListener('click', () => rejectWord(parseInt(btn.dataset.reject)));
+  });
+  aiResults.querySelectorAll('.speak-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const word = aiCurrentBatch.find(w => w[0] === parseInt(btn.dataset.speak));
+      if (word) speakWord(word[1]);
+    });
+  });
+  
+  const btnAcceptAll = aiResults.querySelector('#btn-accept-all');
+  const btnRejectAll = aiResults.querySelector('#btn-reject-all');
+  if (btnAcceptAll) {
+    btnAcceptAll.addEventListener('click', () => {
+      aiCurrentBatch.forEach(w => acceptWord(w[0]));
+    });
+  }
+  if (btnRejectAll) {
+    btnRejectAll.addEventListener('click', () => {
+      aiCurrentBatch = [];
+      renderAIResults();
+      showToast('🗑️ Alle ord forkastet');
+    });
+  }
+}
+
+function acceptWord(wordId) {
+  const word = aiCurrentBatch.find(w => w[0] === wordId);
+  if (!word) return;
+  
+  // Check if already in bank
+  if (aiBank.some(w => w[0] === wordId || w[1] === word[1])) {
+    showToast('⚠️ Ordet er allerede i ordbanken');
+    return;
+  }
+  
+  aiBank.push([...word]);
+  saveJSON(LS_KEYS.AI_BANK, aiBank);
+  
+  // Initialize SRS data for this word
+  if (!srsData[wordId]) {
+    srsData[wordId] = { nextReview: Date.now(), interval: 0, easeFactor: 2.5, repetitions: 0 };
+    saveJSON(LS_KEYS.SRS, srsData);
+  }
+  
+  // Initialize progress
+  if (!progress[wordId]) {
+    progress[wordId] = { correct: 0, partial: 0, wrong: 0, lastSeen: Date.now(), status: 'learning' };
+    saveJSON(LS_KEYS.PROGRESS, progress);
+  }
+  
+  updateAIBankUI();
+  renderAIResults();
+  showToast(`✅ "${word[2]}" lagt til i ordbanken`);
+}
+
+function rejectWord(wordId) {
+  aiCurrentBatch = aiCurrentBatch.filter(w => w[0] !== wordId);
+  renderAIResults();
+}
+
+function updateAIBankUI() {
+  aiBankCount.textContent = aiBank.length;
+  renderAIBank();
+}
+
+// ==================== AI WORD BANK MANAGEMENT ====================
+function renderAIBank() {
+  const search = aiBankSearch.value.toLowerCase().trim();
+  let filtered = [...aiBank];
+  
+  if (search) {
+    filtered = filtered.filter(w =>
+      w[1].toLowerCase().includes(search) ||
+      w[2].toLowerCase().includes(search)
+    );
+  }
+  
+  aiBankCount.textContent = aiBank.length;
+  
+  if (filtered.length === 0) {
+    aiBankList.innerHTML = aiBank.length === 0
+      ? '<p style="opacity:.7">Ingen AI-genererte ord i ordbanken enda. Generer ord og trykk "✅ Lær" for å legge dem til.</p>'
+      : '<p style="opacity:.7">Ingen ord matcher søket.</p>';
+    return;
+  }
+  
+  aiBankList.innerHTML = filtered.map(w => {
+    const p = progress[w[0]];
+    let statusIcon = '⬜';
+    if (p) {
+      if (p.status === 'learned') statusIcon = '🟢';
+      else if (p.status === 'weak') statusIcon = '🔴';
+      else if (p.status === 'learning') statusIcon = '🟡';
+    }
+    const s = srsData[w[0]];
+    const nextReview = s ? new Date(s.nextReview).toLocaleString('no') : 'Nå';
+    
+    return `<div class="ai-word-card bank-card">
+      <div class="word-es">${w[1]}</div>
+      <div class="word-no">${w[2]}</div>
+      ${w[5] ? `<div class="sentence-es">${w[5]}</div>` : ''}
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+        <span style="font-size:.75rem;opacity:.7">SRS: ${nextReview}</span>
+        <span>${statusIcon}</span>
+        <button class="speak-btn" onclick="speakWord('${w[1].replace(/'/g, "\\'")}')">🔊</button>
+        <button class="btn-remove-bank" data-remove="${w[0]}" style="background:none;border:none;cursor:pointer;font-size:.9rem">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+  
+  // Wire up remove buttons
+  aiBankList.querySelectorAll('.btn-remove-bank').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.remove);
+      aiBank = aiBank.filter(w => w[0] !== id);
+      saveJSON(LS_KEYS.AI_BANK, aiBank);
+      updateAIBankUI();
+      showToast('🗑️ Ord fjernet fra AI-ordbanken');
+    });
+  });
+}
+
+aiBankSearch.addEventListener('input', renderAIBank);
+
+// Export AI word bank
+btnExportAI.addEventListener('click', () => {
+  if (aiBank.length === 0) {
+    showToast('⚠️ Ingen ord i AI-ordbanken å eksportere');
+    return;
+  }
+  
+  const text = aiBank.map(w => `${w[1]} - ${w[2]}${w[5] ? ' | ' + w[5] : ''}`).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`📋 ${aiBank.length} ord kopiert til utklippstavlen!`);
+  }).catch(() => {
+    // Fallback: create textarea
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast(`📋 ${aiBank.length} ord kopiert!`);
+  });
+});
+
+// Clear AI word bank
+btnClearAI.addEventListener('click', () => {
+  if (aiBank.length === 0) return;
+  if (confirm(`Er du sikker på at du vil slette alle ${aiBank.length} AI-genererte ord fra ordbanken?`)) {
+    aiBank = [];
+    saveJSON(LS_KEYS.AI_BANK, aiBank);
+    updateAIBankUI();
+    showToast('🗑️ AI-ordbanken er tømt');
+  }
+});
+
+// ==================== AI SENTENCE FOR QUIZ ====================
+async function generateAISentence(wordId) {
+  const word = aiBank.find(w => w[0] === wordId);
+  if (!word || word[5]) return word ? word[5] : null;
+  
+  try {
+    const prompt = `Lag en enkel setning på spansk med ordet "${word[1]}" (betyr "${word[2]}" på norsk). Returner KUN setningen på spansk, ingen annen tekst.`;
+    
+    const response = await fetch(DEEPSEEK_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: 'Du returnerer kun én setning på spansk.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.5,
+        max_tokens: 100
+      })
+    });
+    
+    if (!response.ok) return null;
+    
+    const data = await response.json();
+    const sentence = data.choices[0].message.content.trim();
+    
+    // Store sentence in aiBank
+    const idx = aiBank.findIndex(w => w[0] === wordId);
+    if (idx !== -1) {
+      aiBank[idx][5] = sentence;
+      saveJSON(LS_KEYS.AI_BANK, aiBank);
+    }
+    
+    return sentence;
+  } catch (err) {
+    console.error('Kunne ikke generere AI-setning:', err);
+    return null;
+  }
+}
+
+// ==================== INTEGRATE AI WORDS INTO QUIZ ====================
+// Override getWeightedWord to include AI bank words
+const originalGetWeightedWord = getWeightedWord;
+getWeightedWord = function() {
+  const level = parseInt(quizLevel.value);
+  const priority = quizPriority.value;
+  
+  // Get from built-in words
+  let builtInPool = WORDS.filter(w => {
+    if (level > 0 && w[4] !== level) return false;
+    return true;
+  });
+  
+  // Get from AI bank
+  let aiPool = aiBank.filter(w => {
+    if (level > 0 && level <= 5) return false; // AI words have level 0, only show in "Alle nivåer"
+    return true;
+  });
+  
+  // Apply priority filtering
+  if (priority === 'weak') {
+    const weakIds = Object.keys(progress).filter(id => progress[id].status === 'weak').map(Number);
+    builtInPool = builtInPool.filter(w => weakIds.includes(w[0]));
+    aiPool = aiPool.filter(w => weakIds.includes(w[0]));
+    if (builtInPool.length === 0 && aiPool.length === 0) {
+      builtInPool = [...WORDS.filter(w => level === 0 || w[4] === level)];
+      aiPool = [...aiBank];
+    }
+  } else if (priority === 'new') {
+    builtInPool = builtInPool.filter(w => !progress[w[0]] || progress[w[0]].status === 'new');
+    aiPool = aiPool.filter(w => !progress[w[0]] || progress[w[0]].status === 'new');
+    if (builtInPool.length === 0 && aiPool.length === 0) {
+      builtInPool = [...WORDS.filter(w => level === 0 || w[4] === level)];
+      aiPool = [...aiBank.filter(w => level === 0)];
+    }
+  } else if (priority === 'smart') {
+    const weakBuiltIn = builtInPool.filter(w => progress[w[0]] && progress[w[0]].status === 'weak');
+    const unseenBuiltIn = builtInPool.filter(w => !progress[w[0]]);
+    const otherBuiltIn = builtInPool.filter(w => progress[w[0]] && !['weak', 'new'].includes(progress[w[0]].status));
+    
+    const weakAI = aiPool.filter(w => progress[w[0]] && progress[w[0]].status === 'weak');
+    const unseenAI = aiPool.filter(w => !progress[w[0]]);
+    const otherAI = aiPool.filter(w => progress[w[0]] && !['weak', 'new'].includes(progress[w[0]].status));
+    
+    const r = Math.random();
+    if (r < 0.4 && (weakBuiltIn.length > 0 || weakAI.length > 0)) {
+      builtInPool = weakBuiltIn;
+      aiPool = weakAI;
+    } else if (r < 0.7 && (unseenBuiltIn.length > 0 || unseenAI.length > 0)) {
+      builtInPool = unseenBuiltIn;
+      aiPool = unseenAI;
+    } else if (otherBuiltIn.length > 0 || otherAI.length > 0) {
+      builtInPool = otherBuiltIn;
+      aiPool = otherAI;
+    }
+  }
+  
+  // Merge pools - 30% chance of AI word if available
+  const totalPool = [...builtInPool];
+  if (aiPool.length > 0 && Math.random() < 0.3) {
+    totalPool.push(...aiPool);
+  }
+  
+  if (totalPool.length === 0) {
+    totalPool.push(...WORDS.filter(w => level === 0 || w[4] === level));
+    totalPool.push(...aiBank.filter(w => level === 0));
+  }
+  
+  // fallback
+  if (totalPool.length === 0) totalPool.push(...WORDS);
+  
+  return totalPool[Math.floor(Math.random() * totalPool.length)];
+};
+
+// Override revealAnswer to generate AI sentences for AI words without examples
+const originalRevealAnswer = revealAnswer;
+revealAnswer = function() {
+  if (!currentQuizWord) return;
+  answerRevealed = true;
+  answerReveal.textContent = currentQuizWord[2];
+  
+  // Check if this is an AI word without a sentence
+  const isAIWord = currentQuizWord[0] >= 100000;
+  if (currentQuizWord[5]) {
+    exampleSentence.textContent = '📖 ' + currentQuizWord[5];
+  } else if (isAIWord) {
+    exampleSentence.textContent = '🤖 Genererer setning...';
+    generateAISentence(currentQuizWord[0]).then(sentence => {
+      if (sentence) {
+        exampleSentence.textContent = '📖 ' + sentence;
+      } else {
+        exampleSentence.textContent = '';
+      }
+    });
+  }
+  
+  feedbackBtns.style.display = 'flex';
+  btnReveal.style.display = 'none';
+  btnSkip.style.display = 'none';
+  quizAnswer.style.display = 'none';
+};
+
+// ==================== EXTEND SRS TO INCLUDE AI WORDS ====================
+const originalGetDueSRSWords = getDueSRSWords;
+getDueSRSWords = function() {
+  const now = Date.now();
+  return Object.entries(srsData)
+    .filter(([, s]) => s.nextReview <= now)
+    .map(([id]) => parseInt(id))
+    .filter(id => WORDS.find(w => w[0] === id) || aiBank.find(w => w[0] === id));
+};
+
+// Override renderSRS to handle AI words
+const originalRenderSRS = renderSRS;
+renderSRS = function() {
+  const dueWords = getDueSRSWords();
+  const totalSRS = Object.keys(srsData).length;
+  srsStats.innerHTML = `<strong>${dueWords.length}</strong> ord trenger repetisjon nå. Totalt ${totalSRS} ord i SRS-systemet (${aiBank.length} AI-genererte).`;
+  
+  srsBadge.textContent = dueWords.length;
+  srsBadge.style.display = dueWords.length > 0 ? 'inline' : 'none';
+  
+  if (dueWords.length === 0) {
+    srsList.innerHTML = '<p style="opacity:.7">🎉 Ingen ord trenger repetisjon akkurat nå. Kom tilbake senere!</p>';
+    return;
+  }
+  
+  srsList.innerHTML = dueWords.slice(0, 20).map(id => {
+    let w = WORDS.find(w => w[0] === id);
+    if (!w) w = aiBank.find(w => w[0] === id);
+    if (!w) return '';
+    const s = srsData[id];
+    return `<div class="srs-item">
+      <div class="word">${w[1]}${id >= 100000 ? ' <span style="font-size:.7rem;opacity:.6">(AI)</span>' : ''}</div>
+      <div class="due">Neste: ${new Date(s.nextReview).toLocaleString('no')}</div>
+      <div class="actions">
+        <button class="icon-btn" onclick="speakWord('${w[1].replace(/'/g, "\\'")}')">🔊</button>
+        <button class="icon-btn" onclick="srsReview(${id}, 2)" style="color:var(--correct)">✅</button>
+        <button class="icon-btn" onclick="srsReview(${id}, 0)" style="color:var(--wrong)">❌</button>
+      </div>
+    </div>`;
+  }).join('');
+  
+  if (dueWords.length > 20) {
+    srsList.innerHTML += `<p style="opacity:.7;margin-top:8px">...og ${dueWords.length - 20} flere</p>`;
+  }
+};
+
+// Override renderWordlist to include AI bank words
+const originalRenderWordlist = renderWordlist;
+renderWordlist = function() {
+  const search = wlSearch.value.toLowerCase().trim();
+  const level = parseInt(wlLevel.value);
+  const status = wlStatus.value;
+  
+  let filtered = [...WORDS];
+  
+  // Only include AI words when level is 0 (Alle) or status filtered
+  if (level === 0 && !search && (status === '' || status === 'unseen')) {
+    // Include AI words at end
+  }
+  
+  if (search) {
+    filtered = filtered.filter(w => w[1].toLowerCase().includes(search) || w[2].toLowerCase().includes(search));
+    // Also search AI bank
+    const aiMatches = aiBank.filter(w =>
+      w[1].toLowerCase().includes(search) ||
+      w[2].toLowerCase().includes(search)
+    );
+    filtered = [...filtered, ...aiMatches];
+  }
+  if (level > 0) {
+    filtered = filtered.filter(w => w[4] === level);
+  }
+  if (status === 'learned') {
+    filtered = filtered.filter(w => progress[w[0]] && progress[w[0]].status === 'learned');
+  } else if (status === 'weak') {
+    filtered = filtered.filter(w => progress[w[0]] && progress[w[0]].status === 'weak');
+  } else if (status === 'unseen') {
+    filtered = filtered.filter(w => !progress[w[0]]);
+  }
+  
+  // Add AI bank words when level is 0
+  if (level === 0) {
+    let aiFiltered = [...aiBank];
+    if (search) {
+      aiFiltered = aiFiltered.filter(w =>
+        w[1].toLowerCase().includes(search) ||
+        w[2].toLowerCase().includes(search)
+      );
+    }
+    if (status === 'learned') {
+      aiFiltered = aiFiltered.filter(w => progress[w[0]] && progress[w[0]].status === 'learned');
+    } else if (status === 'weak') {
+      aiFiltered = aiFiltered.filter(w => progress[w[0]] && progress[w[0]].status === 'weak');
+    } else if (status === 'unseen') {
+      aiFiltered = aiFiltered.filter(w => !progress[w[0]]);
+    }
+    // Add AI words not already in filtered
+    const existingIds = new Set(filtered.map(w => w[0]));
+    aiFiltered.forEach(w => {
+      if (!existingIds.has(w[0])) filtered.push(w);
+    });
+  }
+  
+  const maxShow = 200;
+  const toShow = filtered.slice(0, maxShow);
+  
+  wlBody.innerHTML = toShow.map(w => {
+    const p = progress[w[0]];
+    let statusIcon = '⬜';
+    if (p) {
+      if (p.status === 'learned') statusIcon = '🟢';
+      else if (p.status === 'weak') statusIcon = '🔴';
+      else if (p.status === 'learning') statusIcon = '🟡';
+    }
+    const lvlClass = w[4] > 0 ? 'lvl-' + w[4] : 'lvl-ai';
+    const isAI = w[0] >= 100000;
+    return `<tr>
+      <td class="rank"><span class="level-dot ${lvlClass}"></span>${w[3]}${isAI ? ' 🤖' : ''}</td>
+      <td class="sp">${w[1]}</td>
+      <td>${w[2]}</td>
+      <td><button class="speak-btn" onclick="speakWord('${w[1].replace(/'/g, "\\'")}')">🔊</button></td>
+      <td>${statusIcon}</td>
+    </tr>`;
+  }).join('');
+  
+  wlCount.textContent = `Viser ${toShow.length} av ${filtered.length} ord (${aiBank.length} AI-genererte)`;
+};
+
+// ==================== INIT ====================
+function init() {
+  showQuizWord();
+  updateGoalDisplay();
+  renderStats();
+  renderWordlist();
+  renderSRS();
+  updateAIBankUI();
+  
+  // Update SRS badge
+  const due = getDueSRSWords().length;
+  srsBadge.textContent = due;
+  srsBadge.style.display = due > 0 ? 'inline' : 'none';
+  
+  // Periodic SRS check
+  setInterval(() => {
+    const d = getDueSRSWords().length;
+    srsBadge.textContent = d;
+    srsBadge.style.display = d > 0 ? 'inline' : 'none';
+  }, 30000);
+}
+
+init();
+
+console.log(`Spansk Vokabular lastet: ${WORDS.length} ord`);
+console.log(`Spansk stemme: ${spanishVoice ? spanishVoice.name + ' (' + spanishVoice.lang + ')' : 'Ingen funnet'}`);
+</script>
+</body>
+</html>
